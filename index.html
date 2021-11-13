@@ -3,45 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="description" content="Bienvenido al CECATI 13. Conoce nuestra Oferta Educativa">
+    <meta name="robots" content="index,follow">
     <title>CECATI 13</title>
     <link href="estilos.css" rel="stylesheet" />
-    <script type="text/javascript" src="main.js">
-    </script>
     <meta name="keywords"content="cursos,capacitacion">
     <link rel="icon" href="assets/favicon-96x96.png">
 </head>
 <body>
-    <header>
-        <img src="assets/Header150.jpg" alt="encabezado">
-    
-
-            <ul class="menu">
-    
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="Especialidades.html">Especialidades</a></li>
-                <li><a href="OfertaEducativa.html">Oferta Educativa</a></li>
-                <li><b><a href="Inscribete.html">INSCRIPCIÓN</a></b></li>
-                <li><a href="Documentacion.html">Documentación</a></li>
-                <li><a href="Rocos.html">Rocos</a></li>
-                <li><a href="Galeria.html">Galería</a></li>
-                <li><a href="CalendarioEscolar.html">Calendario Escolar</a></li>
-                <li><a href="Contacto.html">Contactos</a></li>
-                <li><a href="Ubicacion.html">Ubicación</a></li>
-                
-            </ul>
+    <header class="header">
+        <svg class="menu__mobile"  viewBox="0 0 46 34.5" stroke-linecap="round" stroke-width="6px">
+            <line x1="3" y1="17.25" x2="43" y2="17.25"/>
+            <line x1="3" y1="31.5" x2="43" y2="31.5"/>
+            <line x1="3" y1="3" x2="43" y2="3"/>
+        </svg>
+        <div class="header__port">
+            <img class="header__port--imgSEP" src="./assets/LogoSep.png" alt="Secretaria de Educación Pública">
+            <div class="header__port__title">
+                <h1 class="header__port--C13">CECATI 13</h1>
+                <h1 class="header__port__title--h1">Centro de Capacitación para el Trabajo Industrial No. 13</h1>                
+                <h2 class="header__port__title--h2">Profesor "Abraham Lezama Breton"</h2>
+            </div>
+            <img class="header__port--imgC13" src="./assets/LogoCecati.jpg" alt="Logo CECATI 13">
+        </div>        
+        <ul class="nav">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="Especialidades.html">Especialidades</a></li>
+            <li><a href="OfertaEducativa.html">Oferta Educativa</a></li>
+            <li><b><a href="Inscribete.html">INSCRIPCIÓN</a></b></li>
+            <li><a href="Documentacion.html">Documentación</a></li>
+            <li><a href="Rocos.html">Rocos</a></li>
+            <li><a href="Galeria.html">Galería</a></li>
+            <li><a href="CalendarioEscolar.html">Calendario Escolar</a></li>
+            <li><a href="Contacto.html">Contactos</a></li>
+            <li><a href="Ubicacion.html">Ubicación</a></li>                
+        </ul>
     </header>
     
     <span class="linea"></span>
-    
-    
-    <video controls="controls" src="assets/c2021.mp4" height="480px" width="2000px" loop autoplay muted>
-    Tu navegadr no permite este elemento de video.
-</video>
-    
+    <main class="main">
+        <video class="main--video" controls="controls" src="assets/c2021.mp4" loop controls autoplay muted>
+            Tu navegador no permite este elemento de video.
+        </video>
+    </main>
     
     <footer>
     
         <h5><p>CSITE/CECATI 13/2021</p></h5>
     </footer>
+
+    <script type="text/javascript" src="main.js"></script>
 </body>
 </html>
