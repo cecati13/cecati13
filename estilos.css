@@ -1,0 +1,205 @@
+html, body{
+    font-family: Monserrat.Arial, sans-serif;
+    color: chocolate
+    margin: 0px;
+    padding 0px;
+    height: 100%
+    
+    
+}
+h1, h2  {
+    color: crimson
+}
+
+header{
+    max-width: 100%;
+}
+
+
+img{
+    
+    max-width: 100%
+}
+
+
+
+
+
+footer {
+    text-align: center;
+}
+.menu{
+    list-style: none;
+    padding: 0;
+    background: #2327;
+    width:  90%;
+    max-width: 2000px;
+    margin: auto;
+}
+
+
+
+
+
+
+.menu li a{
+    text-decoration: none;
+    color: white;
+    padding: 20px;
+    display: block;  
+}
+.menu li{
+    display: inline-block;
+    text-align: center;
+}
+.menu li a:hover{
+background: #f80040;
+}
+video{
+    max-width: 100%;
+}
+
+
+
+
+.grid{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap:  0.5em;
+}
+
+.grid div {
+    background: #ecf0f1;
+    padding: 1em;
+}
+
+.grid div:hover{
+    border: 4px solid #f80040;
+}
+
+
+
+
+
+
+.linea{
+    background: #f80040;
+    height: 5px;
+    width: 100%;
+    display: block;
+}
+
+.galeria{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    width: 95%;
+    margin: auto;
+    grid-gap: 10px;
+    padding: 40px 0;
+    overflow: hidden;
+}
+
+.galeria > a{
+    display: block;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 6px rgba(0,0,0,.5);
+}
+.galeria img{
+    width: 100%;
+    vertical-align: top;
+    height: 300px;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+
+.galeria a:hover img{
+    filter: blur(2px);
+    transform: rotate(10deg) scale(1.3);
+}
+
+.light-box{
+    position: fixed;
+    top: 0;
+    left 0;
+    background: rgba(0,0,0,.5);
+    transition: transform .3s ease-in-out;
+    width: 100%;
+    height: 100vh;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   transform: scale(0);
+}
+
+
+.light-box img{
+    width: 75vw;
+    max-height: 70vh;
+}
+
+
+
+.light-box:target{
+    transform: scaleX(1);
+    
+}
+
+.close{
+    display: block;
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    background: #f80040;
+    color: #fff;
+    text-decoration: none;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+}
+
+.next{
+    display: block;
+    background: #f80040;
+    color: #fff;
+    height: 30px;
+    width: 30px;
+    line-height: 30px;
+    text-decoration: none;
+    text-align: center;
+}
+
+@media screen and (max-width:400px){
+    .galeria{
+        grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+    }
+    .close{
+        top: 20px;
+        right: 20px;
+    }
+}
+
+.visualiza{
+    text-align: center;
+}
+
+.descarga{
+    text-align: center;
+}
+
+.Requisitos{
+    text-align: justify-all;
+}
+
+.oferta{
+    width: 100%;
+    height: 90%;
+}
+
+a{
+    color: #000;
+    text-decoration: none;
+}

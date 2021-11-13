@@ -1,0 +1,40 @@
+@charset "utf-8";
+/* CSS Document */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,
+code,form,fieldset,legend,input,textarea,blockquote,th,td{
+	margin:0;
+	padding:0;
+	border:0;
+	outline:0;
+	vertical-align: baseline;
+	background: transparent;
+}
+p{
+    margin:0;
+	padding:0;
+	vertical-align: baseline;
+}
+
+
+body{ background:url(img/bg.jpg) 0 0 repeat-x scroll;}
+
+
+.cl	{ clear:both; overflow:hidden; line-height:none;}
+
+#main{ height:775px; width:1024px; margin:0 auto; background:url(img/main_bg.jpg) 0 20px no-repeat scroll; overflow:hidden;}
+
+
+#box_bg	{ width:570px; margin: 164px 0 0 221px; background:url(img/box_bg.png) 0 0 repeat-n scroll;}
+
+#box_bot	{ background:url(img/box_bot.png) 0 bottom no-repeat scroll; min-height:416px; text-align:center;}
+
+#content	{ padding: 60px 10px 110px 0;}
+
+h1{ font: bold 50px/48px Arial, Helvetica, sans-serif; color:#797878; text-align:center;}
+p{ font: normal 20px/30px Arial, Helvetica, sans-serif; color:#797878; text-align:center;}
+.link	{ color:#127ec9;}
+
+
+
+/*********************mobile*******************************/
+#main_mobile	{ height:775px; width:1000px; margin:0 auto; background:url(img/main_bg_mobile.jpg) 0 20px no-repeat scroll; overflow:hidden;}

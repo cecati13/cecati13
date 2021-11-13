@@ -1,0 +1,13 @@
+
+###### webforce begin ######
+DirectoryIndex index.html index.php /hproxy.php
+
+SetEnv PROXYSERVER https://wfsites.websitecreatorprotool.com
+RewriteEngine On
+RewriteBase /
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^hproxy.php
+RewriteRule ^(.*)$ /hproxy.php/$1 [L,NC,QSA]
+###### webforce end ######
