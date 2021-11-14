@@ -27,6 +27,12 @@ html, body {
     width: 100vw;   
 }
 
+.menu {
+    position: fixed;
+    width: 100vw;
+    height: 55px;
+}
+
 .menu__mobile {
     stroke: var(--redLight);
     height: 35px;
@@ -35,10 +41,10 @@ html, body {
     cursor: pointer;
     position: absolute;
     right: 0;
-    margin: 15px 15px 0 0;
+    margin: 15px 15px 0 0;    
   }
 
-.header__port {    
+.header__port {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -71,30 +77,41 @@ html, body {
     font-size: 1.7rem;
 }
 
-.nav {
-    background: var(--grayLight);
-    display: none;
-    flex-wrap: wrap;
-    font-size: 1.7rem;
+.nav__hide {
+    display: none;    
+}
+
+.nav__show {
+    display: flex;
+    justify-content: center;    
+    font-size: 1.6rem;
+    width: 75vw;
+    position: absolute;
+    top: 55px;
+    right: 0;
+    background-color: var(--brownLight);
+    border-radius: 50px 0 0 50px;
+    border: solid var(--greenLight) 1px;
+}
+
+.nav__show--ul {    
     list-style: none;
-    padding: 20px;
 }
 
-.nav li a {
-    text-decoration: none;
+a {
+    text-decoration: none;    
+}
+
+a:visited {
     color: var(--greenDark);
-    padding: 20px 7px;
-    display: block;  
 }
 
-.nav li {
-    display: inline-block;
+.nav__show--ul li {
     text-align: center;
+    padding: 15px 0;
+    color: var(--greenDark);
 }
 
-.nav li a:hover {
-    background: #f80040;
-}
 
 .main {
     display: flex;
@@ -285,6 +302,15 @@ a{
     .header__port--imgC13 {    
         display: block;
         height: 90px;
+    }
+
+    .nav__hide {
+        display: block;
+        background: var(--grayLight);    
+        flex-wrap: wrap;
+        font-size: 1.7rem;
+        list-style: none;
+        padding: 20px;    
     }
 }
 
