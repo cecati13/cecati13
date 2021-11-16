@@ -6,7 +6,7 @@
     <meta name="description" content="Bienvenido al CECATI 13. Conoce nuestra Oferta Educativa">
     <meta name="robots" content="index,follow">
     <title>CECATI 13</title>
-    <link href="estilos.css" rel="stylesheet" />
+    <link href="./css/styles.css" rel="stylesheet"/>
     <meta name="keywords"content="cursos,capacitacion">
     <link rel="icon" href="assets/favicon-96x96.png">
 </head>
@@ -19,19 +19,6 @@
                 <line x1="3" y1="3" x2="43" y2="3"/>
             </svg>
         </div>
-        <nav id="navigator" class="nav__hide">
-            <ul class="nav__show--ul">
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="Especialidades.html">Especialidades</a></li>
-                <li><a href="OfertaEducativa.html">Oferta Educativa</a></li>
-                <li><b><a href="Inscribete.html">INSCRIPCIÓN</a></b></li>
-                <li><a href="Documentacion.html">Documentación</a></li>
-                <li><a href="Rocos.html">Rocos</a></li>
-                <li><a href="Galeria.html">Galería</a></li>
-                <li><a href="CalendarioEscolar.html">Calendario Escolar</a></li>
-                                
-            </ul>
-        </nav>       
         <div class="header__port">
             <img class="header__port--imgSEP" src="./assets/LogoSep.png" alt="Secretaria de Educación Pública">
             <div class="header__port__title">
@@ -39,26 +26,60 @@
                 <h1 class="header__port__title--h1">Centro de Capacitación para el Trabajo Industrial No. 13</h1>                
                 <h2 class="header__port__title--h2">Profesor "Abraham Lezama Breton"</h2>
             </div>
-            <img class="header__port--imgC13" src="./assets/LogoCecati.jpg" alt="Logo CECATI 13">
+            <img class="header__port--imgC13" src="./assets/LogoCecati.png" alt="Logo CECATI 13">
         </div>        
+        <nav id="navigator" class="nav__hide">
+            <ul class="nav__show--ul">
+                <li><a class="nav__show--ul__link" href="index.html">Inicio</a></li>
+                <li><a class="nav__show--ul__link" href="Especialidades.html">Especialidades</a></li>
+                <li><a class="nav__show--ul__link" href="./html/OfertaEducativa.html">Oferta Educativa</a></li>
+                <li><a class="nav__show--ul__link" href="./html/Inscribete.html">INSCRIPCIÓN</a></li>
+                <li><a class="nav__show--ul__link" href="Documentacion.html">Documentación</a></li>
+                <li><a class="nav__show--ul__link" href="Rocos.html">Rocos</a></li>
+                <li><a class="nav__show--ul__link" href="Galeria.html">Galería</a></li>
+            </ul>
+        </nav>       
     </header>
     
-    <span class="linea"></span>
+    <span class="line"></span>
     <main class="main">
-        <video class="main--video" controls="controls" src="assets/c2021.mp4" loop controls autoplay muted>
-            Tu navegador no permite este elemento de video.
-        </video>
-    </main>
-    
+        <div class="main__container">
+            <div class="main__container__welcome">
+                <h3 class="main__container__welcome--title">Bienvenido</h3>
+                <h3 class="main__container__welcome--age">2021-2022</h3>
+            </div>
+            <div class="main__container__advertisements">
+                <div class="main__container__advertisements__offer">
+                    <p>Revisa nuestra nueva oferta educativa para los meses de:</p>
+                    <p class="main--advertisements">Noviembre y Diciembre</p>
+                    <a href="./html/OfertaEducativa.html">
+                        <div class="button__link">Oferta educativa</div>
+                    </a>
+                </div>
+                <div class="main__container__advertisements__modalities">
+                    <p>Contamos con las modalidades:</p>
+                    <ul>
+                        <li><a href="">Distancia</a></li>
+                        <li><a href="">Híbridos</a></li>
+                        <li><a href="">Presenciales</a></li>
+                    </ul>
+                    <a href="./html/Inscribete.html">
+                        <div class="button__link">Inscribete</div>
+                    </a>                     
+                </div>
+            </div>
+    </main>    
+    <span class="line"></span>
     <footer class="footer">
-        <ul>
-            <li><a href="Contacto.html">Contactos</a></li>
+        <ul class="footer__contact">
+            <li><a href="Contacto.html">Contacto</a></li>
             <li><a href="Ubicacion.html">Ubicación</a></li>
-            <li><a href="https://es-la.facebook.com/groups/1537489526570773/">Grupo de Programación de cursos en Facebook</a></li>
-            <li><a href="https://www.facebook.com/cecati.trece/about">Facebook</a></li>
+            <li><a href="https://www.gob.mx/sep?tab=Calendario%20escolar">Calendario Escolar</a></li>
+            <li><a href="https://www.facebook.com/cecati.trece/about">Página de Facebook</a></li>
+            <li><a href="https://es-la.facebook.com/groups/1537489526570773/">Grupo de Programación en Facebook</a></li>
         </ul>        
     </footer>
 
-    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript" src="./js/main.js"></script>
 </body>
 </html>
