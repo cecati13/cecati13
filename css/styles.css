@@ -39,8 +39,7 @@ body {
     position: fixed;
     width: 100vw;
     height: 55px;
-    z-index: 3;
-    
+    z-index: 3;    
 }
 
 .menu__mobile {
@@ -52,7 +51,7 @@ body {
     position: absolute;
     right: 0;
     margin: 15px 15px 0 0; 
-    background-color: var(--brownLight);    
+    background-color: var(--brownLight);
   }
 
   .menu__mobile--background {
@@ -62,8 +61,7 @@ body {
 .header__port {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    
+    align-items: center;    
     min-height: 90px;
 }
 
@@ -107,7 +105,8 @@ body {
     right: 0;
     background: linear-gradient(45deg, var(--brownLight), var(--brownDark));
     border-radius: 0 0 0 15px;
-    border: solid var(--redLight) 1px;
+    border-bottom: solid var(--redLight) 2px;
+    border-left: solid var(--redLight) 2px;
     z-index: 2;
     color: var(--redDark);
 }
@@ -291,6 +290,13 @@ a, a:visited, a:active{
     display: block;
     margin: 15px 0;
 }
+
+#contacto, #documentacion, 
+#especialidades, #inscribete,
+#ofertaEducativa, #rocos{
+    color: var(--redLight);
+}
+
 @media (min-width: 768px) {
     .menu {
         display: none;
