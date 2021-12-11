@@ -1,0 +1,40 @@
+.documentation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.8rem;
+}
+
+.documentation--title {
+    margin-top: 20px;
+    font-size: 2.6rem;
+}
+
+.documentation__requirements {
+    font-size: 1.7rem;
+    list-style: circle;
+    padding: 10px 25px;
+    margin: 20px 0;
+    
+}
+
+.documentation__advertisement {
+    font-size: 2.2rem;
+}
+
+.documentation__advertisement > li {
+    padding: 20px;
+}
+
+iframe {
+    width: 90%;
+
+}
+
+@media (min-width: 768px) {
+    iframe {
+        width: 640px;
+        height: 360px;
+    }
+    
+}

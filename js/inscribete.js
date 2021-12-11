@@ -60,14 +60,43 @@ const stepFive = {
         ya haya alcanzado su cupo máximo.`
 }
 
-const nodeParent = document.getElementById("inscribete");
+const nodeParent = document.getElementById("signUp");
+const nodeContainerSteps = document.getElementById("containerSteps");
 
 const tituloH3 = document.createElement("h3");
-tituloH3.className = "inscribete__title";
+tituloH3.className = "singUp__title";
+tituloH3.id = "singUp-Title"
 const textoh3 = document.createTextNode("Pasos para inscribirte a nuestros cursos:");
 tituloH3.appendChild(textoh3);
-nodeParent.appendChild(tituloH3);
+nodeParent.insertBefore(tituloH3,nodeContainerSteps);
 
+function searchLocationNode(childNodes) {
+    const startExpression = /^step/;    
+    let arrayElements= [];
+    
+    childNodes.find((element)=> {        
+        if(startExpression.test(element.id)) {
+            let valueTemp = element.id;
+            const findIndex = valueTemp.match(/\d/);
+            arrayElements.push(findIndex);
+        }        
+    });        
+    const indexFound = arrayElements.length;
+    const nodeFound = "step" + indexFound;
+    return nodeFound;
+}
+
+function searchmountNode(containerHTML) {
+    const convertNodeToArray = [...nodeContainerSteps.childNodes];
+    const nameNodeID = searchLocationNode(convertNodeToArray);
+    console.log("Valor de nameNodeID: " + nameNodeID);
+    if (nameNodeID === "step0") {
+        nodeContainerSteps.append(containerHTML);
+    }
+    const newNodeMount = document.getElementById(nameNodeID)
+    nodeContainerSteps.insertBefore(containerHTML,newNodeMount);
+    //aqui buscamos el nodo si ya exite y regresamos. pendiente orden
+}
 
 function createSteps (stepExecuted) {
     let stepContainer = [];
@@ -75,23 +104,25 @@ function createSteps (stepExecuted) {
     const stepTitleNumber = document.createElement("span");
     const textTitleNumber = document.createTextNode(stepExecuted.stepNumber);
     stepTitleNumber.appendChild(textTitleNumber);
-    stepTitleNumber.className = "inscribete__container__TitleNumber";
+    stepTitleNumber.className = "singUp__container__TitleNumber";
 
     const stepTitleDescription = document.createElement("span");
     const textStepTitle = document.createTextNode(stepExecuted.title);
-    stepTitleDescription.className = "inscribete__container__stepsTitle";
+    stepTitleDescription.className = "singUp__container__stepsTitle";
     stepTitleDescription.append(textStepTitle);
 
     const containerStepTitle = document.createElement("div");
+    containerStepTitle.className = "containerStepTitle";
     containerStepTitle.append(stepTitleNumber, stepTitleDescription);
     
     stepContainer.push(containerStepTitle);
     
     const stepContent = stepExecuted.content;
-    if (Array.isArray(stepContent)) {
-        //aqui generamos la lista ordenada
+    const isURL = /^https:/
+    //evaluar tipo de dato en stepExecuted.content
+    if (Array.isArray(stepContent)) {        
         const containerListStep = document.createElement("ol");
-        containerListStep.className = "inscribete__step--ol";
+        containerListStep.className = "singUp__step--ol";
         for (let index = 0; index < stepContent.length; index++) {
             const element = stepContent[index];
             const requirementLI = document.createElement("li");
@@ -100,28 +131,36 @@ function createSteps (stepExecuted) {
             containerListStep.appendChild(requirementLI);            
         }
         stepContainer.push(containerListStep);
-    // } else if (condition) {
-        //expression regular para URL. Crear Boton para formulario.
-    } 
-    else {
-        //cuando el contenido es solo texto un div
-        console.log("aqui creamos div cuando es solo texto");
+
+    } else if (isURL.test(stepContent)) {        
+        const buttonIncription = document.createElement("a");
+        buttonIncription.className = "button";
+        buttonIncription.textContent = "Registrarme";
+        buttonIncription.href = stepContent;
+        buttonIncription.target= "_blank";
+        stepContainer.push(buttonIncription);
+    } else {        
+        const elementStepContent = document.createElement("div");
+        const textContent = document.createTextNode(stepContent);
+        elementStepContent.className = "singUp__container__stepsTitle";
+        elementStepContent.appendChild(textContent);
+        stepContainer.push(elementStepContent);
     }
 
     const elementObservations = document.createElement("div");
     const textObservations = document.createTextNode(stepExecuted.observations);
-    elementObservations.className = "inscribete__step__observations";
+    elementObservations.className = "singUp__step__observations";
     elementObservations.appendChild(textObservations);
-    stepContainer.push(elementObservations);    
+    stepContainer.push(elementObservations);
     
     //montar en DOM    
     const containerOfStep = document.createElement("div");
-    containerOfStep.className = "inscribete__container";
+    containerOfStep.className = "singUp__container";
     containerOfStep.id = `step${stepExecuted.stepNumber}`;
     containerOfStep.dataset.number = stepExecuted.stepNumber;
     containerOfStep.append(...stepContainer);
 
-    nodeParent.append(containerOfStep);
+    searchmountNode(containerOfStep);    
 }
 
 const nextStep = function () {
@@ -134,19 +173,18 @@ const nextStep = function () {
     //const nodeNext =  document.querySelector(currentStep);
 }
 
-function createButton() {    
+function createButton() {
     const buttonSteps = document.createElement("div");
     buttonSteps.textContent = "SIGUIENTE";
     buttonSteps.className = "button";
     buttonSteps.id = "buttonSteps";
     buttonSteps.addEventListener("click", nextStep);
 
-    nodeParent.append(buttonSteps);
+    nodeParent.insertBefore(buttonSteps,nodeContainerSteps);
 }
 
 const allTheSteps = [stepOne, stepTwo, stepThree, stepFour, stepFive];
 let stepCounter = 1;
 
-createSteps(allTheSteps[0]);
 createButton();
-
+createSteps(allTheSteps[0]);

@@ -1,0 +1,72 @@
+:root {
+    /* Identidad gráfica del gobierno de México */
+    --redLight: #9F2241;
+    --redDark: #691C32;
+    --greenLight: #235B4E;
+    --greenDark: #10312B;
+    --brownLight: #DDC9A3;
+    --brownDark: #BC955C;
+    --grayLight: #98989A;
+    --grayDark: #6F7271;
+}
+
+.container__contactAndUbication {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.contact {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 1.5rem;
+    padding: 15px 35px;
+    color: var(--greenDark);
+}
+
+.contact h2:first-of-type {
+    display: flex;
+    flex-direction: column;
+    color: var(--redLight);
+    font-size: 1.8rem;
+    font-weight: 700;
+    padding: 20px 10px;
+}
+
+.email > h4 {
+    font-size: 1.7rem;
+    font-weight: 900;
+    padding: 8px 0;
+}
+
+.ubication {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100vw;
+}
+.ubication__map {
+    width: 90%;
+    height: 450px;
+    border: var(--greenDark) solid 2px;
+    border-radius: 10px;
+}
+
+.ubication > span {
+    font-size: 1.8rem;
+    text-align: justify;
+    max-width: 400px;
+    padding: 20px;
+    color: var(--redLight);
+}
+
+@media (min-width: 768px) {
+    .ubication {     
+        width: auto;
+    }
+
+    .ubication__map {
+        width: 650px;     
+    } 
+}

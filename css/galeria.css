@@ -1,3 +1,19 @@
-.container__gallery > img{
-    width: 45%;
+.container__gallery {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.container__gallery > img {
+    width: 90vw;
+    margin: 15px 0;
+    height: min-content;
+}
+
+@media (min-width: 390px) {
+
+    .container__gallery > img {
+        width: 350px;
+    }
 }

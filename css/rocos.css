@@ -1,0 +1,30 @@
+:root{
+    --greenDark: #10312B;
+}
+
+#rocos {
+    color: var(--greenDark);
+}
+.rocos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
+}
+
+.rocos--title {
+    font-size: 2.6rem;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.rocos__description {
+    font-size: 1.7rem;
+    padding: 10px 15px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.rocos__advertisement {
+    font-size: 2.2rem;
+    text-align: center;
+}

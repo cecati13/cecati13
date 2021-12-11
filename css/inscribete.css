@@ -10,52 +10,57 @@
     --grayDark: #6F7271;
 }
 
-.inscribete {
+.singUp {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center;    
 }
 
-.inscribete__title {
+.singUp__title {
     font-size: 2.2rem;
     text-align: center;
     padding: 20px;
 }
 
-.inscribete__container {
+.singUp__container {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
     min-width: 250px;
-    padding: 20px 0;
+    padding: 20px 15px;
     border: solid 2px var(--greenDark);
     border-radius: 30px;
-    margin: 0 5px;
+    margin: 10px 5px;
 }
 
-.inscribete__container__TitleNumber {
+.containerStepTitle{
+    text-align: center;
+}
+
+.singUp__container__TitleNumber {
     font-size: 2.5rem;
 }
 
-.inscribete__container__TitleNumber::after {
+.singUp__container__TitleNumber::after {
     content: ") ";
 }
 
-.inscribete__container__stepsTitle {
+.singUp__container__stepsTitle {
     font-size: 2rem;
+    text-align: center;
 }
 
-.inscribete__step--ol{    
+.singUp__step--ol {    
     padding: 25px 50px;
 }
 
-.inscribete__step--ol > li {
+.singUp__step--ol > li {
     font-size: 1.9rem;
     padding: 10px;
 }
 
-.inscribete__step__observations {
+.singUp__step__observations {
     background-color: var(--brownDark);    
     border: solid 1px var(--redLight);
     border-radius: 10px;
@@ -67,18 +72,36 @@
 }
 
 .button {
-    color: var(--brownLight);
     background-color: var(--greenDark);
-    font-size: 2.7rem;
     border-radius: 30px;
+    color: var(--brownLight);
+    font-size: 2.7rem;
     padding: 20px;
-    margin-top: 25px;
+    margin: 15px 0;
+    max-width: max-content;
 }
 
 .button:hover {
     cursor: pointer;
 }
 
+.button:visited, .button:link, .button:active {
+    color: var(--brownLight);
+}
+
 .button__hide {
     display: none;
+}
+
+@media (min-width: 768px) {
+    .singUp__container {
+        max-width: 350px;
+    }
+
+    .containerGeneralAllSteps{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        max-width: 768px;
+    }
 }
