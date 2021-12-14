@@ -1,0 +1,15 @@
+.educativeOffer {
+    display: flex;
+    justify-content: center;
+}
+
+.educativeOffer > object {
+    width: 92vw;
+    min-height: 75vh;
+}
+
+@media (min-width: 1024px) {
+    .educativeOffer > object {
+        max-width: 1200px;
+    }
+}
