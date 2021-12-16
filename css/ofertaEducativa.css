@@ -1,11 +1,19 @@
 .educativeOffer {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    font-size: 1.6rem;
 }
 
-.educativeOffer > object {
+.educativeOffer > iframe {
     width: 92vw;
     min-height: 75vh;
+}
+
+.educativeOffer__button {
+    background-color: var(--grayLight);
+    border: solid var(--grayDark) 3px;
 }
 
 @media (min-width: 1024px) {
