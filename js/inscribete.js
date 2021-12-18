@@ -1,4 +1,4 @@
-const registrationLink = "https://docs.google.com/forms/d/e/1FAIpQLSd66gRs37cyA9ttFND7chD5VDQ9PIhfE1M4Re110FgL-XbvXg/closedform";
+const registrationLink = "https://forms.gle/UwKxyZkwzjABd4pX6";
 const stepOne = {
     stepNumber: 1,
     title: "Ten a la mano...",
@@ -70,34 +70,6 @@ const textoh3 = document.createTextNode("Pasos para inscribirte a nuestros curso
 tituloH3.appendChild(textoh3);
 nodeParent.insertBefore(tituloH3,nodeContainerSteps);
 
-function searchLocationNode(childNodes) {
-    const startExpression = /^step/;    
-    let arrayElements= [];
-    
-    childNodes.find((element)=> {        
-        if(startExpression.test(element.id)) {
-            let valueTemp = element.id;
-            const findIndex = valueTemp.match(/\d/);
-            arrayElements.push(findIndex);
-        }        
-    });        
-    const indexFound = arrayElements.length;
-    const nodeFound = "step" + indexFound;
-    return nodeFound;
-}
-
-function searchmountNode(containerHTML) {
-    const convertNodeToArray = [...nodeContainerSteps.childNodes];
-    const nameNodeID = searchLocationNode(convertNodeToArray);
-    console.log("Valor de nameNodeID: " + nameNodeID);
-    if (nameNodeID === "step0") {
-        nodeContainerSteps.append(containerHTML);
-    }
-    const newNodeMount = document.getElementById(nameNodeID)
-    nodeContainerSteps.insertBefore(containerHTML,newNodeMount);
-    //aqui buscamos el nodo si ya exite y regresamos. pendiente orden
-}
-
 function createSteps (stepExecuted) {
     let stepContainer = [];
 
@@ -121,8 +93,8 @@ function createSteps (stepExecuted) {
     const isURL = /^https:/
     //evaluar tipo de dato en stepExecuted.content
     if (Array.isArray(stepContent)) {        
-        const containerListStep = document.createElement("ol");
-        containerListStep.className = "singUp__step--ol";
+        const containerListStep = document.createElement("ul");
+        containerListStep.className = "singUp__step--ul";
         for (let index = 0; index < stepContent.length; index++) {
             const element = stepContent[index];
             const requirementLI = document.createElement("li");
@@ -160,7 +132,8 @@ function createSteps (stepExecuted) {
     containerOfStep.dataset.number = stepExecuted.stepNumber;
     containerOfStep.append(...stepContainer);
 
-    searchmountNode(containerOfStep);    
+    nodeContainerSteps.appendChild(containerOfStep);
+    //searchmountNode(containerOfStep);    
 }
 
 const nextStep = function () {

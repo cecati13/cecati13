@@ -1,13 +1,10 @@
-:root {
-    /* Identidad gráfica del gobierno de México */
-    --redLight: #9F2241;
-    --redDark: #691C32;
-    --greenLight: #235B4E;
-    --greenDark: #10312B;
-    --brownLight: #DDC9A3;
-    --brownDark: #BC955C;
-    --grayLight: #98989A;
-    --grayDark: #6F7271;
+:root {    
+    --fontColor: #9F2241;
+    --fontColor2: #691C32;
+    --contrastColor: #4c4573;
+    --contrastColor2: #334969;
+    --mainColor: #f2e1e7;
+    --mainColor2: #a36880;    
 }
 
 .singUp {
@@ -29,7 +26,7 @@
     align-items: center;
     min-width: 250px;
     padding: 20px 15px;
-    border: solid 2px var(--greenDark);
+    border: solid 2px var(--contrastColor);
     border-radius: 30px;
     margin: 10px 5px;
 }
@@ -51,19 +48,20 @@
     text-align: center;
 }
 
-.singUp__step--ol {    
+.singUp__step--ul {    
     padding: 25px 50px;
+    list-style: circle;
 }
 
-.singUp__step--ol > li {
+.singUp__step--ul > li {
     font-size: 1.9rem;
     padding: 10px;
 }
 
 .singUp__step__observations {
-    background-color: var(--brownDark);    
-    border: solid 1px var(--redLight);
-    border-radius: 10px;
+    background-color: var(--contrastColor2); 
+    color: var(--mainColor);   
+    border-radius: 4px;
     font-size: 1.6rem;
     max-width: 340px;
     padding: 15px;
@@ -72,9 +70,9 @@
 }
 
 .button {
-    background-color: var(--greenDark);
+    background-color: var(--contrastColor2);
     border-radius: 30px;
-    color: var(--brownLight);
+    color: var(--mainColor);
     font-size: 2.7rem;
     padding: 20px;
     margin: 15px 0;
@@ -86,7 +84,7 @@
 }
 
 .button:visited, .button:link, .button:active {
-    color: var(--brownLight);
+    color: var(--mainColor);
 }
 
 .button__hide {
@@ -99,8 +97,8 @@
     }
 
     .containerGeneralAllSteps{
-        display: flex;
-        flex-wrap: wrap;
+        display: flex;        
+        flex-wrap: wrap-reverse;
         justify-content: space-around;
         max-width: 768px;
     }

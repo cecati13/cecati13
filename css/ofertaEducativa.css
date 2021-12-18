@@ -1,19 +1,33 @@
+:root {    
+    --fontColor: #9F2241;
+    --fontColor2: #691C32;
+    --contrastColor: #4c4573;
+    --contrastColor2: #334969;
+    --mainColor: #f2e1e7;
+    --mainColor2: #a36880;
+}
+
 .educativeOffer {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-size: 1.6rem;
+    font-size: 1.6rem;    
 }
 
 .educativeOffer > iframe {
     width: 92vw;
     min-height: 75vh;
+    border: var(--contrastColor2) solid 2px;
+    border-radius: 10px;
 }
 
 .educativeOffer__button {
-    background-color: var(--grayLight);
-    border: solid var(--grayDark) 3px;
+    padding: 12px 25px;
+}
+
+.educativeOffer__button:visited {
+    color: var(--mainColor);
 }
 
 @media (min-width: 1024px) {

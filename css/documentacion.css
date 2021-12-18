@@ -1,3 +1,12 @@
+:root {    
+    --fontColor: #9F2241;
+    --fontColor2: #691C32;
+    --contrastColor: #4c4573;
+    --contrastColor2: #334969;
+    --mainColor: #f2e1e7;
+    --mainColor2: #a36880;
+}
+
 .documentation {
     display: flex;
     flex-direction: column;
@@ -26,9 +35,10 @@
     padding: 20px;
 }
 
-iframe {
+iframe {    
     width: 90%;
-
+    border: var(--contrastColor2) solid 2px;
+    border-radius: 10px;
 }
 
 @media (min-width: 768px) {

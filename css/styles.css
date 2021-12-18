@@ -1,13 +1,10 @@
-:root {
-    /* Identidad gráfica del gobierno de México */
-    --redLight: #9F2241;
-    --redDark: #691C32;
-    --greenLight: #235B4E;
-    --greenDark: #10312B;
-    --brownLight: #DDC9A3;
-    --brownDark: #BC955C;
-    --grayLight: #98989A;
-    --grayDark: #6F7271;
+:root {    
+    --fontColor: #9F2241;
+    --fontColor2: #691C32;
+    --contrastColor: #4c4573;
+    --contrastColor2: #334969;
+    --mainColor: #f2e1e7;
+    --mainColor2: #a36880;
 }
 
 * {
@@ -22,40 +19,39 @@ html {
 }
 
 body {    
-    background-color: var(--brownLight);    
+    background-color: var(--mainColor);    
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .header {
-    color: var(--redLight);
+    color: var(--fontColor);
     width: 100vw;
     display: flex;
     flex-direction: column;
 }
 
 .menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: fixed;
-    width: 100vw;
-    height: 55px;
-    z-index: 3;    
+    width: 65px;
+    height: 65px;
+    z-index: 3;
+    cursor: pointer;
+    border: solid 3px var(--contrastColor2);
+    background-color: var(--mainColor);
+    border-radius: 50%;
+    bottom: 5px;
+    right: 5px;
 }
 
 .menu__mobile {
-    stroke: var(--redLight);
+    stroke: var(--contrastColor2);
     height: 35px;
-    z-index: 4;
-    display: block;
-    cursor: pointer;
-    position: absolute;
-    right: 0;
-    margin: 15px 15px 0 0; 
-    background-color: var(--brownLight);
-  }
-
-  .menu__mobile--background {
-      background-color: var(--brownDark);
   }
 
 .header__port {
@@ -66,7 +62,7 @@ body {
 }
 
 .header__port--imgSEP {    
-    margin-top: 45px;
+    margin-top: 25px;
     width: 150px;
 }
 
@@ -103,12 +99,12 @@ body {
     position: fixed;    
     padding: 55px 0 20px 0;
     right: 0;
-    background: linear-gradient(45deg, var(--brownLight), var(--brownDark));
+    background: linear-gradient(45deg, var(--mainColor), var(--mainColor2));
     border-radius: 0 0 0 15px;
-    border-bottom: solid var(--redLight) 2px;
-    border-left: solid var(--redLight) 2px;
+    border-bottom: solid var(--fontColor) 2px;
+    border-left: solid var(--fontColor) 2px;
     z-index: 2;
-    color: var(--redDark);
+    color: var(--fontColor2);
 }
 
 ul {    
@@ -120,7 +116,7 @@ a {
 }
 
 a, a:visited, a:active{
-    color: var(--redLight);
+    color: var(--fontColor);
 }
 
 .nav__show--ul li {
@@ -131,7 +127,7 @@ a, a:visited, a:active{
 .main {
     display: flex;
     justify-content: center;
-    color: var(--redLight);
+    color: var(--fontColor);
     width: 100vw;    
 }
 
@@ -201,7 +197,7 @@ a, a:visited, a:active{
 
 .main__container__advertisements {
     font-size: 2.4rem;
-    color: var(--greenLight);    
+    color: var(--contrastColor);    
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -237,39 +233,36 @@ a, a:visited, a:active{
 .button__link {
     max-width: 230px;
     padding: 10px;
-    color: var(--redLight);    
-    border: solid var(--greenDark) 3px;
+    color: var(--mainColor);    
+    background-color: var(--contrastColor2);
     border-radius: 25px;
     font-size: 1.2em;
     margin: 10px;
     text-align: center;
 }
 
-.buttonAnimate {
-    background-color: var(--redLight);
-    position: relative;
-    color: var(--brownLight);
+.buttonAnimate {    
+    position: relative;    
     animation: oferta 10s ease 5s infinite normal forwards;
 }
 
 @keyframes oferta {
     0% {
-        transform: rotate(10deg) scale(0.8);
+        transform: scale(0.8);
     }
     50% {
-        transform: rotate(0deg) scale(1.2);
+        transform:scale(1.2);
     }
     100% {
-        transform:  rotate(10deg) scale(0.8);
+        transform:scale(0.8);
     }
 }
-
 .footer {
     font-size: 1.7rem;
     margin-top: auto;
     min-height: 50px;
     width: 100vw; 
-    background: linear-gradient(var(--brownLight), var(--brownDark));
+    background: linear-gradient(var(--mainColor), var(--mainColor2));
 }
 
 .footer__contact {
@@ -284,17 +277,18 @@ a, a:visited, a:active{
     text-align: center;
 }
 .line {
-    background: var(--redLight);
+    background: var(--fontColor);
     height: 5px;
     width: 100%;
     display: block;
     margin: 15px 0;
 }
 
-#contacto, #documentacion, 
-#especialidades, #inscribete,
+#contacto, #documentation, 
+#especialidades, #signUp,
 #ofertaEducativa, #rocos{
-    color: var(--redLight);
+    color: var(--contrastColor2);
+    max-width: 1024px;
 }
 
 @media (min-width: 768px) {
@@ -307,7 +301,7 @@ a, a:visited, a:active{
     }
 
     .header {
-        color: var(--redLight);
+        color: var(--fontColor);
         min-height: 100px;
     }
     
@@ -357,7 +351,7 @@ a, a:visited, a:active{
         min-height: 70px;
         max-width: 1024px;        
         border-radius: 10px;
-        border: var(--greenDark) 4px solid;       
+        border: var(--contrastColor2) 4px solid;       
     }
 
     .nav__show--ul > li {

@@ -1,10 +1,3 @@
-:root{
-    --greenDark: #10312B;
-}
-
-#rocos {
-    color: var(--greenDark);
-}
 .rocos {
     display: flex;
     flex-direction: column;
