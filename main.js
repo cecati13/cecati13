@@ -2,56 +2,56 @@ const pageDataLinks = [
     {
         page: "home",
         content: "Inicio",
-        link: "../index.html",
+        link: "./index.html",
         ubication: "NAV",
         attribute: false
     },
     {
         page: "specialties",
         content: "Especialidades",
-        link: "../html/Especialidades.html",
+        link: "./html/Especialidades.html",
         ubication: "NAV",
         attribute: false
     },
     {
         page: "offer",
         content: "Oferta Educativa",
-        link: "../html/OfertaEducativa.html",
+        link: "./html/OfertaEducativa.html",
         ubication: "NAV",
         attribute: false
     },
     {
         page: "inscription",
         content: "Inscripción",
-        link: "../html/Inscribete.html",
+        link: "./html/Inscribete.html",
         ubication: "NAV",
         attribute: false
     },
     {
         page: "documentation",
         content: "Documentación",
-        link: "../html/Documentacion.html",
+        link: "./html/Documentacion.html",
         ubication: "NAV",
         attribute: false
     },
     {
         page: "roco",
         content: "ROCO",
-        link: "../html/Rocos.html",
+        link: "./html/Rocos.html",
         ubication: "NAV",
         attribute: false
     },
     {
         page: "gallery",
         content: "Galería",
-        link: "../html/Galeria.html",
+        link: "./html/Galeria.html",
         ubication: "NAV",
         attribute: false
     },
     {
         page: "contact",
         content: "Contacto",
-        link: "../html/Contacto.html",
+        link: "./html/Contacto.html",
         ubication: "FOOTER",
         attribute: false
     },
@@ -98,8 +98,9 @@ function createUL (typeclass) {
 function contentCreation(element) {
     const li = document.createElement("li");
     const aHtml = document.createElement("a");
-    aHtml.textContent = element.content;
+    aHtml.textContent = element.content;    
     aHtml.href = element.link;
+    console.log(aHtml.href)    
     if (typeof(element.attribute) === "object") {        
         aHtml.target = element.attribute.target;
     }
@@ -107,11 +108,12 @@ function contentCreation(element) {
         aHtml.className = "nav__show--ul__link";
         li.appendChild(aHtml);
         navMenu.appendChild(li);
-    } else {
-        
+    } else {        
         li.appendChild(aHtml);
         footerMenu.appendChild(li);
     }
+    console.log(navMenu.childNodes)
+    console.log(footerMenu.childNodes)
 }
 
 //crear menu NAV y FOOTER
@@ -126,4 +128,3 @@ menu.addEventListener("click", ()=> {
     nav.classList.toggle("nav__hide");
     nav.classList.toggle("nav__show");    
 })
-
