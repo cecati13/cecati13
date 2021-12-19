@@ -5,15 +5,31 @@
     justify-content: space-evenly;
 }
 
-.container__gallery > img {
-    width: 90vw;
-    margin: 15px 0;
+.container__gallery figure {
+    background-color: var(--contrastColor2);
+    color: var(--mainColor);
+    border: solid 1.5px var(--contrastColor2);
+    border-radius: 5px;
+    font-size: 1.4rem;
+    text-align: center;
+    margin: 20px;
+    min-height: 50px;
+    min-width: 50px;
+}
+
+.container__gallery img {
+    border-radius: 5px;
     height: min-content;
+    width: 90vw;
+}
+
+.container__gallery figcaption {
+    padding-bottom: 8px;
 }
 
 @media (min-width: 390px) {
 
-    .container__gallery > img {
+    .container__gallery img {
         width: 350px;
     }
 }

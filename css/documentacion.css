@@ -1,12 +1,3 @@
-:root {    
-    --fontColor: #9F2241;
-    --fontColor2: #691C32;
-    --contrastColor: #4c4573;
-    --contrastColor2: #334969;
-    --mainColor: #f2e1e7;
-    --mainColor2: #a36880;
-}
-
 .documentation {
     display: flex;
     flex-direction: column;
