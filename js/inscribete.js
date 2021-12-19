@@ -114,7 +114,8 @@ function createSteps (stepExecuted) {
     } else {        
         const elementStepContent = document.createElement("div");
         const textContent = document.createTextNode(stepContent);
-        elementStepContent.className = "singUp__container__stepsTitle";
+        //crear nueva clase para contrar
+        elementStepContent.className = "singUp__step--content";
         elementStepContent.appendChild(textContent);
         stepContainer.push(elementStepContent);
     }

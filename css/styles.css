@@ -1,10 +1,10 @@
 :root {    
-    --fontColor: #9F2241;
+    --fontColor: #972648;
     --fontColor2: #691C32;
-    --contrastColor: #4c4573;
-    --contrastColor2: #334969;
-    --mainColor: #f2e1e7;
-    --mainColor2: #a36880;
+    --contrastColor: #43655a;
+    --contrastColor2: #628281;
+    --mainColor: #ffffff;
+    --mainColor2: #b1bdc5;
 }
 
 * {
@@ -94,15 +94,13 @@ body {
     display: flex;
     justify-content: center;    
     font-size: 2rem;
-    font-weight: 500;
-    width: 250px;
+    font-weight: 700;
+    width: 100vw;
     position: fixed;    
-    padding: 55px 0 20px 0;
-    right: 0;
+    padding: 10px 0 10px 0;    
     background: linear-gradient(45deg, var(--mainColor), var(--mainColor2));
-    border-radius: 0 0 0 15px;
-    border-bottom: solid var(--fontColor) 2px;
-    border-left: solid var(--fontColor) 2px;
+    border-radius: 0 0 15px 15px;
+    border-bottom: solid var(--fontColor) 4px;    
     z-index: 2;
     color: var(--fontColor2);
 }
@@ -121,7 +119,7 @@ a, a:visited, a:active{
 
 .nav__show--ul li {
     text-align: center;
-    padding: 20px 0;
+    padding: 18px 0;
 }
 
 .main {
@@ -248,13 +246,13 @@ a, a:visited, a:active{
 
 @keyframes oferta {
     0% {
-        transform: scale(0.8);
+        transform: scale(1);
     }
     50% {
         transform:scale(1.2);
     }
     100% {
-        transform:scale(0.8);
+        transform:scale(0.9);
     }
 }
 .footer {

@@ -1,12 +1,3 @@
-:root {    
-    --fontColor: #9F2241;
-    --fontColor2: #691C32;
-    --contrastColor: #4c4573;
-    --contrastColor2: #334969;
-    --mainColor: #f2e1e7;
-    --mainColor2: #a36880;    
-}
-
 .singUp {
     display: flex;
     flex-direction: column;
@@ -19,14 +10,22 @@
     padding: 20px;
 }
 
+.containerGeneralAllSteps{
+    display: flex;        
+    flex-wrap: wrap-reverse;
+    justify-content: space-around;
+    max-width: 768px;
+}
+
 .singUp__container {
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: center;
-    min-width: 250px;
+    min-width: 310px;
+    min-height: 360px;
     padding: 20px 15px;
-    border: solid 2px var(--contrastColor);
+    border: solid 2px var(--fontColor2);
     border-radius: 30px;
     margin: 10px 5px;
 }
@@ -36,7 +35,7 @@
 }
 
 .singUp__container__TitleNumber {
-    font-size: 2.5rem;
+    font-size: 3rem;
 }
 
 .singUp__container__TitleNumber::after {
@@ -44,7 +43,7 @@
 }
 
 .singUp__container__stepsTitle {
-    font-size: 2rem;
+    font-size: 2.5rem;
     text-align: center;
 }
 
@@ -58,13 +57,19 @@
     padding: 10px;
 }
 
+.singUp__step--content {
+    padding: 20px;
+    font-size: 1.9rem;
+    text-align: center;
+}
+
 .singUp__step__observations {
     background-color: var(--contrastColor2); 
     color: var(--mainColor);   
     border-radius: 4px;
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     max-width: 340px;
-    padding: 15px;
+    padding: 20px;
     margin: 10px;
     text-align: center;
 }
@@ -94,12 +99,5 @@
 @media (min-width: 768px) {
     .singUp__container {
         max-width: 350px;
-    }
-
-    .containerGeneralAllSteps{
-        display: flex;        
-        flex-wrap: wrap-reverse;
-        justify-content: space-around;
-        max-width: 768px;
     }
 }

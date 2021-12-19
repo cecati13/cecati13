@@ -1,1 +1,0 @@
-alert("Tenemos nueva oferta educativa");

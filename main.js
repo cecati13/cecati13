@@ -1,58 +1,68 @@
+//verificar que no hay puerto definido
+const verifyingRegularExpression = /\d\d\d\d/
+let URL_hostname = "https://dvnegrete.github.io/cecati13";
+
+const verify = verifyingRegularExpression.test(window.location.port) 
+if (verify) {
+//estamos en localhost
+    URL_hostname = ".."
+}
+
 const pageDataLinks = [   
     {
         page: "home",
         content: "Inicio",
-        link: "./index.html",
+        link: "/index.html",
         ubication: "NAV",
         attribute: false
     },
     {
         page: "specialties",
         content: "Especialidades",
-        link: "./html/Especialidades.html",
+        link: "/html/Especialidades.html",
         ubication: "NAV",
         attribute: false
     },
     {
         page: "offer",
         content: "Oferta Educativa",
-        link: "./html/OfertaEducativa.html",
+        link: "/html/OfertaEducativa.html",
         ubication: "NAV",
         attribute: false
     },
     {
         page: "inscription",
         content: "Inscripción",
-        link: "./html/Inscribete.html",
+        link: "/html/Inscribete.html",
         ubication: "NAV",
         attribute: false
     },
     {
         page: "documentation",
         content: "Documentación",
-        link: "./html/Documentacion.html",
-        ubication: "NAV",
+        link: "/html/Documentacion.html",
+        ubication: "FOOTER",
         attribute: false
     },
     {
         page: "roco",
         content: "ROCO",
-        link: "./html/Rocos.html",
-        ubication: "NAV",
+        link: "/html/Rocos.html",
+        ubication: "FOOTER",
         attribute: false
     },
     {
         page: "gallery",
-        content: "Galería",
-        link: "./html/Galeria.html",
+        content: "Galería de Imágenes",
+        link: "/html/Galeria.html",
         ubication: "NAV",
         attribute: false
     },
     {
         page: "contact",
         content: "Contacto",
-        link: "./html/Contacto.html",
-        ubication: "FOOTER",
+        link: "/html/Contacto.html",
+        ubication: "NAV",
         attribute: false
     },
     {
@@ -65,23 +75,23 @@ const pageDataLinks = [
         }
     },
     {
-        page: "facebook-group",
-        content: "Grupo de Programación en Facebook",
-        link: "https://es-la.facebook.com/groups/1537489526570773/",
-        ubication: "FOOTER",
-        attribute: {
-            target: "_blank"
-        }
-    },    
-    {
         page: "facebook",
-        content: "Página de Facebook",
+        content: "Facebook",
         link: "https://www.facebook.com/cecati.trece/about",
         ubication: "FOOTER",
         attribute: {
             target: "_blank"
         }
     },
+    {
+        page: "youtube",
+        content: "YouTube",
+        link: "https://www.youtube.com/channel/UC5LX_ksGHFpydgsMJdWCv0A",
+        ubication: "FOOTER",
+        attribute: {
+            target: "_blank"
+        }
+    },    
 ];
 
 const menu = document.getElementById("menu");
@@ -98,9 +108,8 @@ function createUL (typeclass) {
 function contentCreation(element) {
     const li = document.createElement("li");
     const aHtml = document.createElement("a");
-    aHtml.textContent = element.content;    
-    aHtml.href = element.link;
-    console.log(aHtml.href)    
+    aHtml.textContent = element.content;
+    aHtml.href = URL_hostname + element.link;
     if (typeof(element.attribute) === "object") {        
         aHtml.target = element.attribute.target;
     }
