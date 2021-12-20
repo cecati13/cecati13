@@ -95,6 +95,10 @@ const pageDataLinks = [
 ];
 
 const menu = document.getElementById("menu");
+const menuSVG = ["lineSpin1", "lineSpin2", "lineSpinHide"];
+// const lineSpinHide = document.getElementById("lineSpinHide");
+// const lineSpin1 = document.getElementById("lineSpin1");
+// const lineSpin2 = document.getElementById("lineSpin2");
 const nav = document.getElementById("navigator");
 const footer = document.querySelector("#footer");
 
@@ -110,6 +114,10 @@ function contentCreation(element) {
     const aHtml = document.createElement("a");
     aHtml.textContent = element.content;
     aHtml.href = URL_hostname + element.link;
+    const absolutePath = /^https?:\/\//i;    
+    if (absolutePath.test(element.link)) {
+        aHtml.href = element.link
+    }
     if (typeof(element.attribute) === "object") {        
         aHtml.target = element.attribute.target;
     }
@@ -124,6 +132,10 @@ function contentCreation(element) {
     console.log(navMenu.childNodes)
     console.log(footerMenu.childNodes)
 }
+function menuAnimation(element) {
+    const nodeLineSVG = document.querySelector(`#${element}`);
+    nodeLineSVG.classList.toggle(element);
+}
 
 //crear menu NAV y FOOTER
 const navMenu = createUL("nav__show--ul");
@@ -134,6 +146,10 @@ footer.appendChild(footerMenu);
 
 //Abrir y cerrar menu en Mobile
 menu.addEventListener("click", ()=> {    
+    if (nav.classList.contains("nav__hide")) {
+        window.scroll(top);
+    }    
+    menuSVG.map(menuAnimation);
     nav.classList.toggle("nav__hide");
     nav.classList.toggle("nav__show");    
 })

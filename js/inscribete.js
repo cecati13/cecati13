@@ -154,7 +154,7 @@ function createButton() {
     buttonSteps.id = "buttonSteps";
     buttonSteps.addEventListener("click", nextStep);
 
-    nodeParent.insertBefore(buttonSteps,nodeContainerSteps);
+    nodeParent.appendChild(buttonSteps);
 }
 
 const allTheSteps = [stepOne, stepTwo, stepThree, stepFour, stepFive];

@@ -12,7 +12,7 @@
 
 .containerGeneralAllSteps{
     display: flex;        
-    flex-wrap: wrap-reverse;
+    flex-wrap: wrap;
     justify-content: space-around;
     max-width: 768px;
 }
@@ -48,13 +48,13 @@
 }
 
 .singUp__step--ul {    
-    padding: 25px 50px;
+    padding: 10px 50px;
     list-style: circle;
 }
 
 .singUp__step--ul > li {
     font-size: 1.9rem;
-    padding: 10px;
+    padding: 4px;
 }
 
 .singUp__step--content {
@@ -70,7 +70,7 @@
     font-size: 1.5rem;
     max-width: 340px;
     padding: 20px;
-    margin: 10px;
+    margin: 0 10px;
     text-align: center;
 }
 

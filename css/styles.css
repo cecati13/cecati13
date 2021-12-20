@@ -45,13 +45,26 @@ body {
     border: solid 3px var(--contrastColor2);
     background-color: var(--mainColor);
     border-radius: 50%;
-    bottom: 5px;
-    right: 5px;
+    bottom: 10px;
+    right:10px;
 }
 
 .menu__mobile {
     stroke: var(--contrastColor2);
     height: 35px;
+    padding: 4px;
+  }
+
+.lineSpin1 {
+    transform: translate(31px, -22px) rotate(45deg);
+}
+
+.lineSpin2 {
+    transform: translate(40px, 3px) rotate(135deg);
+}
+
+.lineSpinHide {
+      display: none;      
   }
 
 .header__port {
@@ -68,6 +81,7 @@ body {
 
 .header__port__title {
     text-align: center;
+    margin-bottom: 10px;
 }
 
 .header__port--C13 {
@@ -96,11 +110,11 @@ body {
     font-size: 2rem;
     font-weight: 700;
     width: 100vw;
-    position: fixed;    
+    position: sticky;
     padding: 10px 0 10px 0;    
-    background: linear-gradient(45deg, var(--mainColor), var(--mainColor2));
-    border-radius: 0 0 15px 15px;
-    border-bottom: solid var(--fontColor) 4px;    
+    background: linear-gradient(var(--mainColor), var(--mainColor2));
+    /* border-radius: 0 0 15px 15px;
+    border-bottom: solid var(--fontColor) 4px;     */
     z-index: 2;
     color: var(--fontColor2);
 }
@@ -279,7 +293,7 @@ a, a:visited, a:active{
     height: 5px;
     width: 100%;
     display: block;
-    margin: 15px 0;
+    margin-bottom: 15px;
 }
 
 #contacto, #documentation, 
@@ -312,7 +326,7 @@ a, a:visited, a:active{
     
     .header__port__title {
         text-align: center;
-        padding: 10px;
+        padding: 10px;        
     }
 
     .header__port__title--h1 {
@@ -349,7 +363,8 @@ a, a:visited, a:active{
         min-height: 70px;
         max-width: 1024px;        
         border-radius: 10px;
-        border: var(--contrastColor2) 4px solid;       
+        border: var(--contrastColor2) 4px solid;
+        margin-bottom: 10px;
     }
 
     .nav__show--ul > li {
