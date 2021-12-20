@@ -134,11 +134,19 @@ function createSteps (stepExecuted) {
     containerOfStep.append(...stepContainer);
 
     nodeContainerSteps.appendChild(containerOfStep);
+    //ubicacion de nodo
+    const node = `#step${stepExecuted.stepNumber}`;
+    return node;
     //searchmountNode(containerOfStep);    
 }
 
 const nextStep = function () {
-    createSteps(allTheSteps[stepCounter]);
+    const nodeStep = createSteps(allTheSteps[stepCounter]);
+    const newNode = document.querySelector(nodeStep);
+    debugger
+    const positionX = newNode.getBoundingClientRect().x;
+    const positionY = newNode.getBoundingClientRect().y;
+    () => {window.scroll(positionX, positionY)}
     stepCounter++;    
     if (stepCounter === allTheSteps.length) {
         const buttonSteps = document.querySelector("#buttonSteps");

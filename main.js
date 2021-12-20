@@ -129,8 +129,6 @@ function contentCreation(element) {
         li.appendChild(aHtml);
         footerMenu.appendChild(li);
     }
-    console.log(navMenu.childNodes)
-    console.log(footerMenu.childNodes)
 }
 function menuAnimation(element) {
     const nodeLineSVG = document.querySelector(`#${element}`);
