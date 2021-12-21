@@ -474,7 +474,7 @@ function infoSpecialitie(specialitie) {
 }
 
 function showInfo(array) {
-    const container = document.createElement("div");
+    const container = document.createElement("div");    
     const title = document.createElement("h3");
     title.textContent = array[0];
     container.appendChild(title);
@@ -497,10 +497,25 @@ function showInfo(array) {
     return container;
 }
 
+
+const closedInformation = function () {
+    do {
+        let soon = nodeResult.firstChild;
+        nodeResult.removeChild(soon);
+    } while (nodeResult.childNodes.length > 0);
+    mountSpecialities.classList.toggle("result__hide");
+}
 const locate = function (e) {
+    mountSpecialities.classList.toggle("result__hide");
     const specialitie = e.target.dataset.specialities;
-    const containerInfo = infoSpecialitie(specialitie);
-    nodeResult.append(...containerInfo);
+    
+    const buttonClose = document.createElement("div")
+    buttonClose.textContent = "X";
+    buttonClose.className = "button__close";
+    
+    buttonClose.addEventListener("click", ()=> closedInformation());
+    const containerInfo = infoSpecialitie(specialitie);    
+    nodeResult.append(buttonClose, ...containerInfo);
 }
 
 const showSpecilities = getSpecialities(BD_SPECIALITIES);

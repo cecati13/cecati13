@@ -1,0 +1,15 @@
+.specialities {
+    font-size: 1.9rem;
+    cursor: pointer;
+}
+
+.button__close {
+    font-size: 2.5rem;
+    color: var(--fontColor2);
+    padding: 20px;
+    cursor: pointer;
+}
+
+.result__hide {
+    display: none;
+}

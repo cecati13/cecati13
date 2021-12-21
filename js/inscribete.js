@@ -142,11 +142,10 @@ function createSteps (stepExecuted) {
 
 const nextStep = function () {
     const nodeStep = createSteps(allTheSteps[stepCounter]);
-    const newNode = document.querySelector(nodeStep);
-    debugger
+    const newNode = document.querySelector(nodeStep);    
     const positionX = newNode.getBoundingClientRect().x;
     const positionY = newNode.getBoundingClientRect().y;
-    () => {window.scroll(positionX, positionY)}
+    const position = window.scroll(positionX, positionY);    
     stepCounter++;    
     if (stepCounter === allTheSteps.length) {
         const buttonSteps = document.querySelector("#buttonSteps");
