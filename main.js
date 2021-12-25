@@ -1,6 +1,7 @@
 //verificar que no hay puerto definido
 const verifyingRegularExpression = /\d\d\d\d/
 let URL_hostname = "https://dvnegrete.github.io/cecati13";
+//URL cecati13: "https://cecati13.com.mx"
 
 const verify = verifyingRegularExpression.test(window.location.port) 
 if (verify) {

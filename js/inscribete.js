@@ -9,11 +9,10 @@ const stepOne = {
         "Documento de último grado de estudios."        
     ],
     observations: 
-        `Correo electrónico y número de whatsapp, 
-        Estan serán las vias de comunicación para 
-        brindarte indicaciones e información del curso.
-        Asegurate que estos datos sean correctos, 
-        de lo contrario no podremos comunicarnos contigo.`
+        `Usaremos correo electrónico y WhatsApp para comunicarnos contigo  
+        y brindarte algunas indicaciones e información del curso.
+        Por favor, asegúrate que estos datos sean correctos.`
+
 }
 
 const stepTwo = {
@@ -22,9 +21,8 @@ const stepTwo = {
     content: registrationLink,
     //aqui hay que usar expresiones regulares para saber si es una URL
     observations: 
-        `Registra correctamente tus datos y los datos del curso.
-        Los registro mal elaborados no se tomarán en cuenta para
-        el proceso de inscripción.`,    
+        `Registra correctamente tus datos personales y los datos del curso que deseas tomar.
+        Los registros mal elaborados no se tomarán en cuenta para el proceso de inscripción.`,    
 }
 
 const stepThree = {
@@ -32,7 +30,7 @@ const stepThree = {
     title: "Espera...",
     content: 
         `En cuanto te asignemos un lugar, te enviaremos un correo 
-        para confirmar tu lugar y la cuenta del plantel para que 
+        de confirmación y la cuenta bancaria del plantel para que 
         puedas realizar tú depósito.`
     ,
     observations: "Limitado a 25 alumnos por curso"
@@ -57,7 +55,7 @@ const stepFive = {
     observations: 
         `Recuerda que tenemos cupo limitado, en caso de no 
         recibir correo de respuesta, es posible que el curso 
-        ya haya alcanzado su cupo máximo.`
+        haya alcanzado su cupo máximo.`
 }
 
 const nodeParent = document.getElementById("signUp");
@@ -142,11 +140,11 @@ function createSteps (stepExecuted) {
 
 const nextStep = function () {
     const nodeStep = createSteps(allTheSteps[stepCounter]);
-    const newNode = document.querySelector(nodeStep);    
-    const positionX = newNode.getBoundingClientRect().x;
-    const positionY = newNode.getBoundingClientRect().y;
-    const position = window.scroll(positionX, positionY);    
-    stepCounter++;    
+    const newNode = document.querySelector(nodeStep);
+    // const positionX = newNode.getBoundingClientRect().x;
+    // const positionY = newNode.getBoundingClientRect().y;
+    // window.scroll(positionX, positionY);
+    stepCounter++;
     if (stepCounter === allTheSteps.length) {
         const buttonSteps = document.querySelector("#buttonSteps");
         buttonSteps.classList.add("button__hide")        

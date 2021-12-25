@@ -1,15 +1,74 @@
 .specialities {
-    font-size: 1.9rem;
+    color: var(--fontColor);
+    font-size: 1.9rem;    
+}
+
+.specialities__UL {
+    padding: 5px;
+    text-align: center;
+}
+
+.specialities__UL--list {
+    padding: 10px;
     cursor: pointer;
 }
 
 .button__close {
-    font-size: 2.5rem;
-    color: var(--fontColor2);
-    padding: 20px;
+    font-size: 4.5rem;
+    font-family: monospace;
+    color: var(--fontColor);
+    padding: 10px 60px;
+    font-weight: 900;
     cursor: pointer;
 }
 
 .result__hide {
     display: none;
+}
+
+.result {
+    color: var(--contrastColor);
+    font-size: 1.9rem;
+    display: flex;
+    flex-direction: column;
+    width: 340px;
+}
+
+.result__container {
+    padding: 20px 10px;
+    
+}
+
+.result__container--title {    
+    font-weight: 600;
+    text-align: center;
+    width: inherit;
+}
+
+.result__container__description {
+    padding: 20px;
+    color: var(--fontColor2);
+    text-align: justify;    
+}
+
+.result__container__description--UL {
+    color: var(--fontColor);
+    padding: 20px;
+    text-align: center;
+}
+
+.result--li {
+    cursor: default;
+}
+
+@media (min-width: 768px) {
+    .result {
+        width: 740px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .result {
+        width: 1024px;
+    }
 }

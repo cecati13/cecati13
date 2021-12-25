@@ -432,6 +432,7 @@ const nodeResult = document.getElementById("result");
 
 function createLI (data, name) {
     const nodeLI = document.createElement("li");
+    nodeLI.className = "specialities__UL--list"
     nodeLI.textContent = name;
     //problema futuro con el dataset specialities al reusar en courses
     nodeLI.dataset.specialities = data;
@@ -440,6 +441,7 @@ function createLI (data, name) {
 
 function getSpecialities (object) {
     const containerUL = document.createElement("ul");
+    containerUL.className = "specialities__UL";
     for (const key in object) {
         if (Object.hasOwnProperty.call(object, key)) {          
             const name = object[key].name;
@@ -470,33 +472,37 @@ function infoSpecialitie(specialitie) {
         const containerCourses = showInfo(courses);
 
     const containerResult = [containerObjetive, containerLaborField, containerCourses];
-    return containerResult;        
+    return containerResult;
 }
 
 function showInfo(array) {
-    const container = document.createElement("div");    
+    const container = document.createElement("div");
+    container.className = "result__container"
     const title = document.createElement("h3");
+    title.className = "result__container--title"
     title.textContent = array[0];
     container.appendChild(title);
     if (Array.isArray(array[1])) {        
         const courses = array[1]
         const description = document.createElement("ul");
+        description.className = "result__container__description--UL"
         for (let i = 0; i < courses.length; i++) {
             const element = courses[i];
             //dataset para conectarlo en el futuro con BD de oferta educativa
             const data = "conexionFutura";            
             const li = createLI(data, element);
+            li.classList.add("result--li") 
             description.appendChild(li);
         }
         container.appendChild(description);
     } else {
         const description = document.createElement("p");
+        description.className = "result__container__description";
         description.textContent = array[1];
         container.appendChild(description);
     }    
     return container;
 }
-
 
 const closedInformation = function () {
     do {
@@ -505,17 +511,22 @@ const closedInformation = function () {
     } while (nodeResult.childNodes.length > 0);
     mountSpecialities.classList.toggle("result__hide");
 }
+
+const buttonClosed = function () {
+    const buttonClose = document.createElement("div")
+    buttonClose.textContent = "X";
+    buttonClose.className = "button__close";    
+    buttonClose.addEventListener("click", ()=> closedInformation());
+    return buttonClose;
+}
+
 const locate = function (e) {
     mountSpecialities.classList.toggle("result__hide");
     const specialitie = e.target.dataset.specialities;
-    
-    const buttonClose = document.createElement("div")
-    buttonClose.textContent = "X";
-    buttonClose.className = "button__close";
-    
-    buttonClose.addEventListener("click", ()=> closedInformation());
+    const buttoncloseInit = buttonClosed();
+    const buttoncloseEnd = buttonClosed();
     const containerInfo = infoSpecialitie(specialitie);    
-    nodeResult.append(buttonClose, ...containerInfo);
+    nodeResult.append(buttoncloseInit, ...containerInfo, buttoncloseEnd);
 }
 
 const showSpecilities = getSpecialities(BD_SPECIALITIES);
