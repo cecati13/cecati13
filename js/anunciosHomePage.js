@@ -18,7 +18,11 @@ const homepage = [
             button : "Inscríbete",
             linkPage : "inscription",
             animation: true
-        }
+        },
+        // regresoaClases : {
+        //     title : "",
+        //     information : "Reanudamos actividades a partir del 03 de enero de 2022"
+        // }
     }
 ];
 
@@ -65,9 +69,9 @@ function createAdvertisements(obj) {
     const container = createContainer();
     container.className = "main__container__advertisements--div";
 
-    const title = document.createElement("p");
+    const title = document.createElement("p");    
     title.textContent = obj.title;
-    title.className = "";
+    title.className = "main__container__advertisements--div__title";
 
     const information = document.createElement("p");
     information.textContent = obj.information;
@@ -80,7 +84,11 @@ function createAdvertisements(obj) {
     if (obj.animation) {
         button.classList.add("buttonAnimate");
     }
-    container.append(title,information,button)
+    if (obj.button) {        
+        container.append(title, information, button);
+    } else {
+        container.append(title,information)
+    }
     return container;
 }
 
