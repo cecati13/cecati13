@@ -58,7 +58,7 @@ const stepFive = {
         haya alcanzado su cupo máximo.`
 }
 
-const nodeParent = document.getElementById("signUp");
+const nodeParent = document.getElementById("nodeSignUp");
 const nodeContainerSteps = document.getElementById("containerSteps");
 
 const tituloH3 = document.createElement("h3");

@@ -3,13 +3,13 @@ bd_galery = [
         name: "general",
         link: "../assets/galeria/img1.jpg",
         label: "todas",
-        alt: "Aqui va la descripcion de las imágenes"
+        alt: ""
     },
     {
         name: "general",
         link: "../assets/galeria/img2.jpg",
         label: "todas",
-        alt: "Esta es una prueba"
+        alt: ""
     },
     {
         name: "general",
@@ -138,7 +138,7 @@ bd_galery = [
         alt: ""
     }
 ];
-const nodeGallery = document.querySelector("#gallery");
+const nodeGallery = document.querySelector("#nodeGallery");
 
 function createContainerImg (element) {    
     const imagen = document.createElement("img");

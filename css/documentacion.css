@@ -30,6 +30,7 @@ iframe {
     width: 90%;
     border: var(--contrastColor2) solid 2px;
     border-radius: 10px;
+    margin-bottom: 25px;
 }
 
 @media (min-width: 768px) {

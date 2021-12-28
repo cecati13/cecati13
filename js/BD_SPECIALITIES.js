@@ -426,7 +426,7 @@ const BD_SPECIALITIES = {
 
 //Algoritmo temporal para mostrar info:
 // bd = { especialities { name, objetive, laborField, courses [] } }
-const mountSpecialities = document.getElementById("specialities")
+const mountSpecialities = document.getElementById("NodeSpecialities")
 const nodeResult = document.getElementById("result");
 
 
@@ -514,7 +514,7 @@ const closedInformation = function () {
 
 const buttonClosed = function () {
     const buttonClose = document.createElement("div")
-    buttonClose.textContent = "X";
+    buttonClose.textContent = "X";    
     buttonClose.className = "button__close";    
     buttonClose.addEventListener("click", ()=> closedInformation());
     return buttonClose;
@@ -525,7 +525,9 @@ const locate = function (e) {
     const specialitie = e.target.dataset.specialities;
     const buttoncloseInit = buttonClosed();
     const buttoncloseEnd = buttonClosed();
-    const containerInfo = infoSpecialitie(specialitie);    
+    const containerInfo = infoSpecialitie(specialitie);
+
+    window.scroll(0,0);
     nodeResult.append(buttoncloseInit, ...containerInfo, buttoncloseEnd);
 }
 

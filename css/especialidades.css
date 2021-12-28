@@ -14,12 +14,13 @@
 }
 
 .button__close {
+    color: var(--fontColor);
+    cursor: pointer;
     font-size: 4.5rem;
     font-family: monospace;
-    color: var(--fontColor);
-    padding: 10px 60px;
     font-weight: 900;
-    cursor: pointer;
+    padding: 10px 60px;
+    text-align: end;
 }
 
 .result__hide {

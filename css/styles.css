@@ -217,7 +217,7 @@ a, a:visited, a:active{
     width: 100%;
 }
 
-.main__container__advertisements__offer {
+.main__container__advertisements--div {
     max-width: 300px;
     min-height: 350px;
     text-align: center;
@@ -232,16 +232,6 @@ a, a:visited, a:active{
     padding: 15px 0;    
 }
 
-.main__container__advertisements__modalities {
-    max-width: 300px;
-    min-height: 350px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;    
-    justify-content: space-around;
-    align-items: center;
-}
-
 .button__link {
     max-width: 230px;
     padding: 10px;
@@ -251,6 +241,10 @@ a, a:visited, a:active{
     font-size: 1.2em;
     margin: 10px;
     text-align: center;
+}
+
+.button__link:visited {
+    color: var(--mainColor);
 }
 
 .buttonAnimate {    
@@ -296,9 +290,9 @@ a, a:visited, a:active{
     margin-bottom: 15px;
 }
 
-#contacto, #documentation, 
-#especialidades, #signUp,
-#ofertaEducativa, #rocos{
+#NodeContact, #nodeDocumentation, 
+#NodeSpecialities, #nodeSignUp,
+#nodeEducativeOffer, #nodeRocos{
     color: var(--contrastColor2);
     max-width: 1024px;
 }

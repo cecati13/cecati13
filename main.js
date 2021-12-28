@@ -114,6 +114,7 @@ function contentCreation(element) {
     const li = document.createElement("li");
     const aHtml = document.createElement("a");
     aHtml.textContent = element.content;
+    aHtml.id = element.page;
     aHtml.href = URL_hostname + element.link;
     const absolutePath = /^https?:\/\//i;    
     if (absolutePath.test(element.link)) {
