@@ -22,7 +22,7 @@ const homepage = [
         // regresoaClases : {
         //     title : "",
         //     information : "Reanudamos actividades a partir del 03 de enero de 2022"
-        // }
+        // },
     }
 ];
 

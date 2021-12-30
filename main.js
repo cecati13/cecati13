@@ -1,7 +1,9 @@
-//verificar que no hay puerto definido
+//verificar que no hay puerto definido, para determinar donde crear los enlaces.
 const verifyingRegularExpression = /\d\d\d\d/
+
 let URL_hostname = "https://dvnegrete.github.io/cecati13";
-//URL cecati13: "https://cecati13.com.mx"
+//URL cecati13 para hacer deploy: 
+//let URL_hostname ="https://cecati13.com.mx"
 
 const verify = verifyingRegularExpression.test(window.location.port) 
 if (verify) {
