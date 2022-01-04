@@ -104,8 +104,8 @@ function createSteps (stepExecuted) {
 
     } else if (isURL.test(stepContent)) {        
         const buttonIncription = document.createElement("a");
-        buttonIncription.className = "button";
-        buttonIncription.textContent = "Registrarme";
+        buttonIncription.className = "button buttonAnimate";
+        buttonIncription.textContent = "Presiona aquí";
         buttonIncription.href = stepContent;
         buttonIncription.target= "_blank";
         stepContainer.push(buttonIncription);
