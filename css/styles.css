@@ -235,10 +235,10 @@ a, a:visited, a:active{
     padding-bottom: 20px;
 }
 
-/* .main--advertisements {    
-    opacity: 1;
-    padding: 15px 0;    
-} */
+.main__container__advertisements--div__note {
+    font-size: 1.2rem;
+    padding: 25px 0;
+}
 
 .button__link {
     max-width: 230px;
@@ -257,7 +257,7 @@ a, a:visited, a:active{
 
 .buttonAnimate {    
     position: relative;    
-    animation: oferta 10s ease 5s infinite normal forwards;
+    animation: oferta 7s ease 3s infinite normal forwards;
 }
 
 @keyframes oferta {
@@ -268,7 +268,7 @@ a, a:visited, a:active{
         transform:scale(1.2);
     }
     100% {
-        transform:scale(0.9);
+        transform:scale(1);
     }
 }
 .footer {

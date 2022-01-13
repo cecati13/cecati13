@@ -6,20 +6,28 @@ const homepage = [
     
     advertisements = {
         ofertaActual : {
-            title : "Revisa nuestra oferta educativa para",
-            information : "Enero y Febrero 2022",
+            title : "Visita nuestra oferta educativa. Actualmente tenemos las siguientes modalidades:",
+            information : "a DISTANCIA, PRESENCIALES e HÍBRIDOS",
+            note: "",
             button : "Oferta Educativa",
             linkPage : "offer",
             animation: false
         },    
         modalidades : {
-            title : "Actualmente tenemos las siguientes modalidades:",
-            information : "A DISTANCIA, PRESENCIALES e HÍBRIDOS",
+            title : "Costo por curso $300.00.",
+            information : 
+            `Inscríbete a un segundo curso a mitad de precio`,
+            note : 
+            `NOTA: Estos cursos NO incluyen el pago de Seguro Escolar,
+             si vas a inscribirte a un curso presencial o hibrido el 
+             costo es de $65.00 pago ÚNICO, para todos los cursos a los 
+             que te inscribas en el ciclo escolar y quedes cubierto por 
+             algún accidente dentro de las instalaciones del plantel`,
             button : "Inscríbete",
             linkPage : "inscription",
             animation: true
         },
-        // regresoaClases : {
+        // clases : {
         //     title : "",
         //     information : "Reanudamos actividades a partir del 03 de enero de 2022"
         // },
@@ -77,6 +85,10 @@ function createAdvertisements(obj) {
     information.textContent = obj.information;
     information.className = "";
 
+    const note = document.createElement("p");
+    note.textContent = obj.note;
+    note.className = "main__container__advertisements--div__note";
+
     const button = document.createElement("a")
     button.textContent = obj.button;    
     button.href = document.querySelector(`#${obj.linkPage}`);
@@ -85,9 +97,9 @@ function createAdvertisements(obj) {
         button.classList.add("buttonAnimate");
     }
     if (obj.button) {        
-        container.append(title, information, button);
+        container.append(title, information, note, button);
     } else {
-        container.append(title,information)
+        container.append(title,information, note)
     }
     return container;
 }
