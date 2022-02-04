@@ -60,11 +60,11 @@ body {
     /* viewBox: 0 0 46 34.5; */
     stroke-linecap: round; 
     stroke-width: 6px;
-  }
+}
 
-  .menu--legend {
-      margin-top: 3px;
-  }
+.menu--legend {
+    margin-top: 3px;
+}
 
 .lineSpin1 {
     transform: translate(31px, -22px) rotate(45deg);
