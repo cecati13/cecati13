@@ -1,139 +1,139 @@
 bd_galery = [
     {
         name: "general",
-        link: "../assets/galeria/img1.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img1.jpg",
         label: "todas",
         alt: ""
     },
     {
         name: "general",
-        link: "../assets/galeria/img2.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img2.jpg",
         label: "todas",
         alt: ""
     },
     {
         name: "general",
-        link: "../assets/galeria/img3.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img3.jpg",
         label: "todas",
         alt: ""
     },
     {
         name: "general",
-        link: "../assets/galeria/img4.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img4.jpg",
         label: "todas",
         alt: ""
     },
     {
         name: "general",
-        link: "../assets/galeria/img5.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img5.jpg",
         label: "todas",
         alt: ""
     },
     {
         name: "general",
-        link: "../assets/galeria/img6.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img6.jpg",
         label: "todas",
         alt: ""
     },
     {
         name: "general",
-        link: "../assets/galeria/img7.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img7.jpg",
         label: "todas",
         alt: ""
     },
     {
         name: "general",
-        link: "../assets/galeria/img8.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img8.jpg",
         label: "todas",
         alt: ""
     },
     {
         name: "general",
-        link: "../assets/galeria/img9.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img9.jpg",
         label: "todas",
         alt: ""
     },
     {
         name: "general",
-        link: "../assets/galeria/img10.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img10.jpg",
         label: "todas",
         alt: ""
     },
     {
         name: "general",
-        link: "../assets/galeria/img11.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img11.jpg",
         label: "todas",
         alt: ""
     },
     {
         name: "general",
-        link: "../assets/galeria/img12.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img12.jpg",
         label: "todas",
         alt: ""
     },
     {
         name: "general",
-        link: "../assets/galeria/img13.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img13.jpg",
         label: "todas",
         alt: ""
     },
     {
         name: "general",
-        link: "../assets/galeria/img14.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img14.jpg",
         label: "todas",
         alt: ""
     },
     {
         name: "general",
-        link: "../assets/galeria/img15.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img15.jpg",
         label: "todas",
         alt: ""
     },
     {
         name: "general",
-        link: "../assets/galeria/img16.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img16.jpg",
         label: "todas",
         alt: ""
     },
     {
         name: "general",
-        link: "../assets/galeria/img17.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img17.jpg",
         label: "todas",
         alt: ""
     },
     {
         name: "general",
-        link: "../assets/galeria/img18.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img18.jpg",
         label: "todas",
         alt: ""
     },
     {
         name: "general",
-        link: "../assets/galeria/img19.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img19.jpg",
         label: "todas",
         alt: ""
     },
     {
         name: "general",
-        link: "../assets/galeria/img20.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img20.jpg",
         label: "todas",
         alt: ""
     },
     {
         name: "general",
-        link: "../assets/galeria/img21.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img21.jpg",
         label: "todas",
         alt: ""
     },
     {
         name: "general",
-        link: "../assets/galeria/img22.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img22.jpg",
         label: "todas",
         alt: ""
     },
     {
         name: "general",
-        link: "../assets/galeria/img23.jpg",
+        link: "https://cecati13web.blob.core.windows.net/galeria/img23.jpg",
         label: "todas",
         alt: ""
     }
@@ -146,12 +146,13 @@ function createContainerImg (element) {
     imagen.alt = element.alt;
 
     //añadir cuando se una descripción de cada imagen
-    // const figCaption = document.createElement("figcaption");
-    // figCaption.textContent = element.name;
+    //const figCaption = document.createElement("figcaption");
+    //figCaption.textContent = element.name;
 
     const containerFigure = document.createElement("figure");
     containerFigure.append(imagen, 
-        //figCaption
+        //añadir cuando se tenga descripcion de la imagen
+      //figCaption
         );
     return containerFigure;
 }

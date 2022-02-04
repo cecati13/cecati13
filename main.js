@@ -40,13 +40,13 @@ const pageDataLinks = [
         ubication: "NAV",
         attribute: false
     },
-    {
-        page: "documentation",
-        content: "Documentación",
-        link: "/html/Documentacion.html",
-        ubication: "FOOTER",
-        attribute: false
-    },
+    // {
+    //     page: "documentation",
+    //     content: "Documentación",
+    //     link: "/html/Documentacion.html",
+    //     ubication: "FOOTER",
+    //     attribute: false
+    // },
     {
         page: "roco",
         content: "ROCO",

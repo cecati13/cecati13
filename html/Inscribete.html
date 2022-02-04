@@ -14,25 +14,18 @@
         JavaScript habilitado. Aquí están las <a href="https://www.enable-javascript.com/es/">
         instrucciones para habilitar JavaScript en tu navegador web</a>.
    </noscript>
-   <header class="header">
-       <div class="menu">
-           <svg id="menu" class="menu__mobile"  viewBox="0 0 46 34.5" stroke-linecap="round" stroke-width="6px">
-            <line id="lineSpinHide" x1="3" y1="17.25" x2="43" y2="17.25"/>
-            <line id="lineSpin1" x1="3" y1="31.5" x2="43" y2="31.5"/>
-            <line id="lineSpin2" x1="3" y1="3" x2="43" y2="3"/>
-           </svg>
-       </div>
-       <div class="header__port">
-           <img class="header__port--imgSEP" src="../assets/LogoSep.png" alt="Secretaria de Educación Pública">
-           <div class="header__port__title">
-               <h1 class="header__port--C13">CECATI 13</h1>
-               <h1 class="header__port__title--h1">Centro de Capacitación para el Trabajo Industrial No. 13</h1>                
-               <h2 class="header__port__title--h2">Profesor "Abraham Lezama Breton"</h2>
-           </div>
-           <img class="header__port--imgC13" src="../assets/LogoCecati.png" alt="Logo CECATI 13">
-       </div>        
-       <nav id="navigator" class="nav__hide"></nav>       
-   </header>
+   <header class="header" id="header">
+    <div class="menu">
+        <div>
+            <svg id="menu" class="menu__mobile"  viewBox="0 0 46 34.5" stroke-linecap="round" stroke-width="6px">
+                <line id="lineSpinHide" x1="3" y1="17.25" x2="43" y2="17.25"/>
+                <line id="lineSpin1" x1="3" y1="31.5" x2="43" y2="31.5"/>
+                <line id="lineSpin2" x1="3" y1="3" x2="43" y2="3"/>
+            </svg>
+        </div>
+        <p class="menu--legend">MENÚ</p>
+    </div>        
+</header>
    <span class="line"></span>
    <section class="singUp" id="nodeSignUp">
        <div class="containerGeneralAllSteps" id="containerSteps"></div>
@@ -43,7 +36,9 @@
         <span class="line"></span>
     </footer>
 
+    <script src="../js/header.js" type="text/javascript"></script>
     <script type="text/javascript" src="../main.js"></script>
-<script type="text/javascript" src="../js/inscribete.js"></script>
+    <script type="module" src="../js/inscribete.js"></script>
+
 </body>
 </html>

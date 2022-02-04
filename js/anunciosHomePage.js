@@ -6,30 +6,29 @@ const homepage = [
     
     advertisements = {
         ofertaActual : {
-            title : "Visita nuestra oferta educativa. Actualmente tenemos las siguientes modalidades:",
-            information : "a DISTANCIA, PRESENCIALES e HÍBRIDOS",
-            note: "",
-            button : "Oferta Educativa",
-            linkPage : "offer",
+            title : "Información importante sobre el seguro escolar",
+            information : "El seguro escolar es una póliza de gastos médicos que garantiza la atención de forma gratuita en caso de sufrir un accidente escolar; debido a la pandemia y que la mayoría de nuestros cursos se imparten a distancia les estamos brindando información a los alumnos que deseen contratar este seguro",
+            note: "Nota. El Seguro Escolar contra Accidentes iniciará su operatividad en el momento que los alumnos asistan a sus escuelas de manera presencial y que haya contratado el mismo. El seguro Escolar tiene un costo de $65 que puede pagarse opcionalmente, cubre riesgos en las instalaciones del plantel y en el trayecto de ida y vuelta de las instalaciones educativas al domicilio (se aplican condiciones de la póliza). El costo es un solo pago de $65 y aplica para todos los cursos a los que se inscriban durante el ciclo escolar. Es recomendable para todos los cursos presenciales e híbridos. En caso de no contratar el seguro el plantel no se hace responsable por algún accidente que suceda dentro de las instalaciones",
+            button : "Conoce las condiciones del seguro escolar",
+            linkPage : "https://cecati13web.blob.core.windows.net/descargas/info_seguro_escolar.pdf",
             animation: false
         },    
         modalidades : {
-            title : "Costo por curso $300.00.",
+            title : "Promoción para cursos de enero y febrero",
             information : 
-            `Inscríbete a un segundo curso a mitad de precio`,
+            `Inscríbete a uno de nuestros cursos y obtén 50% de descuento para cursar un segundo. Para hacer válida la promoción se tienen que inscribir juntos ambos cursos (deben iniciar en el periodo señalado). Ahorro $150.`,
             note : 
-            `NOTA: Estos cursos NO incluyen el pago de Seguro Escolar,
-             si vas a inscribirte a un curso presencial o hibrido el 
-             costo es de $65.00 pago ÚNICO, para todos los cursos a los 
-             que te inscribas en el ciclo escolar y quedes cubierto por 
-             algún accidente dentro de las instalaciones del plantel`,
+            `Nota. Esta promoción es válida para los cursos que inician en los meses de enero y febrero, regístrate a un curso con un costo regular de $300 y cursa un segundo curso pagando solo $150.`,
             button : "Inscríbete",
             linkPage : "inscription",
             animation: true
         },
         // clases : {
-        //     title : "",
-        //     information : "Reanudamos actividades a partir del 03 de enero de 2022"
+        //     title : "Promoción",
+        //     information : "Inscribete al primer curso por $300.00, e inscribete a $150.00",
+        //     button : "Inscríbete",
+        //     linkPage : "inscription",
+        //     animation: true
         // },
     }
 ];
@@ -90,8 +89,13 @@ function createAdvertisements(obj) {
     note.className = "main__container__advertisements--div__note";
 
     const button = document.createElement("a")
-    button.textContent = obj.button;    
-    button.href = document.querySelector(`#${obj.linkPage}`);
+    button.textContent = obj.button;
+    const absolutePath = /^https?:\/\//i;    
+    if (absolutePath.test(obj.linkPage)) {
+        button.href = obj.linkPage;
+    } else {
+        button.href = document.querySelector(`#${obj.linkPage}`);
+    }
     button.className = "button__link";
     if (obj.animation) {
         button.classList.add("buttonAnimate");

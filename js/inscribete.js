@@ -1,4 +1,6 @@
-const registrationLink = "https://forms.gle/UwKxyZkwzjABd4pX6";
+import { linkRegistration } from "../descargas/linkRegistro.js";
+
+const registrationLink = linkRegistration;
 const stepOne = {
     stepNumber: 1,
     title: "Ten a la mano...",
@@ -6,7 +8,7 @@ const stepOne = {
         "CURP.",
         "Acta de Nacimiento.",
         "Comprobante de domicilio.",
-        "Documento de último grado de estudios."        
+        "Documento de último grado de estudios.",        
     ],
     observations: 
         `Usaremos correo electrónico y WhatsApp para comunicarnos contigo  
@@ -21,8 +23,9 @@ const stepTwo = {
     content: registrationLink,
     //aqui hay que usar expresiones regulares para saber si es una URL
     observations: 
-        `Registra correctamente tus datos personales y los datos del curso que deseas tomar.
-        Los registros mal elaborados no se tomarán en cuenta para el proceso de inscripción.`,    
+        `Para el pre-registro es necesario tener un correo de Google.
+        Registra correctamente tus datos personales y los datos del curso que deseas tomar.
+        Los registros mal elaborados no se tomarán en cuenta para el proceso de inscripción.`,
 }
 
 const stepThree = {
