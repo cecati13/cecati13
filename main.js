@@ -6,7 +6,7 @@ const verifyingRegularExpression2 = /github/
 let URL_hostname =""
 let index = "";
 
-const verifyGithub = verifyingRegularExpression.test(window.location.hostname) 
+const verifyGithub = verifyingRegularExpression2.test(window.location.hostname) 
 const verify = verifyingRegularExpression.test(window.location.port) 
 if (verify) {
 //estamos en localhost
