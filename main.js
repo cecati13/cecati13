@@ -1,21 +1,29 @@
 //verificar que no hay puerto definido, para determinar donde crear los enlaces.
 const verifyingRegularExpression = /\d\d\d\d/
+const verifyingRegularExpression2 = /github/
 
-let URL_hostname = "https://dvnegrete.github.io/cecati13";
 //URL cecati13 para hacer deploy: 
-//let URL_hostname ="https://cecati13.com.mx"
+let URL_hostname ="https://cecati13.com.mx"
+let route = "..";
+let index = "";
+debugger;
 
+const verifyGithub = verifyingRegularExpression.test(window.location.hostname) 
 const verify = verifyingRegularExpression.test(window.location.port) 
 if (verify) {
 //estamos en localhost
     URL_hostname = ".."
+}
+if (verifyGithub) {
+    URL_hostname = "https://dvnegrete.github.io/cecati13";
+    index = "index.html";
 }
 
 const pageDataLinks = [   
     {
         page: "home",
         content: "Inicio",
-        link: "/index.html",
+        link: `/${index}`,
         ubication: "NAV",
         attribute: false
     },
@@ -117,11 +125,13 @@ function contentCreation(element) {
     const aHtml = document.createElement("a");
     aHtml.textContent = element.content;
     aHtml.id = element.page;
+    //verificar ajuste para deploy en cecati13.com.mx
     aHtml.href = URL_hostname + element.link;
     const absolutePath = /^https?:\/\//i;    
     if (absolutePath.test(element.link)) {
         aHtml.href = element.link
     }
+    ////termina parte a verificar deploy
     if (typeof(element.attribute) === "object") {        
         aHtml.target = element.attribute.target;
     }
