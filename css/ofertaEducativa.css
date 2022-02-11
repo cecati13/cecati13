@@ -6,6 +6,16 @@
     font-size: 1.6rem;    
 }
 
+.educativeOffer__api {
+    font-size: 1.6rem;
+    max-width: 90vw;
+    color: var(--fontColor2);
+}
+
+.educativeOffer__api > div {
+    padding: 10px;
+}
+
 .educativeOffer > iframe {
     width: 92vw;
     min-height: 75vh;
