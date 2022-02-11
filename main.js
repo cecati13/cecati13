@@ -3,10 +3,8 @@ const verifyingRegularExpression = /\d\d\d\d/
 const verifyingRegularExpression2 = /github/
 
 //URL cecati13 para hacer deploy: 
-let URL_hostname ="https://cecati13.com.mx"
-let route = "..";
+let URL_hostname =""
 let index = "";
-debugger;
 
 const verifyGithub = verifyingRegularExpression.test(window.location.hostname) 
 const verify = verifyingRegularExpression.test(window.location.port) 
@@ -15,7 +13,7 @@ if (verify) {
     URL_hostname = ".."
 }
 if (verifyGithub) {
-    URL_hostname = "https://dvnegrete.github.io/cecati13";
+    URL_hostname = "cecati13";
     index = "index.html";
 }
 
@@ -124,12 +122,11 @@ function contentCreation(element) {
     const li = document.createElement("li");
     const aHtml = document.createElement("a");
     aHtml.textContent = element.content;
-    aHtml.id = element.page;
+    aHtml.id = element.page;    
+    aHtml.href = element.link
     //verificar ajuste para deploy en cecati13.com.mx
-    aHtml.href = URL_hostname + element.link;
-    const absolutePath = /^https?:\/\//i;    
-    if (absolutePath.test(element.link)) {
-        aHtml.href = element.link
+    if (verifyGithub)  {
+        aHtml.href = URL_hostname + element.link;    
     }
     ////termina parte a verificar deploy
     if (typeof(element.attribute) === "object") {        
