@@ -6,5 +6,6 @@ const linkRegistration =
 
 
 // Fecha de actualización: 18 de enero de 2022
+///preueba de modificacion
 
 export { linkRegistration };
