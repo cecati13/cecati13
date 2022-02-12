@@ -6,7 +6,7 @@ const stepOne = {
     title: "Ten a la mano...",
     content: [
         "CURP.",
-        "Acta de Nacimiento.",
+        "Acta de Nacimiento.",  
         "Comprobante de domicilio.",
         "Documento de último grado de estudios.",        
     ],
