@@ -255,7 +255,7 @@ a, a:visited, a:active{
     max-width: 230px;
     padding: 10px;
     color: var(--mainColor);    
-    background-color: var(--contrastColor2);
+    background-color: var(--fontColor);
     border-radius: 25px;
     font-size: 1.2em;
     margin: 10px;
@@ -407,10 +407,10 @@ a, a:visited, a:active{
 
 @media (min-width: 1024px) {
     .main__container {
-        min-width: 1024px;
+        min-width: 95%;
     }
 
     .main__container__advertisements--div {
-        min-width: 425px;
+        min-width: 45%;
     }
 }

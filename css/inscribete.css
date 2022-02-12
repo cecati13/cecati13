@@ -75,7 +75,7 @@
 }
 
 .button {
-    background-color: var(--contrastColor2);
+    background-color: var(--fontColor);
     border-radius: 30px;
     color: var(--mainColor);
     font-size: 2.7rem;
