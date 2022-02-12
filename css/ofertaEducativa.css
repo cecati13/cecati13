@@ -12,6 +12,23 @@
     color: var(--fontColor2);
 }
 
+.educativeOffer__api--title {
+    color: var(--contrastColor);
+    text-align: center;
+}
+
+.educativeOffer__api__containerGral {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    max-width: 1024px;
+}
+
+.educativeOffer__api__containers {
+    max-width: 350px;
+    padding: 20px;
+}
+
 .educativeOffer__api > div {
     padding: 10px;
 }
@@ -34,5 +51,9 @@
 @media (min-width: 1024px) {
     .educativeOffer > iframe {
         max-width: 1200px;
+    }
+
+    .educativeOffer__api__containers {
+        max-width: 450px;
     }
 }
