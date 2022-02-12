@@ -1,5 +1,7 @@
-#Archivos Locales
-descargas/
+descargas
+linkRegistro.js
+*.pdf
+
 
 # Logs
 logs
