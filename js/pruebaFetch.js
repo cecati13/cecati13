@@ -3,16 +3,11 @@ const telmex = "http://svo-5-191.servidoresvirtuales.mx";
 const localhost = "http://localhost:3500"
 
 let URL = localhost;
-const verifyingTelmex = /servidoresvirtuales/;
-const verifyingAzure = /azure/;
-const verifyLocationTelmex = verifyingTelmex.test(window.location.hostname);
-const verifyLocationAzure = verifyingAzure.test(window.location.hostname);
+const verifyingCecatiATelmex = /cecati13/;
+const verifyLocationTelmex = verifyingCecatiATelmex.test(window.location.hostname);
 
 if (verifyLocationTelmex) {
     URL = telmex;
-}
-if (verifyLocationAzure) {
-    URL = azure;
 }
 
 const nodeAPI_Offer = document.getElementById("API_educativeOffer");
