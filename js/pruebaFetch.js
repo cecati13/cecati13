@@ -51,7 +51,7 @@ class availableCourses {
         <br>
         <p>Modalidad del curso: ${course.modalidad_curso}.</p>
         <p>Horario: ${course.hora_inicio} a ${course.Hora_fin} hrs.</p>
-        <p>El curos inicia el ${course.fecha_inicio}, y finaliza el ${course.fecha_termino}.</p>
+        <p>El curso inicia el ${course.fecha_inicio}, y finaliza el ${course.fecha_termino}.</p>
         <p>${course.horas} horas de duración.</p>
         <p>Dias de clase: ${course.dias_de_clases}.</p>
         <p>Costo del curso: $${course.costo}</p>        
