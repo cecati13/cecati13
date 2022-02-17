@@ -19,6 +19,7 @@ class availableCourses {
         if (courses.length > 0) {
             const containerCourses = this.sendCourses(courses);
             this.mountNode(containerCourses);
+            showSpecialties();
         }
     }
 
@@ -73,9 +74,8 @@ class availableCourses {
 }
 
 function locate(event) {
-    const ubication = event.target.innerText.toUpperCase()
-    const showCourses = new availableCourses(ubication)
-    showSpecialties();
+    const ubication = event.target.innerText.toUpperCase();
+    const showCourses = new availableCourses(ubication);    
 }
 
 function showButtonBack() {    
