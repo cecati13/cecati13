@@ -17,20 +17,59 @@
     text-align: center;
 }
 
-.educativeOffer__api__containerGral {
+.container__Specialties {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-evenly;
-    max-width: 1024px;
+    justify-content: space-evenly;    
 }
 
-.educativeOffer__api__containers {
-    max-width: 350px;
-    padding: 20px;
+.container__Specialties--HIDE {
+    display: none;
+}
+
+.buttonBack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 140px;
+    font-size: 1.2rem;
+}
+
+.buttonBack img{
+    width: 50px;
+    cursor: pointer;
+}
+
+.buttonBack--HIDE {
+    display: none;
+}
+
+.Specialties--containers {
+    background-color: var(--contrastColor);
+    border-radius: 10%;
+    color: var(--mainColor);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    font-weight: bold;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    margin: 15px;
+    text-transform: capitalize;
+    text-align: center;    
+    padding: 10px;
+    min-height: 120px;
+    width: 290px;
 }
 
 .educativeOffer__api > div {
     padding: 10px;
+}
+
+.containerCourse--profesor{
+    text-transform: capitalize;
 }
 
 .educativeOffer > iframe {
@@ -53,7 +92,7 @@
         max-width: 1200px;
     }
 
-    .educativeOffer__api__containers {
+    .Specialties--containers {
         max-width: 450px;
     }
 }
