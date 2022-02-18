@@ -1,12 +1,48 @@
 const URL = "https://sheets.googleapis.com/v4/spreadsheets/108FBMScjh_seZ284-T0cZgpW_OpdiU9iJNGlycV4aJU/values/Cursos!A:M?key=AIzaSyA1pfILJrar9ay5u1PoOWVuz4t8VhxA6jE"
 const nodeAPI_Offer = document.getElementById("main");
 
+class ObjForSpecialties {
+    constructor (array){
+        const arrayWithObjSpecialties = this.arrayWithObjects(array);
+        console.log(arrayWithObjSpecialties)
+        
+    }
+    
+    arrayWithObjects(array){
+        let arrayWithObject = [];
+        const objectMold = this.defineProperties(array[0])
+        array.forEach( element => {
+            const obj = this.assignValue(objectMold, array)
+            arrayWithObject.push(obj)
+        })        
+        return arrayWithObject;
+    }
+
+    assignValue(model, ) {
+
+    }
+
+    defineProperties(arrayProperties){
+        const keys = arrayProperties;
+        const obj = {};
+        keys.forEach( element => {
+            Object.defineProperty(obj, element, {
+                writable: true,
+                enumerable: true,
+                configurable: false
+            })
+        })
+        return obj
+    }
+}
+
 async function conexion(URL) {
     try {
         const info = await fetch(`${URL}`);        
         const infoJSON = await info.json()
         const response = infoJSON.values;
         console.log(response);
+        const obj = new ObjForSpecialties(response);
         const container = document.createElement("div");
         container.className = `containerCourses`;
         container.id = "containerSpecialties";

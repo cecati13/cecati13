@@ -53,9 +53,9 @@
 }
 
 .Specialties--containers {
-    background-color: var(--fontColor);
+    background-color: var(--mainColor2);
     border-radius: 10%;
-    color: var(--mainColor);
+    color: var(--fontColor2);
     cursor: pointer;
     display: flex;
     align-items: center;
