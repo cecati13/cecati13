@@ -9,7 +9,7 @@ const verifyLocationTelmex = verifyingCecatiATelmex.test(window.location.hostnam
 if (verifyLocationTelmex) {
     URL = telmex;
 }
-
+const textTitle = "Seleciona una especialidad para ver los cursos disponibles:"
 const nodeAPI_Offer = document.getElementById("API_educativeOffer");
 let infoFetch = [];
 
@@ -20,12 +20,15 @@ class availableCourses {
             const containerCourses = this.sendCourses(courses);
             this.mountNode(containerCourses);
             showSpecialties();
+            window.scroll(top);            
+            alternateTitle(`Cursos de ${nameSpeciality.toUpperCase()}`);
         }
     }
 
     mountNode(containerCourses){
         const coursesContainers = document.createElement("div");
         coursesContainers.id = "containerCourses";
+        coursesContainers.className ="containerCourses";
         containerCourses.forEach( course => {            
             coursesContainers.appendChild(course);
         })
@@ -44,20 +47,19 @@ class availableCourses {
 
     constructorCourse(course){        
         const container = document.createElement("div");
-        container.className = "containerCourse";
+        container.className = "course";
         container.innerHTML = `
-        <p>Curso: ${course.curso}.</p>
+        <p class="containerCourse--title">${course.curso}</p>
         <p class="containerCourse--profesor">Profesor: ${course.profesor.toLowerCase()}</p>
         <br>
-        <p>Modalidad del curso: ${course.modalidad_curso}.</p>
+        <p>Inicia ${course.fecha_inicio}</p>
+        <p>Termina: ${course.fecha_termino}</p>
         <p>Horario: ${course.hora_inicio} a ${course.Hora_fin} hrs.</p>
-        <p>El curso inicia el ${course.fecha_inicio}, y finaliza el ${course.fecha_termino}.</p>
-        <p>${course.horas} horas de duración.</p>
-        <p>Dias de clase: ${course.dias_de_clases}.</p>
-        <p>Costo del curso: $${course.costo}</p>        
-        <br>
-        <p>Observaciones: ${course.observaciones}</p>
-        <br>
+        <p>${course.horas} horas de duración</p>
+        <p>Modalidad del curso: ${course.modalidad_curso}</p>
+        <p>Dias de clase: ${course.dias_de_clases}</p>
+        <p>Costo del curso: $${course.costo}.00</p>        
+        <p>Observaciones: ${course.observaciones}</p>        
         `;
         return container;
     }
@@ -73,9 +75,14 @@ class availableCourses {
     }
 }
 
+function alternateTitle(stringText){
+    const title = document.querySelector("#alternateTitle");    
+    title.innerText = stringText;
+}
+
 function locate(event) {
     const ubication = event.target.innerText.toUpperCase();
-    const showCourses = new availableCourses(ubication);    
+    const showCourses = new availableCourses(ubication);
 }
 
 function showButtonBack() {    
@@ -93,6 +100,7 @@ const backToSpecialties = function () {
     showSpecialties();
     removeSon();
     showButtonBack();
+    alternateTitle(textTitle);
 }
 
 function removeSon() {    
@@ -111,8 +119,8 @@ function createButtoBack(){
     buttonBack.className = "buttonBack buttonBack--HIDE";
     buttonBack.id = "buttonBack";
     buttonBack.innerHTML = `        
-    <img src="/assets/arrowBack.png" alt="Retroceder">
-    <span>Regresar a todas las Especialidades</span>`;        
+    <img src="/assets/arrowBack.svg" alt="Retroceder">
+    <span>REGRESAR</span>`;        
     nodeAPI_Offer.appendChild(buttonBack);
 }
 
@@ -139,7 +147,7 @@ async function conexion(URL) {
         console.log(error)
         const titleError = document.createElement("h3");
         titleError.innerHTML= `
-        <h3>Error al consultar la información. 
+        <h3 class="error__API">Error al consultar la información. 
         Por favor intenta más tarde. 
         Estamos trabajando para darte un mejor servicio.</h3>`;
         nodeAPI_Offer.appendChild(titleError);
@@ -149,6 +157,7 @@ async function conexion(URL) {
 conexion(URL);
 
 const title = document.createElement("h4");
-title.innerText = `Seleciona una especialidad para ver los cursos disponibles:`;
+title.innerText = textTitle;
+title.id = "alternateTitle"
 title.className ="educativeOffer__api--title";
 nodeAPI_Offer.appendChild(title);

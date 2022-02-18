@@ -13,8 +13,10 @@
 }
 
 .educativeOffer__api--title {
-    color: var(--contrastColor);
+    color: var(--fontColor);
     text-align: center;
+    font-size: 2.3rem;
+    padding-bottom: 15px;
 }
 
 .container__Specialties {
@@ -28,17 +30,22 @@
 }
 
 .buttonBack {
+    background-color: var(--fontColor);
+    border-radius: 25px;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    width: 140px;
+    width: 100px;
     font-size: 1.2rem;
+    color: var(--mainColor);
+    cursor: pointer;
+    padding: 8px;
 }
 
 .buttonBack img{
     width: 50px;
-    cursor: pointer;
+    padding: 4px;
 }
 
 .buttonBack--HIDE {
@@ -46,7 +53,7 @@
 }
 
 .Specialties--containers {
-    background-color: var(--contrastColor);
+    background-color: var(--fontColor);
     border-radius: 10%;
     color: var(--mainColor);
     cursor: pointer;
@@ -56,20 +63,43 @@
     font-size: 1.6rem;
     font-weight: bold;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    margin: 15px;
+    margin: 8px;
     text-transform: capitalize;
     text-align: center;    
     padding: 10px;
-    min-height: 120px;
-    width: 290px;
+    min-height: 90px;
+    width: 260px;
 }
 
-.educativeOffer__api > div {
-    padding: 10px;
+.containerCourses {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.course {
+    background: linear-gradient(180deg, var(--mainColor), var(--mainColor2));
+    border-radius: 7px;
+    color: var(--contrastColor);
+    font-size: 1.8rem;
+    margin: 10px;
+    padding: 5px;
+    padding-bottom: 15px;
+    text-align: center;
+    width: 400px;
+}
+
+.containerCourse--title {
+    font-size: 2.3rem;
+    background-color: var(--contrastColor);
+    color: var(--mainColor);    
+    padding: 15px 5px;
 }
 
 .containerCourse--profesor{
     text-transform: capitalize;
+    font-size: 2rem;
+    margin-top: 10px;
 }
 
 .educativeOffer > iframe {
@@ -85,6 +115,14 @@
 
 .educativeOffer__button:visited {
     color: var(--mainColor);
+}
+
+.error__API{    
+    color: var(--contrastColor);
+    margin: auto;
+    margin-top: 90px;
+    text-align: center;
+    vertical-align: middle;
 }
 
 @media (min-width: 1024px) {
