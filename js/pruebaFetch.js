@@ -45,20 +45,20 @@ class availableCourses {
         return arrayCourses;
     }
 
-    constructorCourse(course){        
+    constructorCourse(course){
         const container = document.createElement("div");
         container.className = "course";
         container.innerHTML = `
-        <p class="containerCourse--title">${course.curso}</p>
+        <p class="containerCourse--title"><strong>${course.curso}</strong></p>
         <p class="containerCourse--profesor">Profesor: ${course.profesor.toLowerCase()}</p>
         <br>
-        <p>Inicia ${course.fecha_inicio}</p>
-        <p>Termina: ${course.fecha_termino}</p>
-        <p>Horario: ${course.hora_inicio} a ${course.Hora_fin} hrs.</p>
+        <p>Inicia:  <b>${course.fecha_inicio}</b> - Termina:  <b>${course.fecha_termino}</b></p>        
+        <p>Horario:  <b>${course.hora_inicio} a ${course.Hora_fin}</b> hrs.</p>
+        <br>
+        <p>Modalidad del curso: <b><i>${course.modalidad_curso}</i></b></p>
         <p>${course.horas} horas de duración</p>
-        <p>Modalidad del curso: ${course.modalidad_curso}</p>
         <p>Dias de clase: ${course.dias_de_clases}</p>
-        <p>Costo del curso: $${course.costo}.00</p>        
+        <p>Costo del curso: <b>$${course.costo}.00</b></p>        
         <p>Observaciones: ${course.observaciones}</p>        
         `;
         return container;

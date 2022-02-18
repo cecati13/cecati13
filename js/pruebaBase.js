@@ -8,21 +8,21 @@ async function conexion(URL) {
         const response = infoJSON.values;
         console.log(response);
         const container = document.createElement("div");
-        container.className = `container__Specialties container__Specialties--HIDE`;
+        container.className = `containerCourses`;
         container.id = "containerSpecialties";
         response.forEach(element => {
             container.innerHTML += `
-            <div class="Specialties--containers">
-                <p>Curso: ${element[0]}.</p>
-                <p>Especialidad: ${element[1]}.</p>
+            <div class="course">
+                <p class="containerCourse--title">Curso: <strong>${element[0]}</strong></p>
+                <p class="containerCourse--title">Especialidad: ${element[1]}</p>
                 <p class="containerCourse--profesor">Profesor: ${element[8]}</p>
                 <br>
-                <p>Modalidad del curso: ${element[11]}.</p>
-                <p>Horario: ${element[2]} a ${element[3]} hrs.</p>
-                <p>El curso inicia el ${element[4]}, y finaliza el ${element[5]}.</p>
-                <p>${element[9]} horas de duración.</p>
-                <p>Dias de clase: ${element[6]}.</p>
-                <p>Costo del curso: $${element[7]}</p>                
+                <p>Horario: <b>${element[2]} a ${element[3]}</b> hrs</p>
+                <p>Inicio: <b>${element[4]}</b> - Concluye: <b>${element[5]}</b></p>
+                <p>${element[9]} horas de duración</p>
+                <p>Modalidad del curso: ${element[11]}</p>
+                <p>Dias de clase: ${element[6]}</p>
+                <p>Costo del curso: <b>$${element[7]}.00</b></p>                
                 <p>Observaciones: ${element[12]}</p>
                 <br><br>
             </div>`
