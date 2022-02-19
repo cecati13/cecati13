@@ -27,15 +27,15 @@ const pageDataLinks = [
     },
     {
         page: "specialties",
-        content: "Especialidades",
-        link: "/html/Especialidades.html",
+        content: "Oferta Educativa",
+        link: "/html/Oferta.html",
         ubication: "NAV",
         attribute: false
     },
     {
-        page: "offer",
-        content: "Oferta Educativa",
-        link: "/html/OfertaEducativa.html",
+        page: "courses",
+        content: "Cursos Disponibles",
+        link: "/html/cursos.html",
         ubication: "NAV",
         attribute: false
     },
@@ -46,32 +46,32 @@ const pageDataLinks = [
         ubication: "NAV",
         attribute: false
     },
-    // {
-    //     page: "documentation",
-    //     content: "Documentación",
-    //     link: "/html/Documentacion.html",
-    //     ubication: "FOOTER",
-    //     attribute: false
-    // },
     {
-        page: "roco",
-        content: "ROCO",
-        link: "/html/Rocos.html",
-        ubication: "FOOTER",
+        page: "question",
+        content: "Preguntas Frecuentes",
+        link: "/html/preguntas.html",
+        ubication: "NAV",
+        attribute: false
+    },
+    {
+        page: "services",
+        content: "Servicios",
+        link: "/html/servicios.html",
+        ubication: "NAV",
         attribute: false
     },
     {
         page: "gallery",
         content: "Galería de Imágenes",
         link: "/html/Galeria.html",
-        ubication: "NAV",
+        ubication: "FOOTER",
         attribute: false
     },
     {
         page: "contact",
-        content: "Contacto",
+        content: "Contacto y Ubicación",
         link: "/html/Contacto.html",
-        ubication: "NAV",
+        ubication: "FOOTER",
         attribute: false
     },
     {
