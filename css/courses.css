@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    /* align-items: center; */
     font-size: 1.6rem;    
 }
 
@@ -22,7 +22,8 @@
 .container__Specialties {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-evenly;    
+    justify-content: space-evenly;
+    margin-bottom: 25px;    
 }
 
 .container__Specialties--HIDE {
@@ -77,13 +78,20 @@
     justify-content: space-around;
 }
 
-.course {
+.containerCourses > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
     background: linear-gradient(180deg, var(--mainColor), var(--mainColor2));
     border-radius: 7px;
+    margin: 10px 10px 25px 10px;    
+    padding: 5px;
+}
+
+.course {
     color: var(--contrastColor);
     font-size: 1.8rem;
-    margin: 10px;
-    padding: 5px;
     padding-bottom: 15px;
     text-align: center;
     max-width: 400px;
@@ -93,13 +101,14 @@
     font-size: 2.3rem;
     background-color: var(--contrastColor);
     color: var(--mainColor);    
-    padding: 15px 5px;
+    padding: 15px 10px;
 }
 
 .containerCourse--profesor{
     text-transform: capitalize;
     font-size: 2rem;
     margin-top: 10px;
+    padding: 0px 15px;
 }
 
 .floating__button {
@@ -116,20 +125,16 @@
     display: none;
 }
 
-.educativeOffer > iframe {
-    width: 92vw;
-    min-height: 75vh;
-    border: var(--contrastColor2) solid 2px;
-    border-radius: 10px;
-}
-
+/* estilos de diseño con PDF, analizar si reutilizar en inscripcion*/
 .educativeOffer__button {
     padding: 12px 25px;
+    margin-bottom: 10px;
 }
 
 .educativeOffer__button:visited {
     color: var(--mainColor);
 }
+/* Terminan estilos de diseño con PDF */
 
 .error__API{    
     color: var(--contrastColor);
@@ -140,10 +145,6 @@
 }
 
 @media (min-width: 1024px) {
-    .educativeOffer > iframe {
-        max-width: 1200px;
-    }
-
     .Specialties--containers {
         max-width: 450px;
     }

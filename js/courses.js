@@ -26,20 +26,29 @@ class AvailableCourses {
     }
 
     constructorCourse(course){
+        if (course.observaciones == undefined) {
+            course.observaciones = "";
+        } else {
+            const textObs = course.observaciones;
+            course.observaciones = "Observaciones: " + textObs;
+        }
         const container = document.createElement("div");
-        container.className = "course";
+        //container.className = "course";
         container.innerHTML = `
-        <p class="containerCourse--title"><strong>${course.curso}</strong></p>
-        <p class="containerCourse--profesor">Profesor: ${course.profesor.toLowerCase()}</p>
-        <br>
-        <p>Inicia:  <b>${course.fecha_inicio}</b></p>
-        <p>Termina:  <b>${course.fecha_termino}</b></p>        
-        <p>Horario:  <b>${course.hora_inicio} a ${course.Hora_fin}</b> hrs.</p>
-        <br>
-        <p>Modalidad del curso: <b><i>${course.modalidad_curso}</i></b></p>
-        <p>${course.horas} horas de duración</p>
-        <p>Dias de clase: ${course.dias_de_clases}</p>        
-        <p>Observaciones: ${course.observaciones}</p>        
+        <div class="course">
+            <p class="containerCourse--title"><strong>${course.curso}</strong></p>
+            <p class="containerCourse--profesor">Profesor: ${course.profesor.toLowerCase()}</p>
+            <br>
+            <p>Inicia:  <b>${course.fecha_inicio}</b></p>
+            <p>Termina:  <b>${course.fecha_termino}</b></p>        
+            <p>Horario:  <b>${course.hora_inicio} a ${course.Hora_fin}</b> hrs.</p>
+            <br>
+            <p>Modalidad del curso: <b><i>${course.modalidad_curso}</i></b></p>
+            <p>${course.horas} horas de duración</p>
+            <p>Dias de clase: ${course.dias_de_clases}</p>        
+            <p>${course.observaciones}</p>
+        </div>
+        <a class="button__link educativeOffer__button" href="../html/Inscribete.html">Inscribete...</a>
         `;
         return container;
     }
@@ -57,7 +66,7 @@ class AvailableCourses {
 
     sendCourses(array){
         let arrayCourses = [];        
-        array[0].forEach(element => {
+        array[0].forEach(element => {            
             const course = this.constructorCourse(element);
             arrayCourses.push(course);
         })                
@@ -81,6 +90,7 @@ class AvailableCourses {
 }
 
 class ObjFromArray {
+    arrayKeys = [];
     constructor (array){
         this.arrayProperties(array);
         const arrayWithObjects = this.trasnformArrayOfObjects(array);
@@ -94,25 +104,38 @@ class ObjFromArray {
     
     trasnformArrayOfObjects(array){
         let arrayWithObject = []
-        array.forEach( element => {            
-            let i = 0;            
-            const course = element.reduce( (obj, item)=> {                
-                const prop = this.arrayKeys[i];                
+        array.forEach( element => {
+            let i = 0;
+            const course = element.reduce( (obj, item)=> {
+                const prop = this.arrayKeys[i];
                 if (!obj[item]) {
                     Object.defineProperty(obj, prop, {
                         value: item,
                         writable: true,
                         enumerable: true,
                         configurable: false
-                    })                    
-                }                
+                    })
+                }
                 i++;
-                return obj                    
+                return obj
             }, {})
             arrayWithObject.push(course)
-        })        
-        arrayWithObject.shift();        
-        return arrayWithObject
+        })
+        
+        arrayWithObject.shift();
+        const arrayWithPlaces = this.coursesWithPlaces(arrayWithObject)
+        return arrayWithPlaces
+    }
+
+    coursesWithPlaces(array){
+        const withPlace = [];
+        array.forEach(element => {
+            const places = Number.parseInt(element.inscritos)
+                if (places < 25 && places != NaN) {
+                    withPlace.push(element)
+                }
+        })
+        return withPlace
     }
 
     sortBySpeciality(array){
@@ -131,19 +154,17 @@ class ObjFromArray {
           return objSpecialities
         })
         return forSpecialities;
-      }
-
-      arrayKeys = [];
     }
+}
     
 class Specialties {
     static textTitle = "Seleciona una especialidad para ver los cursos disponibles:"
 
-    constructor(arrayResponse){
+    constructor(arrayResponse){        
         this.title()
         this.createContainer(arrayResponse);
         this.createButtoBack();
-        this.createRegistrationButton();
+        //this.createRegistrationButton();
         Specialties.showSpecialties();
     }
 
@@ -154,7 +175,7 @@ class Specialties {
         title.className ="educativeOffer__api--title";
         nodeAPI_Offer.appendChild(title);
     }
-
+    
     createContainer(arrayResponse){
         const container = document.createElement("div");
         container.className = `container__Specialties container__Specialties--HIDE`;
@@ -168,7 +189,7 @@ class Specialties {
         nodeAPI_Offer.appendChild(container);
     }
     
-    createButtoBack(){    
+    createButtoBack(){
         const buttonBack = document.createElement("div");        
         buttonBack.className = "buttonBack buttonBack--HIDE";
         buttonBack.id = "buttonBack";
@@ -192,8 +213,9 @@ class Specialties {
     }
 
     static showButtonBack() {
-        const nodeButtonFloatingReg = document.querySelector("#buttonFloatingReg");
-        nodeButtonFloatingReg.classList.toggle("floating__button--HIDE");
+        //habilitar si se usa boton flotante
+        //const nodeButtonFloatingReg = document.querySelector("#buttonFloatingReg");
+        //nodeButtonFloatingReg.classList.toggle("floating__button--HIDE");
         const nodeButtonBack = document.querySelector("#buttonBack");
         nodeButtonBack.classList.toggle("buttonBack--HIDE");
         nodeButtonBack.addEventListener("click", backToSpecialties)
