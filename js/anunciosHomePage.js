@@ -5,14 +5,24 @@ const homepage = [
     },
     
     advertisements = {
-        ofertaActual : {
-            title : "Información importante sobre el seguro escolar",
-            information : "El seguro escolar es una póliza de gastos médicos que garantiza la atención de forma gratuita en caso de sufrir un accidente escolar; debido a la pandemia y que la mayoría de nuestros cursos se imparten a distancia les estamos brindando información a los alumnos que deseen contratar este seguro",
-            note: "Nota. El Seguro Escolar contra Accidentes iniciará su operatividad en el momento que los alumnos asistan a sus escuelas de manera presencial y que haya contratado el mismo. El seguro Escolar tiene un costo de $65 que puede pagarse opcionalmente, cubre riesgos en las instalaciones del plantel y en el trayecto de ida y vuelta de las instalaciones educativas al domicilio (se aplican condiciones de la póliza). El costo es un solo pago de $65 y aplica para todos los cursos a los que se inscriban durante el ciclo escolar. Es recomendable para todos los cursos presenciales e híbridos. En caso de no contratar el seguro el plantel no se hace responsable por algún accidente que suceda dentro de las instalaciones",
-            button : "Conoce las condiciones del seguro escolar",
-            linkPage : "https://cecati13web.blob.core.windows.net/descargas/info_seguro_escolar.pdf",
-            animation: false
-        },    
+        modalidades : {
+            title : "Actualizamos nuestro sitio web!",
+            information : 
+            `Inscríbete a uno de nuestros cursos y obtén 50% de descuento para cursar un segundo. Para hacer válida la promoción se tienen que inscribir juntos ambos cursos (deben iniciar en el periodo señalado). Ahorro $150.`,            
+            note : "",
+            
+            button : "",
+            linkPage: "",
+            animation : false
+        },
+        // ofertaActual : {
+        //     title : "Información importante sobre el seguro escolar",
+        //     information : "El seguro escolar es una póliza de gastos médicos que garantiza la atención de forma gratuita en caso de sufrir un accidente escolar; debido a la pandemia y que la mayoría de nuestros cursos se imparten a distancia les estamos brindando información a los alumnos que deseen contratar este seguro",
+        //     note: "Nota. El Seguro Escolar contra Accidentes iniciará su operatividad en el momento que los alumnos asistan a sus escuelas de manera presencial y que haya contratado el mismo. El seguro Escolar tiene un costo de $65 que puede pagarse opcionalmente, cubre riesgos en las instalaciones del plantel y en el trayecto de ida y vuelta de las instalaciones educativas al domicilio (se aplican condiciones de la póliza). El costo es un solo pago de $65 y aplica para todos los cursos a los que se inscriban durante el ciclo escolar. Es recomendable para todos los cursos presenciales e híbridos. En caso de no contratar el seguro el plantel no se hace responsable por algún accidente que suceda dentro de las instalaciones",
+        //     button : "Conoce las condiciones del seguro escolar",
+        //     linkPage : "https://cecati13web.blob.core.windows.net/descargas/info_seguro_escolar.pdf",
+        //     animation: false
+        // },    
         modalidades : {
             title : "Promoción para cursos de enero y febrero",
             information : 

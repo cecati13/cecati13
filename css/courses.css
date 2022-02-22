@@ -72,6 +72,12 @@
     width: 260px;
 }
 
+.Specialties--containers > img {
+    height: 30px;
+    font-size: 1rem;
+    font-weight: normal;
+}
+
 .containerCourses {
     display: flex;
     flex-wrap: wrap-reverse;
@@ -113,12 +119,11 @@
 
 .floating__button {
     position: fixed;
-    left: 7vw;
-    bottom: 10px;
-    font-size: 1.5rem;
-    font-weight: 600;
-    height: 50px;
-    padding-top: 14px;
+    right: 0vw;
+    top: 60vh;    
+    height: 60px;
+    padding: 6px;
+    border-radius: 5px;
 }
 
 .floating__button--HIDE{
@@ -149,9 +154,7 @@
         max-width: 450px;
     }
 
-    .floating__button{
-        position: absolute;
-        left: 60vw;
-        top: 265px;
+    .floating__button {        
+        position: static;
     }
 }

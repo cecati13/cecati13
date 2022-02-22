@@ -1,5 +1,5 @@
 //Consultar mas columnas, modificar URL
-const URL = "https://sheets.googleapis.com/v4/spreadsheets/108FBMScjh_seZ284-T0cZgpW_OpdiU9iJNGlycV4aJU/values/Cursos!A:N?key=AIzaSyA1pfILJrar9ay5u1PoOWVuz4t8VhxA6jE"
+const URL = "https://sheets.googleapis.com/v4/spreadsheets/108FBMScjh_seZ284-T0cZgpW_OpdiU9iJNGlycV4aJU/values/Cursos!A:O?key=AIzaSyA1pfILJrar9ay5u1PoOWVuz4t8VhxA6jE"
 let infoFetch = [];
 const nodeAPI_Offer = document.getElementById("API_educativeOffer");
 
@@ -48,8 +48,8 @@ class AvailableCourses {
             <p>Dias de clase: ${course.dias_de_clases}</p>        
             <p>${course.observaciones}</p>
         </div>
-        <a class="button__link educativeOffer__button" href="../html/Inscribete.html">Inscribete...</a>
         `;
+        //<a class="button__link educativeOffer__button" href="../html/Inscribete.html">Inscribete...</a>
         return container;
     }
 
@@ -141,15 +141,18 @@ class ObjFromArray {
     sortBySpeciality(array){
         const onlySpecialities = [];
         array.forEach( item => {
-          if (!onlySpecialities.includes(item.especialidad)) {
-            onlySpecialities.push(item.especialidad)
-          }
+            if (!onlySpecialities.includes(item.especialidad)) {
+                onlySpecialities.push(item.especialidad)
+            }
         });
         const forSpecialities = onlySpecialities.map( item => {
-          const coursesArray = array.filter( itemObj => itemObj.especialidad === item)
+            const coursesArrayWithSpecialtie = array.filter( itemObj => itemObj.especialidad === item);            
+            const imgArrayWithSpecialtie = [];
+          coursesArrayWithSpecialtie.forEach( course => imgArrayWithSpecialtie.push(course.imagenURL))
           const objSpecialities = {
             specialty : item,
-            courses : coursesArray
+            courses : coursesArrayWithSpecialtie,
+            imageURL : imgArrayWithSpecialtie
           }
           return objSpecialities
         })
@@ -160,11 +163,11 @@ class ObjFromArray {
 class Specialties {
     static textTitle = "Seleciona una especialidad para ver los cursos disponibles:"
 
-    constructor(arrayResponse){        
+    constructor(arrayBySpecialties){
         this.title()
-        this.createContainer(arrayResponse);
+        this.createContainer(arrayBySpecialties);
         this.createButtoBack();
-        //this.createRegistrationButton();
+        this.createRegistrationButton();
         Specialties.showSpecialties();
     }
 
@@ -176,14 +179,19 @@ class Specialties {
         nodeAPI_Offer.appendChild(title);
     }
     
-    createContainer(arrayResponse){
+    createContainer(arrayBySpecialties){
         const container = document.createElement("div");
         container.className = `container__Specialties container__Specialties--HIDE`;
         container.id = "containerSpecialties";
-        arrayResponse.forEach(element => {
+        arrayBySpecialties.forEach(element => {
+            const imageRandom = Math.ceil(Math.random()*element.imageURL.length) - 1;
+            console.log("Especialidad: ", element.specialty, ". # de Cursos: ", element.imageURL.length,". ImageRandom: ",imageRandom);
             container.innerHTML += `
             <div class="Specialties--containers">
-            ${element.specialty.toLowerCase()} </div>`             
+                <img src="${element.imageURL[imageRandom]}" 
+                alt="imagen curso">
+                <span>${element.specialty.toLowerCase()}</span>            
+            </div>`             
         });
         container.addEventListener("click", event => locateEvent(event));      
         nodeAPI_Offer.appendChild(container);
@@ -194,16 +202,20 @@ class Specialties {
         buttonBack.className = "buttonBack buttonBack--HIDE";
         buttonBack.id = "buttonBack";
         buttonBack.innerHTML = `        
-        <img src="/assets/arrowBack.svg" alt="Retroceder">
+        <img src="http://cecati13.com.mx/assets/arrowBack.svg" alt="Retroceder">
         <span>REGRESAR</span>`;        
         nodeAPI_Offer.appendChild(buttonBack);
     }
-    createRegistrationButton(){        
+    createRegistrationButton(){
         const registrationButton = document.createElement("a");
-        registrationButton.innerText = "Preinscríbete...";
         registrationButton.href= document.querySelector("#inscription");
-        registrationButton.className = "button__link floating__button floating__button--HIDE";
-        registrationButton.id = "buttonFloatingReg";
+        registrationButton.innerHTML = `
+        <img src="http://cecati13.com.mx/assets/inscripcion.svg" 
+        alt="Inscripción" class="button__link floating__button floating__button--HIDE" id="buttonFloatingReg">
+        `;
+        // registrationButton.innerText = "Preinscríbete...";
+        // registrationButton.className = "button__link floating__button floating__button--HIDE";
+        //registrationButton.id = "buttonFloatingReg";
         nodeAPI_Offer.appendChild(registrationButton);
     }
 
@@ -214,8 +226,8 @@ class Specialties {
 
     static showButtonBack() {
         //habilitar si se usa boton flotante
-        //const nodeButtonFloatingReg = document.querySelector("#buttonFloatingReg");
-        //nodeButtonFloatingReg.classList.toggle("floating__button--HIDE");
+        const nodeButtonFloatingReg = document.querySelector("#buttonFloatingReg");
+        nodeButtonFloatingReg.classList.toggle("floating__button--HIDE");
         const nodeButtonBack = document.querySelector("#buttonBack");
         nodeButtonBack.classList.toggle("buttonBack--HIDE");
         nodeButtonBack.addEventListener("click", backToSpecialties)
