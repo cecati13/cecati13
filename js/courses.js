@@ -166,8 +166,7 @@ class Specialties {
     constructor(arrayBySpecialties){
         this.title()
         this.createContainer(arrayBySpecialties);
-        this.createButtoBack();
-        this.createRegistrationButton();
+        this.createButtoBack();        
         Specialties.showSpecialties();
     }
 
@@ -184,39 +183,40 @@ class Specialties {
         container.className = `container__Specialties container__Specialties--HIDE`;
         container.id = "containerSpecialties";
         arrayBySpecialties.forEach(element => {
-            const imageRandom = Math.ceil(Math.random()*element.imageURL.length) - 1;
-            console.log("Especialidad: ", element.specialty, ". # de Cursos: ", element.imageURL.length,". ImageRandom: ",imageRandom);
+            //image course random show to specialtie
+            const imageRandom = Math.ceil(Math.random()*element.imageURL.length) - 1;            
             container.innerHTML += `
-            <div class="Specialties--containers">
-                <img src="${element.imageURL[imageRandom]}" 
-                alt="imagen curso">
-                <span>${element.specialty.toLowerCase()}</span>            
+            <div class="Specialties--containers" data-specialty="${element.specialty.toLowerCase()}">
+                <div class="Specialties--container--logo" data-specialty="${element.specialty.toLowerCase()}">
+                    <img src="${element.imageURL[imageRandom]}" class="Specialties--containers--img"
+                    data-specialty="${element.specialty.toLowerCase()}" alt="imagen curso">
+                </div>
+                <div class="Specialties--container--title" 
+                data-specialty="${element.specialty.toLowerCase()}">${element.specialty.toLowerCase()}</div>
             </div>`             
         });
         container.addEventListener("click", event => locateEvent(event));      
         nodeAPI_Offer.appendChild(container);
     }
-    
+
     createButtoBack(){
         const buttonBack = document.createElement("div");        
-        buttonBack.className = "buttonBack buttonBack--HIDE";
-        buttonBack.id = "buttonBack";
-        buttonBack.innerHTML = `        
-        <img src="http://cecati13.com.mx/assets/arrowBack.svg" alt="Retroceder">
-        <span>REGRESAR</span>`;        
-        nodeAPI_Offer.appendChild(buttonBack);
-    }
-    createRegistrationButton(){
-        const registrationButton = document.createElement("a");
-        registrationButton.href= document.querySelector("#inscription");
-        registrationButton.innerHTML = `
-        <img src="http://cecati13.com.mx/assets/inscripcion.svg" 
-        alt="Inscripción" class="button__link floating__button floating__button--HIDE" id="buttonFloatingReg">
-        `;
+        buttonBack.className = "container__buttons";        
+        buttonBack.innerHTML = `
+        <div class="buttonBack buttonBack--HIDE" id="buttonBack">
+            <img src="http://cecati13.com.mx/assets/arrowBack.svg" alt="Retroceder">
+            <span>REGRESAR</span>        
+        </div>
+        <a href="/html/Inscribete.html">
+            <img src="http://cecati13.com.mx/assets/inscripcion.svg" 
+            alt="Inscripción" class="button__link floating__button floating__button--HIDE" id="buttonFloatingReg">
+        </a>
+        `;        
+        //PARA USAR CUANDO LA INSCRIPCION LLEVE DIRECTO AL FORMULARIO PRECARGADO CON EL CURSO
         // registrationButton.innerText = "Preinscríbete...";
         // registrationButton.className = "button__link floating__button floating__button--HIDE";
         //registrationButton.id = "buttonFloatingReg";
-        nodeAPI_Offer.appendChild(registrationButton);
+        nodeAPI_Offer.appendChild(buttonBack);
     }
 
     static showSpecialties(){    
@@ -232,11 +232,10 @@ class Specialties {
         nodeButtonBack.classList.toggle("buttonBack--HIDE");
         nodeButtonBack.addEventListener("click", backToSpecialties)
     }
-
 }
 
 //functions of EventListener
-const backToSpecialties = function () {    
+const backToSpecialties = function () {
     Specialties.showSpecialties();
     AvailableCourses.removeCourses();
     Specialties.showButtonBack();
@@ -244,7 +243,7 @@ const backToSpecialties = function () {
 }
 
 function locateEvent(event) {
-    const ubication = event.target.innerText.toUpperCase();    
+    const ubication = event.target.dataset.specialty.toUpperCase();
     const showCourses = new AvailableCourses(ubication);
 }
 
