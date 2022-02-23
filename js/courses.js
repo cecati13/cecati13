@@ -1,7 +1,7 @@
 //Consultar mas columnas, modificar URL
 const URL = "https://sheets.googleapis.com/v4/spreadsheets/108FBMScjh_seZ284-T0cZgpW_OpdiU9iJNGlycV4aJU/values/Cursos!A:O?key=AIzaSyA1pfILJrar9ay5u1PoOWVuz4t8VhxA6jE"
 let infoFetch = [];
-const nodeAPI_Offer = document.getElementById("API_educativeOffer");
+const nodeAPI_Offer = document.getElementById("sectionCourses");
 
 class AvailableCourses {
     constructor(nameSpeciality){
@@ -25,8 +25,8 @@ class AvailableCourses {
         return courses;
     }
 
-    constructorCourse(course){
-        if (course.observaciones == undefined) {
+    constructorCourse(course){        
+        if (course.observaciones == undefined || course.observaciones === "") {
             course.observaciones = "";
         } else {
             const textObs = course.observaciones;
@@ -41,7 +41,7 @@ class AvailableCourses {
             <br>
             <p>Inicia:  <b>${course.fecha_inicio}</b></p>
             <p>Termina:  <b>${course.fecha_termino}</b></p>        
-            <p>Horario:  <b>${course.hora_inicio} a ${course.Hora_fin}</b> hrs.</p>
+            <p>Horario:  <b>${course.hora_inicio} a ${course.hora_fin}</b> hrs.</p>
             <br>
             <p>Modalidad del curso: <b><i>${course.modalidad_curso}</i></b></p>
             <p>${course.horas} horas de duración</p>
@@ -174,7 +174,7 @@ class Specialties {
         const title = document.createElement("h4");
         title.innerText = Specialties.textTitle;
         title.id = "alternateTitle"
-        title.className ="educativeOffer__api--title";
+        title.className ="section__courses--title";
         nodeAPI_Offer.appendChild(title);
     }
     
@@ -184,12 +184,16 @@ class Specialties {
         container.id = "containerSpecialties";
         arrayBySpecialties.forEach(element => {
             //image course random show to specialtie
-            const imageRandom = Math.ceil(Math.random()*element.imageURL.length) - 1;            
+            const imageRandom = Math.ceil(Math.random()*element.imageURL.length) - 1;
+            let image = element.imageURL[imageRandom];        
+            if (image == undefined) {
+                image = "https://cecati13web.blob.core.windows.net/assets-web-cecati13/LogoCecati.png";                
+            }
             container.innerHTML += `
             <div class="Specialties--containers" data-specialty="${element.specialty.toLowerCase()}">
                 <div class="Specialties--container--logo" data-specialty="${element.specialty.toLowerCase()}">
-                    <img src="${element.imageURL[imageRandom]}" class="Specialties--containers--img"
-                    data-specialty="${element.specialty.toLowerCase()}" alt="imagen curso">
+                    <img src="${image}" class="Specialties--containers--img"
+                    data-specialty="${element.specialty.toLowerCase()}" alt="curso">
                 </div>
                 <div class="Specialties--container--title" 
                 data-specialty="${element.specialty.toLowerCase()}">${element.specialty.toLowerCase()}</div>
@@ -204,11 +208,11 @@ class Specialties {
         buttonBack.className = "container__buttons";        
         buttonBack.innerHTML = `
         <div class="buttonBack buttonBack--HIDE" id="buttonBack">
-            <img src="http://cecati13.com.mx/assets/arrowBack.svg" alt="Retroceder">
+            <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/arrowBack.svg" alt="Retroceder">
             <span>REGRESAR</span>        
         </div>
         <a href="/html/Inscribete.html">
-            <img src="http://cecati13.com.mx/assets/inscripcion.svg" 
+            <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/inscripcion.svg" 
             alt="Inscripción" class="button__link floating__button floating__button--HIDE" id="buttonFloatingReg">
         </a>
         `;        

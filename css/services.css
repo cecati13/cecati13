@@ -1,23 +1,45 @@
-.rocos {
+.section__services {
     display: flex;
     flex-direction: column;
     align-items: center;    
 }
 
-.rocos--title {
+.section__services--title {
+    color: var(--fontColor);
     font-size: 2.6rem;
-    margin-top: 20px;
+}
+
+.rocos {
+    background: linear-gradient(var(--mainColor), var(--mainColor2));
+    border-radius: 5px;
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
+    max-width: 700px;
+}
+
+.rocos--title {
+    background-color: var(--fontColor2);
+    border-radius: 5px 5px 0 0;
+    color: var(--mainColor);
+    padding: 20px;
+    font-size: 2rem;    
     text-align: center;
+    width: 100%;
 }
 
 .rocos__description {
+    color: var(--fontColor2);
     font-size: 1.7rem;
     padding: 10px 15px;
-    margin: 20px 0;
-    text-align: center;
+    margin: 10px 0;
+    text-align: justify;
 }
 
 .rocos__advertisement {
-    font-size: 2.2rem;
+    font-size: 2rem;
     text-align: center;
+    color: var(--fontColor2);
+    margin-bottom: 30px;
 }

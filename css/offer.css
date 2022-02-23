@@ -1,14 +1,14 @@
-.specialities {
-    color: var(--fontColor);
+.section__specialities {
+    color: var(--contrastColor2);
     font-size: 1.9rem;    
 }
 
-.specialities__UL {
+.section__specialities__UL {
     padding: 5px;
     text-align: center;
 }
 
-.specialities__UL--list {
+.section__specialities__UL--list {
     padding: 10px;
     cursor: pointer;
 }

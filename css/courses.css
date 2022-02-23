@@ -1,4 +1,4 @@
-.educativeOffer {
+.section__courses {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -6,16 +6,10 @@
     font-size: 1.6rem;    
 }
 
-.educativeOffer__api {
-    font-size: 1.6rem;
-    max-width: 90vw;
-    color: var(--fontColor2);
-}
-
-.educativeOffer__api--title {
+.section__courses--title {
     color: var(--fontColor);
     text-align: center;
-    font-size: 2.3rem;
+    font-size: 2.6rem;
     padding-bottom: 15px;
 }
 
@@ -65,15 +59,13 @@
     color: var(--fontColor2);
     cursor: pointer;
     display: flex;
-    align-items: center;
-    
+    align-items: center;    
     font-size: 1.6rem;
     font-weight: bold;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     margin: 8px;
     text-transform: capitalize;
     text-align: center;    
-    
     min-height: 90px;
     width: 260px;
 }
@@ -81,6 +73,8 @@
 .Specialties--container--logo {
     width: 35%;
     display: flex;
+    /* Quitar none para poner imagen */
+    display: none;
 }
 
 .Specialties--containers--img {
@@ -93,6 +87,8 @@
 
 .Specialties--container--title {
     width: 65%;
+    /* Quitar width al 100% Para imagenes */
+    width: 100%;
     padding: 5px;
 }
 

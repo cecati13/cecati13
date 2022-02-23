@@ -426,13 +426,13 @@ const BD_SPECIALITIES = {
 
 //Algoritmo temporal para mostrar info:
 // bd = { especialities { name, objetive, laborField, courses [] } }
-const mountSpecialities = document.getElementById("NodeSpecialities")
+const mountSpecialities = document.getElementById("sectionSpecialties")
 const nodeResult = document.getElementById("result");
 
 
 function createLI (data, name) {
     const nodeLI = document.createElement("li");
-    nodeLI.className = "specialities__UL--list"
+    nodeLI.className = "section__specialities__UL--list"
     nodeLI.textContent = name;
     //problema futuro con el dataset specialities al reusar en courses
     nodeLI.dataset.specialities = data;
@@ -441,7 +441,7 @@ function createLI (data, name) {
 
 function getSpecialities (object) {
     const containerUL = document.createElement("ul");
-    containerUL.className = "specialities__UL";
+    containerUL.className = "section__specialities__UL";
     for (const key in object) {
         if (Object.hasOwnProperty.call(object, key)) {          
             const name = object[key].name;

@@ -4,17 +4,7 @@ const homepage = [
         year : "2021-2022"
     },
     
-    advertisements = {
-        modalidades : {
-            title : "Actualizamos nuestro sitio web!",
-            information : 
-            `Inscríbete a uno de nuestros cursos y obtén 50% de descuento para cursar un segundo. Para hacer válida la promoción se tienen que inscribir juntos ambos cursos (deben iniciar en el periodo señalado). Ahorro $150.`,            
-            note : "",
-            
-            button : "",
-            linkPage: "",
-            animation : false
-        },
+    advertisements = {        
         // ofertaActual : {
         //     title : "Información importante sobre el seguro escolar",
         //     information : "El seguro escolar es una póliza de gastos médicos que garantiza la atención de forma gratuita en caso de sufrir un accidente escolar; debido a la pandemia y que la mayoría de nuestros cursos se imparten a distancia les estamos brindando información a los alumnos que deseen contratar este seguro",
@@ -23,7 +13,7 @@ const homepage = [
         //     linkPage : "https://cecati13web.blob.core.windows.net/descargas/info_seguro_escolar.pdf",
         //     animation: false
         // },    
-        modalidades : {
+        promocion : {
             title : "Promoción para cursos de enero y febrero",
             information : 
             `Inscríbete a uno de nuestros cursos y obtén 50% de descuento para cursar un segundo. Para hacer válida la promoción se tienen que inscribir juntos ambos cursos (deben iniciar en el periodo señalado). Ahorro $150.`,
@@ -70,21 +60,25 @@ function advertisementsTotal(obj) {
     const containerAdvertisements = createContainer();
     containerAdvertisements.className = "main__container__advertisements";
     const countAdvertisements = Object.keys(obj).length;
+    let classAdvertisements = "main__container__advertisements--div"
+    if (countAdvertisements === 1) {
+        classAdvertisements = "main__container__advertisements--div main__container__advertisements--div--maxWidth"
+    }
     const names = Object.getOwnPropertyNames(obj)
     let count = 0;
     while (count < countAdvertisements) {              
         const value = names[count];        
-        const container = createAdvertisements(obj[value]);
+        const container = createAdvertisements(obj[value], classAdvertisements);
         containerAdvertisements.appendChild(container);
         count++;
     }
     return containerAdvertisements;
 }
 
-function createAdvertisements(obj) {
+function createAdvertisements(obj, stringClass) {
     //crear el anuncio
     const container = createContainer();
-    container.className = "main__container__advertisements--div";
+    container.className = stringClass;
 
     const title = document.createElement("p");    
     title.textContent = obj.title;
