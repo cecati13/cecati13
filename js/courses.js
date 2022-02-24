@@ -161,7 +161,7 @@ class ObjFromArray {
 }
     
 class Specialties {
-    static textTitle = "Seleciona una especialidad para ver los cursos disponibles:"
+    static textTitle = "Selecciona una especialidad para ver los cursos disponibles:"
 
     constructor(arrayBySpecialties){
         this.title()
