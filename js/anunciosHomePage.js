@@ -1,7 +1,8 @@
 const homepage = [
     cicloEscolar = {
         title : "Bienvenido",
-        year : "2021-2022"
+        year : "2021-2022",
+        image: "https://lh4.googleusercontent.com/lRmgG0eWF9w35OtI8H4u1TK6ljP-9ZJlh6xQMsLsZBsmtP136efmhupZ4T_sU4UZtHCzckcAhA4ReAPrsJi0KcNFpSUGoPeD9SCA9nypok3WTB4zOvASK4oFoySWj4etKg=w1424"
     },
     
     advertisements = {        
@@ -33,7 +34,6 @@ const homepage = [
     }
 ];
 
-//algoritmo
 const nodeMain = document.querySelector("#main");
 
 function createContainer () {
@@ -44,15 +44,11 @@ function createContainer () {
 function welcome (obj) {
     const containerWelcome = createContainer();
     containerWelcome.className = "main__container__welcome";
-    
-    const h3Title = document.createElement("h3");
-    h3Title.textContent = obj.title;
-    h3Title.className = "main__container__welcome--title";    
-    const h3Age = document.createElement("h3");
-    h3Age.textContent = obj.year;
-    h3Age.className = "main__container__welcome--age";
-
-    containerWelcome.append(h3Title,h3Age);
+    containerWelcome.innerHTML = `
+    <h3 class="main__container__welcome--title">${obj.title}</h3>
+    <h3 class="main__container__welcome--age">${obj.year}</h3>
+    `;
+    //<img class="main__container__welcome--img" src="${obj.image}">
     return containerWelcome;
 }
 
@@ -80,18 +76,11 @@ function createAdvertisements(obj, stringClass) {
     const container = createContainer();
     container.className = stringClass;
 
-    const title = document.createElement("p");    
-    title.textContent = obj.title;
-    title.className = "main__container__advertisements--div__title";
-
-    const information = document.createElement("p");
-    information.textContent = obj.information;
-    information.className = "";
-
-    const note = document.createElement("p");
-    note.textContent = obj.note;
-    note.className = "main__container__advertisements--div__note";
-
+    container.innerHTML = `
+        <p class="main__container__advertisements--div__title">${obj.title}</p>
+        <p>${obj.information}</p>
+        <p class="main__container__advertisements--div__note">${obj.note}</p>
+    `;
     const button = document.createElement("a")
     button.textContent = obj.button;
     const absolutePath = /^https?:\/\//i;    
@@ -105,10 +94,8 @@ function createAdvertisements(obj, stringClass) {
         button.classList.add("buttonAnimate");
     }
     if (obj.button) {        
-        container.append(title, information, note, button);
-    } else {
-        container.append(title,information, note)
-    }
+        container.append(button);
+    }     
     return container;
 }
 
