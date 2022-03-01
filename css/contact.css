@@ -13,19 +13,36 @@
     color: var(--contrastColor2);
 }
 
-.contact h2:first-of-type {
+.contact h3:first-of-type {
     display: flex;
     flex-direction: column;
     color: var(--fontColor);
     font-size: 1.8rem;
     font-weight: 700;
-    padding: 20px 10px;
+    padding: 15px 10px;
+    margin-top: 20px;
 }
 
 .email > h4 {
     font-size: 1.7rem;
     font-weight: 900;
     padding: 8px 0;
+}
+
+.whatsapp {
+    position: fixed;
+    right: 10px;
+    bottom: 75px;
+    background-color: var(--mainColor2);
+    border: solid 2px var(--contrastColor2);
+    border-radius: 25%;
+    padding: 4px;
+    width: 67px;
+    margin: 20px 0;
+}
+
+.whatsapp img {
+    height: 55px;
 }
 
 .ubication {
@@ -49,7 +66,10 @@
     color: var(--fontColor);
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
+    .whatsapp {
+        position: static;
+    }
     .ubication {     
         width: auto;
     }

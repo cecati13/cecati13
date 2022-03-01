@@ -15,11 +15,11 @@ const homepage = [
         //     animation: false
         // },    
         promocion : {
-            title : "Promoción para cursos de enero y febrero",
+            title : "Promoción para cursos en marzo",
             information : 
             `Inscríbete a uno de nuestros cursos y obtén 50% de descuento para cursar un segundo. Para hacer válida la promoción se tienen que inscribir juntos ambos cursos (deben iniciar en el periodo señalado). Ahorro $150.`,
             note : 
-            `Nota. Esta promoción es válida para los cursos que inician en los meses de enero y febrero, regístrate a un curso con un costo regular de $300 y cursa un segundo curso pagando solo $150.`,
+            `Nota. Esta promoción es válida para los cursos que inician en marzo, regístrate a un curso con un costo regular de $300 y cursa un segundo curso pagando solo $150.`,
             button : "Inscríbete",
             linkPage : "inscription",
             animation: true

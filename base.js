@@ -50,12 +50,12 @@ class Base {
         footer.appendChild(footerUL);
     }
 
-    constructor() {
-        const ubication = this.verifyHost()
+    constructor() {        
+        const ubication = this.verifyHost();        
         this.createHeader(ubication);
         this.createFOOTER(ubication);
     }
-
+    
     verifyHost(){
         let hostname = "";
         const verifying = /github/;
