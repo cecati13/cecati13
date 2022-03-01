@@ -23,6 +23,18 @@
     margin-top: 20px;
 }
 
+.contact--a {
+    color: var(--contrastColor2);
+}
+
+.contact--a:visited {
+    color: var(--contrastColor2);
+}
+
+.contact--a:active{
+    color: var(--contrastColor2);
+}
+
 .email > h4 {
     font-size: 1.7rem;
     font-weight: 900;
@@ -36,8 +48,8 @@
     background-color: var(--mainColor2);
     border: solid 2px var(--contrastColor2);
     border-radius: 25%;
-    padding: 4px;
-    width: 67px;
+    padding: 2px;
+    width: 65px;
     margin: 20px 0;
 }
 

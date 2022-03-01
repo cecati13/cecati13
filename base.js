@@ -31,10 +31,10 @@ class Base {
         footerUL.className = "footer__contact"
         footerUL.innerHTML = `
         <li>
-            <a id="gallery" href="${ub}/html/Galeria.html">Galería de Imágenes</a>
+            <a id="contact" href="${ub}/html/Contacto.html">Contacto y Ubicación</a>
         </li>
         <li>
-            <a id="contact" href="${ub}/html/Contacto.html">Contacto y Ubicación</a>
+            <a id="gallery" href="${ub}/html/Galeria.html">Galería de Imágenes</a>
         </li>
         <li>
             <a id="calendar" href="https://www.gob.mx/sep?tab=Calendario%20escolar" target="_blank">Calendario Escolar</a>
@@ -68,23 +68,23 @@ class Base {
 
     createHeader(ubication){
         const menu = this.createMenu();
-        const header = this.createHeaderPort();
+        const header = this.createHeaderPort(ubication);
         const nav = this.createNAV(ubication);
         const nodeHeader = document.getElementById("header");        
         nodeHeader.append(menu, header, nav);
     }
 
-    createHeaderPort(){
+    createHeaderPort(ub){        
         const container = document.createElement("div");
         container.className = "header__port";
-        container.innerHTML = `
-        <img class="header__port--imgSEP" src="https://upload.wikimedia.org/wikipedia/commons/f/fc/SEP_Logo_2019.svg" alt="Secretaria de Educación Pública">
+        container.innerHTML = `        
+        <a href="${ub}/"><img class="header__port--imgSEP" src="https://upload.wikimedia.org/wikipedia/commons/f/fc/SEP_Logo_2019.svg" alt="Secretaria de Educación Pública"></a>
         <div class="header__port__title">
-            <h1 class="header__port--C13">CECATI 13</h1>
+            <a href="${ub}/"><h1 class="header__port--C13">CECATI 13</h1></a>
             <h2 class="header__port__title--h1">Centro de Capacitación para el Trabajo Industrial No. 13</h2>
             <h2 class="header__port__title--h2">Profesor "Abraham Lezama Breton"</h2>
         </div>
-        <img class="header__port--imgC13" src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/LogoCecati.png" alt="Logo CECATI 13">
+        <img class="header__port--imgC13" src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/LogoCecati.png" alt="Logo CECATI 13">        
         `;
         return container;
     }
