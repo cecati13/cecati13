@@ -1,0 +1,17 @@
+.main {
+    color: var(--mainColor2);
+    background-image: url("http://cecati13.com.mx/assets/galeria/portada3.jpeg");
+    background-position: 80% 50%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.main__container__welcome{
+    color: var(--mainColor);
+}
+.main__container__advertisements--div {
+    background: linear-gradient(var(--fontColor2), transparent);
+    color: var(--mainColor);
+    border-radius: 15px;
+    padding: 6px;
+}
