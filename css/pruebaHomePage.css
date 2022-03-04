@@ -1,7 +1,7 @@
 .main {
     color: var(--mainColor2);
-    background-image: url("http://cecati13.com.mx/assets/galeria/portada3.jpg");
-    background-position: 77% 90%;
+    background-image: url("https://cecati13web.blob.core.windows.net/galeria/zonas_comunes16.jpeg");
+    background-position: 35% 55%;
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
@@ -25,4 +25,19 @@
 .line {
     margin: 0;
     height: 7px;
+}
+
+@media (min-width: 768px) {
+    .main {
+        background: none;
+    }
+
+    .main__container__welcome{
+        color: var(--fontColor);
+        -webkit-text-stroke: 0;
+    }
+    .main__container__advertisements--div {
+        background: none;
+        color: var(--contrastColor);
+    }
 }

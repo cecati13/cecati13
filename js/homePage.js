@@ -13,7 +13,7 @@ const arrayHomePage = [
         //     button : "Cursos",
         //     linkPage : "courses",
         //     animation: false            
-        // },    
+        // },
         promocion : {
             title : "Promoción para cursos en marzo",
             information : 
