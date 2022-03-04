@@ -1,17 +1,28 @@
 .main {
     color: var(--mainColor2);
-    background-image: url("http://cecati13.com.mx/assets/galeria/portada3.jpeg");
-    background-position: 80% 50%;
+    background-image: url("http://cecati13.com.mx/assets/galeria/portada3.jpg");
+    background-position: 77% 90%;
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
 
 .main__container__welcome{
     color: var(--mainColor);
+    -webkit-text-stroke: 2px var(--fontColor);
 }
 .main__container__advertisements--div {
     background: linear-gradient(var(--fontColor2), transparent);
     color: var(--mainColor);
     border-radius: 15px;
+    max-width: 450px;
     padding: 6px;
+}
+
+.main__container__advertisements--div--maxWidth {
+    max-width: 100%;
+}
+
+.line {
+    margin: 0;
+    height: 7px;
 }
