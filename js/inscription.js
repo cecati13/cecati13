@@ -54,8 +54,7 @@ class Inscriptions {
     
     
 
-    static createSteps (stepExecuted) {
-        console.log(stepExecuted)
+    static createSteps (stepExecuted) {        
         let stepContainer = [];        
         const stepTitleNumber = document.createElement("span");
         const textTitleNumber = document.createTextNode(stepExecuted.stepNumber);

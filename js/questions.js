@@ -59,8 +59,7 @@ class Questions {
             let link = element.link;
             let linkText = "";
             let linkClass = "";
-            if (link.length > 1) {
-                console.log(link);
+            if (link.length > 1) {                
                 linkText = "Mas información";
                 linkClass = "button__link";
             }
@@ -85,8 +84,7 @@ async function conexion(URL) {
         const info = await fetch(`${URL}`);        
         const infoJSON = await info.json()
         const responseWithArray = infoJSON.values;        
-        const response = new ObjFromArray(responseWithArray);
-        console.log(response);
+        const response = new ObjFromArray(responseWithArray);        
         const questions = new Questions(response);
         
     } catch (error) {
