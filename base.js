@@ -4,26 +4,27 @@ class Base {
         nav.className ="nav__hide";
         nav.id="navigator";
         nav.innerHTML = `
-    <ul class="nav__show--ul">
+        <ul class="nav__show--ul">
         <li>
             <a id="home" href="${ub}/" class="nav__show--ul__link">Inicio</a>
         </li>
         <li>
-            <a id="specialties" href="${ub}/html/Oferta.html" class="nav__show--ul__link">Oferta Educativa</a>
+            <a id="specialties" href="${ub}/oferta.html" class="nav__show--ul__link">Oferta Educativa</a>
         </li>
         <li>
-            <a id="courses" href="${ub}/html/cursos.html" class="nav__show--ul__link">Cursos Disponibles</a>
+            <a id="courses" href="${ub}/cursos.html" class="nav__show--ul__link">Cursos Disponibles</a>
         </li>
         <li>
-            <a id="inscription" href="${ub}/html/Inscribete.html" class="nav__show--ul__link">Inscripción</a>
+            <a id="inscription" href="${ub}/inscribete.html" class="nav__show--ul__link">Inscripción</a>
         </li>
         <li>
-            <a id="question" href="${ub}/html/preguntas.html" class="nav__show--ul__link">Preguntas Frecuentes</a>
+            <a id="question" href="${ub}/preguntas.html" class="nav__show--ul__link">Preguntas Frecuentes</a>
         </li>
         <li>
-            <a id="services" href="${ub}/html/servicios.html" class="nav__show--ul__link">Servicios</a>
+            <a id="services" href="${ub}/servicios.html" class="nav__show--ul__link">Servicios</a>
         </li>
-    </ul>`;
+        </ul>   
+        `;
     return nav;
     }
     createFOOTER(ub){
@@ -31,10 +32,10 @@ class Base {
         footerUL.className = "footer__contact"
         footerUL.innerHTML = `
         <li>
-            <a id="contact" href="${ub}/html/Contacto.html">Contacto y Ubicación</a>
+            <a id="contact" href="${ub}/contacto.html">Contacto y Ubicación</a>
         </li>
         <li>
-            <a id="gallery" href="${ub}/html/Galeria.html">Galería de Imágenes</a>
+            <a id="gallery" href="${ub}/galeria.html">Galería de Imágenes</a>
         </li>
         <li>
             <a id="calendar" href="https://www.gob.mx/sep?tab=Calendario%20escolar" target="_blank">Calendario Escolar</a>
@@ -47,7 +48,8 @@ class Base {
         </li>
         `;
         const footer = document.querySelector("#footer");
-        footer.appendChild(footerUL);
+        const line = this.createLine();
+        footer.append(line,footerUL);
     }
 
     constructor() {        
@@ -70,11 +72,12 @@ class Base {
         const menu = this.createMenu();
         const header = this.createHeaderPort(ubication);
         const nav = this.createNAV(ubication);
-        const nodeHeader = document.getElementById("header");        
-        nodeHeader.append(menu, header, nav);
+        const line = this.createLine();
+        const nodeHeader = document.getElementById("header");
+        nodeHeader.append(menu, header, nav, line);
     }
 
-    createHeaderPort(ub){        
+    createHeaderPort(ub){
         const container = document.createElement("div");
         container.className = "header__port";
         container.innerHTML = `        
@@ -101,6 +104,11 @@ class Base {
         <p class="menu--legend">MENÚ</p>
         `;
         return containerSVG;
+    }
+    createLine(){
+        const line = document.createElement("hr");
+        line.className = "line";
+        return line;
     }
     
 }

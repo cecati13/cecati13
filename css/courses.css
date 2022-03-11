@@ -73,8 +73,6 @@
 .Specialties--container--logo {
     width: 35%;
     display: flex;
-    /* Quitar none para poner imagen */
-    display: none;
 }
 
 .Specialties--containers--img {
@@ -83,12 +81,12 @@
     max-width: 100%;
     font-size: 1rem;
     font-weight: normal;
+    /* Quitar none para poner imagen */
+    display: none;
 }
 
 .Specialties--container--title {
-    width: 65%;
-    /* Quitar width al 100% Para imagenes */
-    width: 100%;
+    width: 65%;    
     padding: 5px;
 }
 

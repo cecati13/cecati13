@@ -146,7 +146,7 @@ class HomePage {
         container.className = "main__welcome";
         container.innerHTML = `        
             <h3 class="main__welcome--title">${obj.title}</h3>
-            <h3 class="mainr__welcome--age">${obj.year}</h3>
+            <h3 class="main__welcome--age">${obj.year}</h3>
             `;
             
         return container
