@@ -1,8 +1,9 @@
 .main {
     color: var(--mainColor2);
-    background-image: url("https://cecati13web.blob.core.windows.net/galeria/zonas_comunes15.jpeg");    background-position: 25% 25%;
+    background-image: url("https://cecati13web.blob.core.windows.net/galeria/zonas_comunes15.jpeg");
+    background-position: 25% 25%;
     background-repeat: no-repeat;
-    background-attachment: fixed;   
+    background-attachment: fixed;
     width: 100vw;
     display: flex;
     flex-direction: column;
@@ -11,12 +12,12 @@
 
 .main__welcome {
     font-size: 4rem;
-    padding: 20px;    
+    padding: 20px;
     background: linear-gradient(180deg, #7c888f, transparent);
     border-radius: 25px;
     color: var(--mainColor);
     -webkit-text-stroke: 2px var(--fontColor);
-    margin: 20px 0;    
+    margin: 20px 0;
 }
 
 .main__welcome--title {
@@ -32,7 +33,7 @@
 
     25% {        
         opacity: 0.7;
-    }   
+    }
 
     50% {
         transform: scale(1.4);
@@ -86,7 +87,6 @@
 
 .main__container__image {
     display: none;
-    
 }
 
 .main__container__announce--div {   
@@ -96,7 +96,7 @@
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    margin: 10px;    
+    margin: 10px;
     background: linear-gradient(var(--fontColor2), transparent);
     color: var(--mainColor);
     border-radius: 15px;
@@ -114,7 +114,7 @@
     padding: 25px 0;
 }
 
-@media (min-width: 768px) {   
+@media (min-width: 768px) {
     .main {
         background: none;
     }
@@ -139,12 +139,11 @@
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
-        width: 40%;       
+        width: 40%;
     }
 
-    .image__change {
-        animation: slideImage 6s ease 0s infinite normal none;    
-        /* Ajustar tiempo de acuerdo a function changeImage en homePage.js */
+    .image__change {        
+        animation: slideImage 6s ease 0s 1 normal none;        
     }
     
     @keyframes slideImage {
@@ -161,9 +160,9 @@
         }
     }
 
-    .main__container__image > img {        
+    .main__container__image > img {
         border-radius: 2em;
-        padding: 15px;        
+        padding: 15px;
         /* height: 400px; */
         width: auto;
     }
@@ -178,13 +177,14 @@
     .main__container__image {
         width: auto;
     }
-    .main__container__image > img {        
-       height: 400px;        
+
+    .main__container__image > img {
+       height: 400px;
     }
 }
 
 @media (min-width: 1440px) {
-    .main{
+    .main {
         width: 1440px;
     }
 

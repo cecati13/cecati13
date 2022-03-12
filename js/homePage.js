@@ -41,8 +41,6 @@ const arrayHomePage = [
 
 const arrayImage = [
     "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes15.jpeg",
-    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes9.jpeg",
-    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes16.jpeg",
     "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes1.jpeg",
     "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes2.jpeg",
     "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes3.jpeg",
@@ -51,13 +49,14 @@ const arrayImage = [
     "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes6.jpeg",
     "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes7.jpeg",
     "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes8.jpeg",
+    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes9.jpeg",
     "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes10.jpeg",
     "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes11.jpeg",
-    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes12.jpeg",
-    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes13.jpeg",
+    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes12.jpeg",    
     "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes14.jpeg",
+    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes16.jpeg",
     "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes17.jpeg",
-    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes18.jpeg",
+    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes18.jpg",
 ]
 
 class HomePage {
@@ -162,7 +161,7 @@ const containerMain = new HomePage(arrayHomePage);
 
 function numberRandom (){
     const min = 0;
-    const max = 17;    
+    const max = arrayImage.length;
 
     let n = 0;
     let numero;
@@ -185,28 +184,43 @@ function numberRandom (){
     return numbers;
 }
 
-function animationClass(number){
-    const node = document.getElementById(`containerImageCoverPage${number}`)
-    if (node.classList.contains("image__change")) {
-        node.classList.remove("image__change")        
-    }
-    node.classList.add("image__change");
-}
+// function animationClass(number){
+//     const node = document.getElementById(`containerImageCoverPage${number}`)
+//     if (node.classList.contains("image__change")) {
+//         node.classList.remove("image__change")        
+//     }
+//     node.classList.add("image__change");
+// }
 
 function changeImage() {
-    setInterval( () => {
-        const positions = numberRandom()        
-        removeAddImage(2,positions[0])        
-        removeAddImage(3,positions[1])
-    }, 6000)
-//Ajustar tiempo segun animacion en la clase image__change en HomePage.css
+    opacityChange(2);
+    opacityChange(3);    
+    setTimeout(() => {
+        const positions = numberRandom()
+        changeOneImage(2, positions[1])
+        changeOneImage(3, positions[0])
+    }, 250);
 }
 
-function removeAddImage(ubication, numberArray){
-    const image = arrayImage[numberArray];
-    animationClass(ubication);
-    const nodeImage = document.getElementById(`imageCoverPage${ubication}`)
-    nodeImage.src = image;
+function opacityChange(ubication){
+    const imagen = document.getElementById(`imageCoverPage${ubication}`)
+    imagen.style.opacity = "0.1";
 }
 
-window.onload = changeImage();
+function changeOneImage(ubication, numberArray){
+    const imagen = document.getElementById(`imageCoverPage${ubication}`)
+    imagen.src = arrayImage[numberArray];    
+    imagen.style.opacity = "0.1";
+    setTimeout( ()=>{
+        imagen.style.opacity = "1"
+    }, 250)
+}
+
+function slide() {
+    setTimeout(()=>{
+        changeImage();
+        setInterval(changeImage, 7000);
+    },7000)
+}
+
+window.onload = slide();
