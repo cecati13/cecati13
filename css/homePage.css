@@ -191,4 +191,8 @@
     .main__container {
         width: 100%;
     }
+
+    .main__container__announce {
+        width: 550px;
+    }
 }
