@@ -45,12 +45,12 @@ class Base {
             <a id="facebook" href="https://www.facebook.com/cecati.trece/about" target="_blank">
                 <div class="footer__contact--img--text">Facebook</div>
                 <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/facebook-logo.png" 
-                alt="Facebook" class="footer__contact--img">
+                alt="Facebook" class="footer__contact--img" height="50px">
             </a>
             <a id="youtube" href="https://www.youtube.com/channel/UC5LX_ksGHFpydgsMJdWCv0A" target="_blank">
                 <div class="footer__contact--img--text">YouTube</div>
                 <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/youtube-logo.png"
-                alt="YouTube" class="footer__contact--img">
+                alt="YouTube" class="footer__contact--img" height="50px">
             </a>
         </li>
         `;
