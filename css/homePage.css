@@ -1,7 +1,7 @@
 .main {
     color: var(--mainColor2);
-    background-image: url("https://cecati13web.blob.core.windows.net/galeria/zonas_comunes15.jpeg");
-    background-position: 25% 25%;
+    background-image: url("https://cecati13web.blob.core.windows.net/galeria/background_portada.jpg");
+    background-position: 50% 60%;
     background-repeat: no-repeat;
     background-attachment: fixed;
     width: 100vw;
@@ -17,7 +17,7 @@
     border-radius: 25px;
     color: var(--mainColor);
     -webkit-text-stroke: 2px var(--fontColor);
-    margin: 20px 0;
+    margin: 10px 0;
 }
 
 .main__welcome--title {

@@ -2,6 +2,7 @@
 const URL = "https://sheets.googleapis.com/v4/spreadsheets/108FBMScjh_seZ284-T0cZgpW_OpdiU9iJNGlycV4aJU/values/Cursos!A:O?key=AIzaSyA1pfILJrar9ay5u1PoOWVuz4t8VhxA6jE"
 let infoFetch = [];
 const nodeAPI_Offer = document.getElementById("sectionCourses");
+const URL_BASE_IMAGE = "https://cecati13web.blob.core.windows.net/assets-web-cecati13/";
 
 class AvailableCourses {
     constructor(nameSpeciality){
@@ -185,14 +186,14 @@ class Specialties {
         arrayBySpecialties.forEach(element => {
             //image course random show to specialtie
             const imageRandom = Math.ceil(Math.random()*element.imageURL.length) - 1;
-            let image = element.imageURL[imageRandom];        
-            if (image == undefined) {
-                image = "https://cecati13web.blob.core.windows.net/assets-web-cecati13/LogoCecati.png";                
+            let image = element.imageURL[imageRandom];
+            if (image == undefined) {                
+                image = "LogoCecati.png";
             }
             container.innerHTML += `
             <div class="Specialties--containers" data-specialty="${element.specialty.toLowerCase()}">
                 <div class="Specialties--container--logo" data-specialty="${element.specialty.toLowerCase()}">
-                    <img src="${image}" class="Specialties--containers--img"
+                    <img src="${URL_BASE_IMAGE}${image}" class="Specialties--containers--img"
                     data-specialty="${element.specialty.toLowerCase()}" alt="curso">
                 </div>
                 <div class="Specialties--container--title" 

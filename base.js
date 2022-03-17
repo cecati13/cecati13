@@ -32,19 +32,26 @@ class Base {
         footerUL.className = "footer__contact"
         footerUL.innerHTML = `
         <li>
-            <a id="contact" href="${ub}/contacto.html">Contacto y Ubicación</a>
+        <a id="gallery" href="${ub}/galeria.html">Galería de Imágenes</a>
         </li>
         <li>
-            <a id="gallery" href="${ub}/galeria.html">Galería de Imágenes</a>
+        <a id="contact" href="${ub}/contacto.html">Contacto y Ubicación</a>
         </li>
         <li>
-            <a id="calendar" href="https://www.gob.mx/sep?tab=Calendario%20escolar" target="_blank">Calendario Escolar</a>
+        <a id="calendar" href="https://www.gob.mx/sep?tab=Calendario%20escolar" 
+        target="_blank">Calendario Escolar</a>        
         </li>
         <li>
-            <a id="facebook" href="https://www.facebook.com/cecati.trece/about" target="_blank">Facebook</a>
-        </li>
-        <li>
-            <a id="youtube" href="https://www.youtube.com/channel/UC5LX_ksGHFpydgsMJdWCv0A" target="_blank">YouTube</a>
+            <a id="facebook" href="https://www.facebook.com/cecati.trece/about" target="_blank">
+                <div class="footer__contact--img--text">Facebook</div>
+                <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/facebook-logo.png" 
+                alt="Facebook" class="footer__contact--img">
+            </a>
+            <a id="youtube" href="https://www.youtube.com/channel/UC5LX_ksGHFpydgsMJdWCv0A" target="_blank">
+                <div class="footer__contact--img--text">YouTube</div>
+                <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/youtube-logo.png"
+                alt="YouTube" class="footer__contact--img">
+            </a>
         </li>
         `;
         const footer = document.querySelector("#footer");

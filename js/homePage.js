@@ -1,3 +1,5 @@
+const baseIMG = "https://cecati13web.blob.core.windows.net/galeria/";
+
 const arrayHomePage = [
     cicloEscolar = {
         title : "Bienvenido",
@@ -40,23 +42,23 @@ const arrayHomePage = [
 ];
 
 const arrayImage = [
-    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes15.jpeg",
-    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes1.jpeg",
-    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes2.jpeg",
-    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes3.jpeg",
-    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes4.jpeg",
-    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes5.jpeg",
-    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes6.jpeg",
-    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes7.jpeg",
-    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes8.jpeg",
-    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes9.jpeg",
-    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes10.jpeg",
-    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes11.jpeg",
-    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes12.jpeg",    
-    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes14.jpeg",
-    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes16.jpeg",
-    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes17.jpeg",
-    "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes18.jpg",
+    "background_portada.jpg",
+    "zonas_comunes1.jpeg",
+    "zonas_comunes2.jpeg",
+    "zonas_comunes3.jpeg",
+    "zonas_comunes4.jpeg",
+    "zonas_comunes5.jpeg",
+    "zonas_comunes6.jpeg",
+    "zonas_comunes7.jpeg",
+    "zonas_comunes8.jpeg",
+    "zonas_comunes9.jpeg",
+    "zonas_comunes10.jpeg",
+    "zonas_comunes11.jpeg",
+    "zonas_comunes12.jpeg",    
+    "zonas_comunes14.jpeg",
+    "zonas_comunes16.jpeg",
+    "zonas_comunes17.jpeg",
+    "zonas_comunes18.jpg",
 ]
 
 class HomePage {
@@ -104,7 +106,7 @@ class HomePage {
         container.className = "main__container__image image__change";
         container.id=`containerImageCoverPage${assignID}`;            
         container.innerHTML= `
-        <img src="${arrayImage[numberPosition]}"
+        <img src="${baseIMG}${arrayImage[numberPosition]}"
         alt="Imagen de portada del plantel"
         id="imageCoverPage${assignID}"
         >
@@ -184,22 +186,37 @@ function numberRandom (){
     return numbers;
 }
 
-// function animationClass(number){
-//     const node = document.getElementById(`containerImageCoverPage${number}`)
-//     if (node.classList.contains("image__change")) {
-//         node.classList.remove("image__change")        
-//     }
-//     node.classList.add("image__change");
-// }
-
 function changeImage() {
     opacityChange(2);
-    opacityChange(3);    
+    opacityChange(3);            
     setTimeout(() => {
         const positions = numberRandom()
-        changeOneImage(2, positions[1])
-        changeOneImage(3, positions[0])
+        //const arrayPositions = indexArrayImage()        
+        //console.log("array que regreso la funcion indexArrayImage: ", arrayPositions)
+        changeOneImage(2, positions[0])
+        changeOneImage(3, positions[1])
+        //changeOneImage(2, position1)
+        //changeOneImage(3, position2)
+        
     }, 250);
+    
+}
+
+//trabajar en el clousure para que las imagenes se pasen una a una y vaya aumentando
+const indexArrayImage = () => {    
+    let positions = [1,2];
+    //    let position2 = 2;
+    return {
+        function (increment) {
+        console.log("antes: del forEach", positions)
+        positions.forEach(element => {
+            element += increment;
+        });        
+        console.log("despuesdel forEach: ", positions)
+        return positions
+    }
+}
+    return changeIndexArrayImage
 }
 
 function opacityChange(ubication){
@@ -209,7 +226,7 @@ function opacityChange(ubication){
 
 function changeOneImage(ubication, numberArray){
     const imagen = document.getElementById(`imageCoverPage${ubication}`)
-    imagen.src = arrayImage[numberArray];    
+    imagen.src = `${baseIMG}`+arrayImage[numberArray];    
     imagen.style.opacity = "0.1";
     setTimeout( ()=>{
         imagen.style.opacity = "1"

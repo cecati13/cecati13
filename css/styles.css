@@ -191,12 +191,37 @@ a, a:visited, a:active{
     display: flex;
     justify-content: space-evenly;
     flex-wrap: wrap;
+    flex-direction: row-reverse;
 }
 
 .footer__contact > li {
-    padding: 20px;
-    min-width: 140px;
-    text-align: center;    
+    padding: 10px 20px 5px 20px;
+    min-width: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.footer__contact > li:hover {
+    transform: scale(1.1);
+    text-decoration: underline;
+}
+
+.footer__contact--img {
+    height: 50px;    
+}
+
+.footer__contact--img--text {
+    opacity: 0;
+    padding: 0 35px;
+}
+
+.footer__contact > li > a {
+    text-align: center;
+}
+
+.footer__contact > li > a:hover .footer__contact--img--text{
+    opacity: 1;
 }
 
 .line {
@@ -205,6 +230,12 @@ a, a:visited, a:active{
     display: block;    
     margin: 0;
     height: 6px;
+}
+
+@media (min-width: 768px) {
+    .footer__contact > li {        
+        min-width: 195px;        
+    }
 }
 
 @media (min-width: 1024px) {
@@ -255,7 +286,7 @@ a, a:visited, a:active{
         justify-content: center;     
         font-size: 1.7rem;
         font-weight: 700;
-        margin-top: 25px;
+        margin-top: 10px;
         padding: 0 25px;
     }
 
@@ -281,5 +312,9 @@ a, a:visited, a:active{
     .nav__show--ul > li:hover {
         transform: scale(1.4);
         text-decoration: underline;       
+    }
+
+    .footer__contact {
+        flex-direction: row;
     }
 }

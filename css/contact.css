@@ -52,10 +52,13 @@
     padding: 2px;
     width: 65px;
     margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .whatsapp img {
-    height: 55px;
+    height: 50px;
 }
 
 .ubication {
