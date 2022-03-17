@@ -200,6 +200,7 @@ a, a:visited, a:active{
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+    margin-bottom: 10px;
 }
 
 .footer__contact > li:hover {
