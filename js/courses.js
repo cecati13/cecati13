@@ -33,6 +33,7 @@ class AvailableCourses {
             const textObs = course.observaciones;
             course.observaciones = "Observaciones: " + textObs;
         }
+        course.imageURL = (course.imagenURL != undefined ? URL_BASE_IMAGE + course.imagenURL : "");
         const container = document.createElement("div");
         //container.className = "course";
         container.innerHTML = `
@@ -48,6 +49,8 @@ class AvailableCourses {
             <p>${course.horas} horas de duración</p>
             <p>Dias de clase: ${course.dias_de_clases}</p>        
             <p>${course.observaciones}</p>
+            <br>
+            <img src="${course.imageURL}" alt="Logo de Especialidad">
         </div>
         `;
         //<a class="button__link educativeOffer__button" href="../html/Inscribete.html">Inscribete...</a>
@@ -105,9 +108,9 @@ class ObjFromArray {
     
     trasnformArrayOfObjects(array){
         let arrayWithObject = []
-        array.forEach( element => {
+        array.forEach( element => {            
             let i = 0;
-            const course = element.reduce( (obj, item)=> {
+            const course = element.reduce( (obj, item)=> {                
                 const prop = this.arrayKeys[i];
                 if (!obj[item]) {
                     Object.defineProperty(obj, prop, {
@@ -188,7 +191,7 @@ class Specialties {
             const imageRandom = Math.ceil(Math.random()*element.imageURL.length) - 1;
             let image = element.imageURL[imageRandom];
             if (image == undefined) {                
-                image = "LogoCecati.png";
+                image = "LogoCecatiEspecialidades.png";
             }
             container.innerHTML += `
             <div class="Specialties--containers" data-specialty="${element.specialty.toLowerCase()}">

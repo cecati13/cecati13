@@ -82,7 +82,7 @@
     font-size: 1rem;
     font-weight: normal;
     /* Quitar none para poner imagen */
-    display: none;
+    
 }
 
 .Specialties--container--title {
@@ -113,6 +113,10 @@
     padding-bottom: 15px;
     text-align: center;
     max-width: 400px;
+}
+
+.course > img {
+    width: 115px;
 }
 
 .containerCourse--title {
