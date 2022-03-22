@@ -215,7 +215,7 @@ class Specialties {
             <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/arrowBack.svg" alt="Retroceder">
             <span>REGRESAR</span>        
         </div>
-        <a href="../html/Inscribete.html">
+        <a href="./inscripcion.html">
             <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/inscripcion.svg" 
             alt="Inscripción" class="button__link floating__button floating__button--HIDE" id="buttonFloatingReg">
         </a>
