@@ -94,6 +94,7 @@ class AvailableCourses {
 }
 
 class ObjFromArray {
+    static countCourses = 0;
     arrayKeys = [];
     constructor (array){
         this.arrayProperties(array);
@@ -127,6 +128,7 @@ class ObjFromArray {
         })
         
         arrayWithObject.shift();
+        ObjFromArray.countCourses = arrayWithObject.length;
         const arrayWithPlaces = this.coursesWithPlaces(arrayWithObject)
         return arrayWithPlaces
     }
@@ -168,15 +170,24 @@ class Specialties {
     static textTitle = "Selecciona una especialidad para ver los cursos disponibles:"
 
     constructor(arrayBySpecialties){
+        this.textTitleCount(arrayBySpecialties)
         this.title()
         this.createContainer(arrayBySpecialties);
         this.createButtoBack();        
         Specialties.showSpecialties();
     }
 
-    title(){
-        const title = document.createElement("h4");
-        title.innerText = Specialties.textTitle;
+    textTitleCount(array){        
+        const countSpecialties = array.length;
+        Specialties.textTitle= `        
+        Tenemos ${countSpecialties} especialidades con ${ObjFromArray.countCourses} cursos abiertos.
+        Selecciona una especialidad y ve los cursos disponibles:        
+        `;        
+    }
+
+    title(array){
+        const title = document.createElement("h3");        
+        title.innerText = Specialties.textTitle
         title.id = "alternateTitle"
         title.className ="section__courses--title";
         nodeAPI_Offer.appendChild(title);

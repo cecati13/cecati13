@@ -5,6 +5,11 @@
     max-width: 1024px;
     color: var(--contrastColor2);
 }
+.singUp > h3 {
+    font-size: 2.6rem;
+    margin: 20px 0;
+    color: var(--fontColor);
+}
 
 .singUp__title {
     font-size: 2.2rem;

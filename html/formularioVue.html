@@ -4,15 +4,31 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Incripción</title>
-    <script src="https://unpkg.com/vue@next"></script>
+    <link rel="stylesheet" href="../css/styles.css">
+    <title>Inscripción</title>
 </head>
 <body>
-    <div id="app">
-        <input type="number" v-model="value">
-        <span>{{ convertedValue }}</span>
-       
-    </div>
+    <noscript>
+        Para utilizar las funcionalidades completas de este sitio es necesario tener
+        JavaScript habilitado. Aquí están las <a href="https://www.enable-javascript.com/es/">
+        instrucciones para habilitar JavaScript en tu navegador web</a>.
+    </noscript>
+    <header class="header" id="header"></header>    
+    <main id="app"></main>
+    <footer class="footer" id="footer"></footer>
+    
+    <script src="../base.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/vue@next"></script>
     <script src="../js/formularioVue.js" type="text/javascript"></script>
 </body>
+<style>
+    .closed {
+        background-color: #64040b;
+        color: white;
+    }
+
+    .open {
+        background-color: #3fa115;
+    }
+</style>
 </html>

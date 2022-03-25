@@ -1,26 +1,70 @@
-.section__specialities {
-    color: var(--contrastColor2);
-    font-size: 1.9rem;    
+.section__specialities {    
+    color: var(--contrastColor);
+    font-size: 1.9rem;
+    max-width: 1200px;
+}
+
+.section__specialities > h3 {
+    text-align: center;
+    padding: 10px;
+    font-size: 2.6rem;
 }
 
 .section__specialities__UL {
     padding: 5px;
-    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    color: var(--fontColor2);
 }
 
 .section__specialities__UL--list {
-    padding: 10px;
+    padding: 10px 30px;
     cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 300px;
 }
 
-.button__close {
-    color: var(--fontColor);
+.section__specialities__UL--list > img{
+    height: 75px;
+}
+
+.result__buttons {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: row-reverse;
+    padding: 5px;
+}
+
+.result__buttons__logo{
+    background-color: var(--fontColor2);
+    border-radius: 1em;    
+}
+
+.result__buttons__logo > img {
+    width: 85px;
+}
+
+.buttonBack {
+    background-color: var(--fontColor2);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 90px;
+    font-size: 1.2rem;
+    color: var(--mainColor);
     cursor: pointer;
-    font-size: 4.5rem;
-    font-family: monospace;
-    font-weight: 900;
-    padding: 10px 60px;
-    text-align: end;
+    padding: 8px;
+}
+
+.buttonBack img{
+    width: 50px;
+    padding: 4px;
 }
 
 .result__hide {
@@ -32,15 +76,15 @@
     font-size: 1.9rem;
     display: flex;
     flex-direction: column;
-    width: 340px;
+    max-width: 340px;
 }
 
 .result__container {
-    padding: 20px 10px;
-    
+    padding: 20px 10px;    
 }
 
-.result__container--title {    
+.result__container--title {
+    color:var(--fontColor);
     font-weight: 600;
     text-align: center;
     width: inherit;
@@ -48,28 +92,39 @@
 
 .result__container__description {
     padding: 20px;
-    color: var(--fontColor2);
+    color: var(--contrastColor);
     text-align: justify;    
 }
 
 .result__container__description--UL {
     color: var(--fontColor);
     padding: 20px;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .result--li {
     cursor: default;
+    color: var(--contrastColor);
 }
 
 @media (min-width: 768px) {
     .result {
-        width: 740px;
+        max-width: 740px;
+    }
+
+    .section__specialities__UL--list {       
+        width: 370px;
     }
 }
 
 @media (min-width: 1024px) {
     .result {
-        width: 1024px;
+        max-width: 1024px;
+    }
+
+    .section__specialities__UL--list {       
+        width: 400px;
     }
 }

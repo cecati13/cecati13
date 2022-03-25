@@ -1,68 +1,64 @@
-Vue.createApp({
-    data() {
-        return {        
-            portada: "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes11.jpeg",
+const vm = Vue.createApp({
+  data() {
+    return {
+      portada: "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes11.jpeg",
     
-            image: [
-                "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes11.jpeg",
-                "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes16.jpeg",
-                "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes18.jpg"
-            ],
+      image: [
+          "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes11.jpeg",
+          "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes16.jpeg",
+          "https://cecati13web.blob.core.windows.net/galeria/zonas_comunes18.jpg"
+      ],
 
-            price: 8400,
+      text: "Tu nombre...",
+      firstName: "Damián",
+      lastName: "Valenzuela",
+      textPuerta: "Puerta Cerrada",
+      open: false,
+      styles:  {
+        backgroundColor: "#e5e5e5"
+      }
+    };
+  },
 
-            value: 0,
-
-            
-
-            methods:{
-                toggleShowPrices(){
-                    this.showPrices = !this.showPrices;
-                  }
-             },
-
-            computed:{
-                convertedValue(){
-                    if(!this.value) {
-                        return 0
-                    } else {
-                        return this.value/this.price
-                    }
-                }
-            }
-        }
+  watch:{
+    open(value){
+      if (value) {
+        this.textPuerta = "Puerta abierta";
+        this.styles.backgroundColor = "#b5e7a0";
+      } else {
+        this.textPuerta = "Puerta Cerrada";
+        this.styles.backgroundColor = "#eca1a6"
+      }
     }
-    }).mount('#app')
+  },
 
+  methods: {
+    input(e) {
+      this.text = e.target.value;
+    },
+  },
 
-    new Vue({
-        el: '#app',
-      
-        data() {
-          return {
-            name: 'Bitcoin',
-            img: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png',
-            changePercent: 10,
-            color: 'f4f4f4',
-            price: 8400,
-            pricesWithDays: [
-              { day: 'Lunes', value: 8400 },
-              { day: 'Martes', value: 7900 },
-              { day: 'Miercoles', value: 8200 },
-              { day: 'Jueves', value: 9000 },
-              { day: 'Viernes', value: 9400 },
-              { day: 'Sabado', value: 10000 },
-              { day: 'Domingo', value: 10200 },
-            ],
-            showPrices: false,
-          }
-        },
-        methods: {
-          toggleShowPrices() {
-            this.showPrices = !this.showPrices;
-      
-            this.color = this.color.split('').reverse().join(''); //* Tomamos el string del color y le damos la vuelta.
-          }
-        }
-    });
+  computed: {
+    fullName(){
+      return this.firstName + " " + this.lastName;
+    },
+    label(){
+      return this.open ? "cerrar" : " abrir";
+    },
+  },
 
+  template: `
+    <div>
+      <p>{{text}}</p>
+      <input type="text" 
+      v-model="text"
+      />
+
+      <p>{{fullName}}</p>
+    </div>
+    <div class="container" :class="{'open': open, 'closed': !open}">
+      <h2>{{textPuerta}}</h2>
+      <button @click="open = !open">{{ label }}</button>
+    </div>
+    `,
+}).mount('#app');

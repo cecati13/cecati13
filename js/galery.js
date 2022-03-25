@@ -248,35 +248,58 @@ bd_galery = [
         alt: ""
     }
 ];
-const nodeGallery = document.querySelector("#nodeGallery");
+// const nodeGallery = document.querySelector("#nodeGallery");
 
-function createContainerImg (element) {    
-    const imagen = document.createElement("img");
-    imagen.src = element.link;
-    imagen.alt = element.alt;
+// function createContainerImg (element) {
+//     const container = document.createElement("div");
+//     container.className="carousel__container";
+//     container.innerHTML= `
+//     <figure class="carousel--item">    
+//         <img src="${element.link}" alt="${element.alt}">
+//         <figcaption>${element.name}</figcaption>
+//     </figure>
+//     `;
+//     return container;
+// }
 
-    //añadir cuando se una descripción de cada imagen
-    const figCaption = document.createElement("figcaption");
-    figCaption.textContent = element.name;
+// function galleryContainer (array) {
+//     const container = document.getElementById("div");
+//     container.className = "container__gallery";
+//     for (let i = 0; i < array.length; i++) {
+//         const element = array[i];
+//         const figure = createContainerImg(element);
+//         container.appendChild(figure);
+//     }
+//     return container
+// }
 
-    const containerFigure = document.createElement("figure");
-    containerFigure.append(imagen, 
-        //añadir cuando se tenga descripcion de la imagen
-      figCaption
-        );
-    return containerFigure;
-}
+// const containerImages = galleryContainer(bd_galery);
+// nodeGallery.appendChild(containerImages);
+window.addEventListener("load", ()=> {
+    new Glider(document.querySelector(".carousel__list"), {
+        type: 'carousel',
+        startAt: 5,
+        perView: 5,
+        dots: ".carousel__indicators",
+        arrows: {
+            prev: ".carousel__previous",
+            next: ".carousel__next"
+        }
+    });
+})
 
 function galleryContainer (array) {
-    const container = document.createElement("div");
-    container.className = "container__gallery";
-    for (let i = 0; i < array.length; i++) {
-        const element = array[i];
-        const figure = createContainerImg(element);
-        container.appendChild(figure);
-    }
+    const container = document.querySelector(".carousel__list");
+    array.forEach(element => {
+        const figure = document.createElement("figure");
+        figure.innerHTML= `
+        <img src="${element.link}" alt="${element.alt}" class="gallery__img">
+        `;       
+        //<figcaption>${element.name}</figcaption>
+        container.appendChild(figure)
+        }
+    );    
     return container
 }
 
-const containerImages = galleryContainer(bd_galery);
-nodeGallery.appendChild(containerImages);
+galleryContainer(bd_galery);
