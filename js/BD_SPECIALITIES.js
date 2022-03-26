@@ -492,10 +492,7 @@ const BD_SPECIALITIES = {
         ]
     }
 };
-const URL_BASE_IMAGE = "https://cecati13web.blob.core.windows.net/assets-web-cecati13/";
 
-//Algoritmo temporal para mostrar info:
-// bd = { especialities { name, objetive, laborField, courses [] } }
 const mountSpecialities = document.getElementById("sectionSpecialties")
 const nodeResult = document.getElementById("result");
 
@@ -525,7 +522,7 @@ function createLI (data, name, logo) {
 function getSpecialities (object) {    
     const containerUL = document.createElement("ul");
     containerUL.className = "section__specialities__UL";
-    for (const key in object) {
+    for (const key in object) {        
         if (Object.hasOwnProperty.call(object, key)) {          
             const name = object[key].name;
             const logoRed = object[key].logoRed;
@@ -583,7 +580,7 @@ const buttonClosed = function () {
     const buttonClose = document.createElement("div");
     buttonClose.className = "buttonBack";
     buttonClose.innerHTML= `  
-    <img src="${URL_BASE_IMAGE}arrowBack.svg" alt="Retroceder">
+    <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/arrowBack.svg" alt="Retroceder">
     <span>REGRESAR</span>    
     `;  
     buttonClose.addEventListener("click", ()=> closedInformation());
@@ -617,7 +614,57 @@ const locate = function (e) {
     }
 }
 
+async function conexion(URL) {
+    try {
+        const info = await fetch(`${URL}/API/v1/specialtie`);        
+        const infoJSON = await info.json()
+        console.log(infoJSON)
+        BD_SPECIALITIES = infoJSON.reduce((acumObj,item)=>{
+            for(let key in item){
+                if(typeof item[key] === 'object') {
+                    if(key in acumObj){
+                        debugger
+                        if(!acumObj[key].some(e=>JSON.stringify(e) === JSON.stringify(item[key]))) 
+                        acumObj[key].push(item[key]);
+                    }else{                        
+                        acumObj[key] = item[key];
+                    }
+                }
+            }
+            return acumObj;
+        },{});        
+        const title = createTitle(BD_SPECIALITIES);        
+        const showSpecialities = getSpecialities(BD_SPECIALITIES);
+        mountSpecialities.append(title,showSpecialities);
+    } catch (error) {
+        console.log("error en el fetch", error);
+        const titleError = document.createElement("h3");
+        titleError.innerHTML= `
+        <h3 class="error__API">Lo sentimos, la información no esta disponible en este momento.
+        Por favor intenta más tarde, lamentamos los inconvenientes.</h3>`;
+        mountSpecialities.appendChild(titleError);
+    }
+}
+//***Habilitar al conectar a API. ***//
+//***Eliminar BD_SPECIALITIES en codigo linea 1. Al usar en pruebas cambiar nombre BD_SPECIALITIES1***
+
+//const URL = "http://svo-5-191.servidoresvirtuales.mx";
+// const URL = "http://localhost:3000";
+// let BD_SPECIALITIES = {};
+// conexion(URL);
+
+//***Habilitar al conectar a API. ***
+//***Eliminar BD_SPECIALITIES en codigo linea 1. Al usar en pruebas cambiar nombre BD_SPECIALITIES1***
+
+
+//********************************************//
+//***Eliminar al conectar API con MongoDB***
+
 const title = createTitle(BD_SPECIALITIES);
 const showSpecialities = getSpecialities(BD_SPECIALITIES);
 mountSpecialities.append(title,showSpecialities);
+
+//***Eliminar al conectar API con MongoDB***
+
 mountSpecialities.addEventListener("click", event => locate(event));
+

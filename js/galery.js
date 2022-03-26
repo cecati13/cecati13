@@ -248,33 +248,7 @@ bd_galery = [
         alt: ""
     }
 ];
-// const nodeGallery = document.querySelector("#nodeGallery");
 
-// function createContainerImg (element) {
-//     const container = document.createElement("div");
-//     container.className="carousel__container";
-//     container.innerHTML= `
-//     <figure class="carousel--item">    
-//         <img src="${element.link}" alt="${element.alt}">
-//         <figcaption>${element.name}</figcaption>
-//     </figure>
-//     `;
-//     return container;
-// }
-
-// function galleryContainer (array) {
-//     const container = document.getElementById("div");
-//     container.className = "container__gallery";
-//     for (let i = 0; i < array.length; i++) {
-//         const element = array[i];
-//         const figure = createContainerImg(element);
-//         container.appendChild(figure);
-//     }
-//     return container
-// }
-
-// const containerImages = galleryContainer(bd_galery);
-// nodeGallery.appendChild(containerImages);
 window.addEventListener("load", ()=> {
     new Glider(document.querySelector(".carousel__list"), {
         type: 'carousel',

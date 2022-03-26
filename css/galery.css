@@ -1,52 +1,3 @@
-/* .container__gallery {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-evenly;
-} */
-
-/* .container__gallery {
-    display: flex;
-    flex-flow: wrap;
-    align-items: center;
-    justify-content: space-evenly;
-}
-
-.container__gallery figure {
-    background-color: var(--contrastColor2);
-    color: var(--mainColor);
-    border: solid 1.5px var(--contrastColor2);
-    border-radius: 5px;
-    font-size: 1.4rem;
-    text-align: center;
-    margin: 20px;
-    min-height: 50px;
-    min-width: 50px;
-}
-
-.container__gallery img {
-    border-radius: 5px;
-    height: min-content;
-    max-width: 90vw;
-}
-
-.container__gallery > figure img:hover {
-    filter: blur(2px); 
-    transform: rotate(5deg) scale(1.3);
-}
-
-.container__gallery figcaption {
-    padding-bottom: 8px;
-}
-
-@media (min-width: 390px) {
-    .container__gallery img {   
-        width: 350px;    
-    }
-} */
-
-/* Estilos anteriores */
-
 .gallery {
     text-align: center;
 }
@@ -108,7 +59,7 @@
 
 .carousel__indicators .glider-dot {
     display: block;
-    width: 30px;
+    width: 25px;
     height: 4px;
     background-color: var(--contrastColor);
     opacity: 0.4;
