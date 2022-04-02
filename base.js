@@ -9,19 +9,19 @@ class Base {
             <a id="home" href="${ub}/" class="nav__show--ul__link">Inicio</a>
         </li>
         <li>
-            <a id="specialties" href="${ub}/oferta.html" class="nav__show--ul__link">Oferta Educativa</a>
+            <a id="specialties" href="${ub}/oferta" class="nav__show--ul__link">Oferta Educativa</a>
         </li>
         <li>
-            <a id="courses" href="${ub}/cursos.html" class="nav__show--ul__link">Cursos Disponibles</a>
+            <a id="courses" href="${ub}/cursos" class="nav__show--ul__link">Cursos Disponibles</a>
         </li>
         <li>
-            <a id="inscription" href="${ub}/inscripcion.html" class="nav__show--ul__link">Inscripción</a>
+            <a id="inscription" href="${ub}/inscripcion" class="nav__show--ul__link">Inscripción</a>
         </li>
         <li>
-            <a id="question" href="${ub}/preguntas.html" class="nav__show--ul__link">Preguntas Frecuentes</a>
+            <a id="question" href="${ub}/preguntas" class="nav__show--ul__link">Preguntas Frecuentes</a>
         </li>
         <li>
-            <a id="services" href="${ub}/servicios.html" class="nav__show--ul__link">Servicios</a>
+            <a id="services" href="${ub}/servicios" class="nav__show--ul__link">Servicios</a>
         </li>
         </ul>   
         `;
@@ -32,10 +32,10 @@ class Base {
         footerUL.className = "footer__contact"
         footerUL.innerHTML = `
         <li>
-        <a id="gallery" href="${ub}/galeria.html">Galería de Imágenes</a>
+        <a id="gallery" href="${ub}/galeria">Galería de Imágenes</a>
         </li>
         <li>
-        <a id="contact" href="${ub}/contacto.html">Contacto y Ubicación</a>
+        <a id="contact" href="${ub}/contacto">Contacto y Ubicación</a>
         </li>
         <li>
         <a id="calendar" href="https://www.gob.mx/sep?tab=Calendario%20escolar" 

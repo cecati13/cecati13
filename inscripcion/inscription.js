@@ -13,8 +13,6 @@ async function conexionURL(URL){
    }
 }
 
-
-
 class Inscriptions {
     
     static allTheSteps = [];

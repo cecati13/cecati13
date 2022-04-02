@@ -98,4 +98,17 @@ async function conexion(URL) {
     }
 }
 
+// async function conexion(URL) {
+//     try {
+//         const info = await fetch(`${URL}`);        
+//         const infoJSON = await info.json();        
+//         const responseWithArray = infoJSON.values;
+//         const obj = {...responseWithArray}
+//         console.log(obj)
+//     } catch (error) {
+//         console.log(error)
+        
+//     }
+// }
+
 conexion(URL);
