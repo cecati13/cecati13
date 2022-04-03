@@ -220,13 +220,15 @@ class Specialties {
 
     createButtoBack(){
         const buttonBack = document.createElement("div");        
-        buttonBack.className = "container__buttons";        
+        buttonBack.className = "container__buttons";
+        const inscripcion = document.querySelector("#inscription");
+        const buttonHref = inscripcion.href;
         buttonBack.innerHTML = `
         <div class="buttonBack buttonBack--HIDE" id="buttonBack">
             <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/arrowBack.svg" alt="Retroceder">
             <span>REGRESAR</span>        
         </div>
-        <a href="./inscripcion.html">
+        <a href="${buttonHref}">
             <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/inscripcion.svg" 
             alt="Inscripción" class="button__link floating__button floating__button--HIDE" id="buttonFloatingReg">
         </a>
