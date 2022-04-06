@@ -1,4 +1,4 @@
-const host = "http://localhost:3000/";
+const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
 const linkURL = host + "API/v1/frontendURL/20";
 
 async function conexionURL(URL){

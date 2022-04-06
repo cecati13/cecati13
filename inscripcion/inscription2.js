@@ -1,13 +1,12 @@
-const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
-const linkURL = host + "API/v1/frontendURL/20";
+const linkURL = "https://sheets.googleapis.com/v4/spreadsheets/108FBMScjh_seZ284-T0cZgpW_OpdiU9iJNGlycV4aJU/values/inscripcion!A1:A1?key=AIzaSyA1pfILJrar9ay5u1PoOWVuz4t8VhxA6jE"
 
 async function conexionURL(URL){
    try {
         const conexion = await fetch(URL);
-        const response = await conexion.json();
-        const urlValue = response.link;        
+        const response = await conexion.json();        
+        const responseValueArray = response.values[0];
+        const urlValue = responseValueArray[0];
         console.log(urlValue);
-        const inscription = new Inscriptions(urlValue);
         return urlValue;
    } catch(error) {
     console.log(error)
@@ -197,5 +196,5 @@ const nextStep = function () {
     }
     //const nodeNext =  document.querySelector(currentStep);
 }
-
-conexionURL(linkURL);
+const registrationLink = await conexionURL(linkURL);
+const inscription = new Inscriptions(registrationLink);

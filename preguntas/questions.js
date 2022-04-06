@@ -1,46 +1,11 @@
-const URL = "https://sheets.googleapis.com/v4/spreadsheets/108FBMScjh_seZ284-T0cZgpW_OpdiU9iJNGlycV4aJU/values/preguntas!A:C?key=AIzaSyA1pfILJrar9ay5u1PoOWVuz4t8VhxA6jE"
+const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
+const URL = host + "API/v1/frontendURL/30";
 const nodeAPIQuestions = document.querySelector("#sectionQuestions");
 
-class ObjFromArray {
-    arrayKeys = [];
-    constructor (array){
-        this.arrayProperties(array);
-        const arrayWithObjects = this.trasnformArrayOfObjects(array);        
-        return arrayWithObjects;
-    }
-    
-    arrayProperties(array){
-        array[0].forEach( element => this.arrayKeys.push(element))
-    }
-    
-    trasnformArrayOfObjects(array){        
-        let arrayWithObject = []
-        array.forEach( element => {
-            let i = 0;
-            const question = element.reduce( (obj, item)=> {
-                const prop = this.arrayKeys[i];
-                if (!obj[item]) {
-                    Object.defineProperty(obj, prop, {
-                        value: item,
-                        writable: true,
-                        enumerable: true,
-                        configurable: false
-                    })
-                }
-                i++;
-                return obj
-            }, {})
-            arrayWithObject.push(question)
-        })        
-        arrayWithObject.shift();        
-        return arrayWithObject;
-    }        
-}
-
 class Questions {
-    constructor(arrayQuestions){
+    constructor(objQuestions){
         this.title()
-        this.createContainer(arrayQuestions);        
+        this.createContainer(objQuestions);        
     }
 
     title(){
@@ -51,11 +16,12 @@ class Questions {
         nodeAPIQuestions.appendChild(title);
     }
     
-    createContainer(arrayQuestions){
+    createContainer(objQuestions){
         const container = document.createElement("div");
         container.className = `container`;
-        container.id = "containerQuestions";
-        arrayQuestions.forEach(element => {
+        container.id = "containerQuestions";        
+        for (const key in objQuestions) {            
+            const element = objQuestions[key];
             let link = element.link;
             let linkText = "";
             let linkClass = "";
@@ -72,8 +38,8 @@ class Questions {
                         ${element.respuesta}
                     </div>
                     <a class="${linkClass}" href="${link}">${linkText}</a>
-                </div>`             
-        });
+                </div>`;            
+        }
         //container.addEventListener("click", event => locateEvent(event));      
         nodeAPIQuestions.appendChild(container);
     }
@@ -82,11 +48,8 @@ class Questions {
 async function conexion(URL) {
     try {
         const info = await fetch(`${URL}`);        
-        const infoJSON = await info.json()
-        const responseWithArray = infoJSON.values;        
-        const response = new ObjFromArray(responseWithArray);        
-        const questions = new Questions(response);
-        
+        const infoJSON = await info.json();
+        const questions = new Questions(infoJSON);        
     } catch (error) {
         console.log(error)
         const titleError = document.createElement("h3");
@@ -97,18 +60,5 @@ async function conexion(URL) {
         nodeAPIQuestions.appendChild(titleError);
     }
 }
-
-// async function conexion(URL) {
-//     try {
-//         const info = await fetch(`${URL}`);        
-//         const infoJSON = await info.json();        
-//         const responseWithArray = infoJSON.values;
-//         const obj = {...responseWithArray}
-//         console.log(obj)
-//     } catch (error) {
-//         console.log(error)
-        
-//     }
-// }
 
 conexion(URL);
