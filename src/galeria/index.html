@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">    
+        <title>CECATI 13. Inscribete</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glider-js@1.7.3/glider.min.css">
+        <link rel="stylesheet" href="../styles.css">
+        <link rel="stylesheet" href="./galery.css">
+        <link rel="icon" href="../assets/favicon-96x96.png">
+</head>
+<body>
+    <noscript>
+        Para utilizar las funcionalidades completas de este sitio es necesario tener
+        JavaScript habilitado. Aquí están las <a href="https://www.enable-javascript.com/es/">
+            instrucciones para habilitar JavaScript en tu navegador web</a>.
+        </noscript>
+        <header class="header" id="header"></header>    
+        <section class="gallery">
+            <h3>Galería de Imágenes</h3>
+            <div class="carousel">
+                <div class="carousel__container">
+                    <button class="carousel__previous" aria-label="Anterior">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="carousel__list">
+                    </div>
+                    <button class="carousel__next" aria-label="Siguiente">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                <div role="tablist" class="carousel__indicators"></div>
+            </div>
+    </section>
+
+    <footer class="footer" id="footer"></footer>
+    <script src="https://cdn.jsdelivr.net/npm/glider-js@1.7.3/glider.min.js"></script>
+    <script src="https://kit.fontawesome.com/2c36e9b7b1.js" crossorigin="anonymous"></script>
+    <script src="../base.js" type="text/javascript"></script>
+    <script src="./galery.js" type="text/javascript"></script>
+    
+</body>
+</html>

@@ -1,0 +1,182 @@
+.section__courses {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* align-items: center; */
+    font-size: 1.6rem;    
+}
+
+.section__courses--title {
+    color: var(--fontColor);
+    text-align: center;
+    font-size: 2.6rem;
+    padding-bottom: 15px;
+}
+
+.container__Specialties {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin-bottom: 25px;    
+}
+
+.container__Specialties--HIDE {
+    display: none;
+}
+
+.container__buttons {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.buttonBack {
+    background-color: var(--fontColor);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100px;
+    font-size: 1.2rem;
+    color: var(--mainColor);
+    cursor: pointer;
+    padding: 8px;
+}
+
+.buttonBack img{
+    width: 50px;
+    padding: 4px;
+}
+
+.buttonBack--HIDE {
+    display: none;
+}
+
+.Specialties--containers {
+    background-color: var(--contrastColor);
+    border-radius: 8em 1em 1em 8em;
+    color: var(--mainColor);
+    cursor: pointer;
+    display: flex;
+    align-items: center;    
+    font-size: 1.6rem;
+    font-weight: bold;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    margin: 8px;
+    text-transform: capitalize;
+    text-align: center;    
+    min-height: 90px;
+    width: 260px;
+}
+
+.Specialties--container--logo {
+    width: 35%;
+    display: flex;
+}
+
+.Specialties--containers--img {
+    border-radius: 5%;
+    height: 100%;
+    max-width: 100%;
+    font-size: 1rem;
+    font-weight: normal;
+    /* Quitar none para poner imagen */
+    
+}
+
+.Specialties--container--title {
+    width: 65%;    
+    padding: 5px;
+}
+
+.containerCourses {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    justify-content: space-around;
+}
+
+.containerCourses > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(180deg, var(--mainColor), var(--mainColor2));
+    border-radius: 7px;
+    margin: 10px 10px 25px 10px;    
+    padding: 5px;
+}
+
+.course {
+    color: var(--contrastColor);
+    font-size: 1.8rem;
+    padding-bottom: 15px;
+    text-align: center;
+    max-width: 400px;
+}
+
+.course > img {
+    width: 115px;
+}
+
+.containerCourse--title {
+    font-size: 2.3rem;
+    background-color: var(--contrastColor);
+    color: var(--mainColor);    
+    padding: 15px 10px;
+}
+
+.containerCourse--profesor{
+    text-transform: capitalize;
+    font-size: 2rem;
+    margin-top: 10px;
+    padding: 0px 15px;
+}
+
+.floating__button {
+    position: fixed;
+    right: 1vw;
+    top: 60vh;    
+    height: 70px;
+    padding: 6px;
+    border-radius: 5px;
+}
+
+.floating__button--HIDE{
+    display: none;
+}
+
+/* estilos de diseño con PDF, analizar si reutilizar en inscripcion*/
+.educativeOffer__button {
+    padding: 12px 25px;
+    margin-bottom: 10px;
+}
+
+.educativeOffer__button:visited {
+    color: var(--mainColor);
+}
+/* Terminan estilos de diseño con PDF */
+
+.error__API{    
+    color: var(--contrastColor);
+    margin: auto;
+    margin-top: 90px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+@media (min-width: 1024px) {
+    .Specialties--containers {
+        max-width: 450px;
+    }
+
+    .container__buttons {        
+        justify-content: space-evenly;        
+    }
+
+    .floating__button {        
+        position: static;
+        height: 75px;
+        margin: 0;
+    }
+}

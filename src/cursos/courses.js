@@ -1,8 +1,10 @@
-//Consultar mas columnas, modificar URL
-const URL = "https://sheets.googleapis.com/v4/spreadsheets/108FBMScjh_seZ284-T0cZgpW_OpdiU9iJNGlycV4aJU/values/Cursos!A:O?key=AIzaSyA1pfILJrar9ay5u1PoOWVuz4t8VhxA6jE"
+const host = "http://localhost:3000/";
+const URL = host + "API/v1/frontendURL/10"
+const URL_BASE_IMAGE = "https://cecati13web.blob.core.windows.net/assets-web-cecati13/";
+
 let infoFetch = [];
 const nodeAPI_Offer = document.getElementById("sectionCourses");
-const URL_BASE_IMAGE = "https://cecati13web.blob.core.windows.net/assets-web-cecati13/";
+const numberPlacesWithCourses = 25;
 
 class AvailableCourses {
     constructor(nameSpeciality){
@@ -95,73 +97,52 @@ class AvailableCourses {
 
 class ObjFromArray {
     static countCourses = 0;
-    arrayKeys = [];
-    constructor (array){
-        this.arrayProperties(array);        
-        const arrayWithObjects = this.trasnformArrayOfObjects(array);
-        const specialities = this.sortBySpeciality(arrayWithObjects);        
+    constructor (objCourses){        
+        const arrayWithPlaces = this.coursesWithPlaces(objCourses)        
+        const specialities = this.sortBySpeciality(arrayWithPlaces);        
         return specialities;
     }
-    
-    arrayProperties(array){
-        array[0].forEach( element => this.arrayKeys.push(element))
-    }
-    
-    trasnformArrayOfObjects(array){
-        let arrayWithObject = []
-        array.forEach( element => {            
-            let i = 0;
-            const course = element.reduce( (obj, item)=> {                
-                const prop = this.arrayKeys[i];
-                if (!obj[item]) {
-                    Object.defineProperty(obj, prop, {
-                        value: item,
-                        writable: true,
-                        enumerable: true,
-                        configurable: false
-                    })
-                }
-                i++;
-                return obj
-            }, {})
-            arrayWithObject.push(course)
-        })
-        
-        arrayWithObject.shift();
-        ObjFromArray.countCourses = arrayWithObject.length;
-        const arrayWithPlaces = this.coursesWithPlaces(arrayWithObject)
-        return arrayWithPlaces
-    }
 
-    coursesWithPlaces(array){
+    coursesWithPlaces(objCourses){
         const withPlace = [];
-        array.forEach(element => {
-            const places = Number.parseInt(element.inscritos)
-                if (places < 25 && places != NaN) {
-                    withPlace.push(element)
-                }
-        })
+        for (const key in objCourses) {
+            const item = objCourses[key];
+            const places = Number.parseInt(item.inscritos)
+            if (places < numberPlacesWithCourses && places != NaN) {
+                withPlace.push(item)
+            }
+        }
+        ObjFromArray.countCourses = withPlace.length;                
         return withPlace
     }
 
-    sortBySpeciality(array){
+    sortBySpeciality(objCourses){        
         const onlySpecialities = [];
-        array.forEach( item => {
+        for (const key in objCourses) {
+            const item = objCourses[key];
             if (!onlySpecialities.includes(item.especialidad)) {
                 onlySpecialities.push(item.especialidad)
             }
-        });
+        }
+        
         const forSpecialities = onlySpecialities.map( item => {
-            const coursesArrayWithSpecialtie = array.filter( itemObj => itemObj.especialidad === item);            
+            const coursesArrayWithSpecialtie = [];            
+            for (const key in objCourses) {
+                const itemObj = objCourses[key];
+                if (itemObj.especialidad === item) {
+                    coursesArrayWithSpecialtie.push(itemObj)
+                }
+            }
             const imgArrayWithSpecialtie = [];
-          coursesArrayWithSpecialtie.forEach( course => imgArrayWithSpecialtie.push(course.imagenURL))
-          const objSpecialities = {
-            specialty : item,
-            courses : coursesArrayWithSpecialtie,
-            imageURL : imgArrayWithSpecialtie
-          }
-          return objSpecialities
-        })
+            coursesArrayWithSpecialtie.forEach( course => imgArrayWithSpecialtie.push(course.imagenURL))
+            
+            const objSpecialities = {
+                specialty : item,
+                courses : coursesArrayWithSpecialtie,
+                imageURL : imgArrayWithSpecialtie
+            }            
+            return objSpecialities
+        })        
         return forSpecialities;
     }
 }
@@ -169,7 +150,7 @@ class ObjFromArray {
 class Specialties {
     static textTitle = "Selecciona una especialidad para ver los cursos disponibles:"
 
-    constructor(arrayBySpecialties){
+    constructor(arrayBySpecialties){        
         this.textTitleCount(arrayBySpecialties)
         this.title()
         this.createContainer(arrayBySpecialties);
@@ -218,7 +199,7 @@ class Specialties {
         nodeAPI_Offer.appendChild(container);
     }
 
-    createButtoBack(){
+    createButtoBack(){        
         const buttonBack = document.createElement("div");        
         buttonBack.className = "container__buttons";
         const inscripcion = document.querySelector("#inscription");
@@ -271,10 +252,9 @@ function locateEvent(event) {
 async function conexion(URL) {
     try {
         const info = await fetch(`${URL}`);        
-        const infoJSON = await info.json()
-        const responseWithArray = infoJSON.values;        
-        const response = new ObjFromArray(responseWithArray);
-        console.log(response);        
+        const infoJSON = await info.json()                
+        const response = new ObjFromArray(infoJSON);
+        console.log(response);
         const specialitie = new Specialties(response);        
         infoFetch = [...response];        
     } catch (error) {
