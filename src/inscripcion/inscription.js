@@ -14,6 +14,10 @@ async function conexionURL(URL){
    }
 }
 
+function preloader() {
+    nodeContainerSteps.classList.toggle("preloader");
+}
+
 class Inscriptions {
     
     static allTheSteps = [];
@@ -23,6 +27,7 @@ class Inscriptions {
         this.createButton();
         this.buildSequence();
         Inscriptions.createSteps(Inscriptions.allTheSteps[0]);
+        preloader();
     }
 
     title (){
@@ -198,4 +203,5 @@ const nextStep = function () {
     //const nodeNext =  document.querySelector(currentStep);
 }
 
+preloader()
 conexionURL(linkURL);

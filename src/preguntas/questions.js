@@ -5,7 +5,8 @@ const nodeAPIQuestions = document.querySelector("#sectionQuestions");
 class Questions {
     constructor(objQuestions){
         this.title()
-        this.createContainer(objQuestions);        
+        this.createContainer(objQuestions);
+        preloader();        
     }
 
     title(){
@@ -45,6 +46,10 @@ class Questions {
     }
 }
 
+function preloader() {
+    nodeAPIQuestions.classList.toggle("preloader");
+}
+
 async function conexion(URL) {
     try {
         const info = await fetch(`${URL}`);        
@@ -61,4 +66,5 @@ async function conexion(URL) {
     }
 }
 
+preloader()
 conexion(URL);

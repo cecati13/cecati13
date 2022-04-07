@@ -8,11 +8,13 @@
 }
 
 .carousel {
-    width: 80vw;
+    width: 95vw;
+    margin-bottom: 15px;
 }
 
 .carousel__container{
-    position: relative;
+    /* position: relative; */
+    overflow: scroll;
 }
 
 .carousel__previous, 
@@ -44,17 +46,27 @@
 }
 
 .gallery__img {    
-    max-height: 30vh;    
+    max-height: 40vh;    
 }
 
 .carousel__list {
     text-align: center;
+    display: flex;
+    align-items: center;
 }
 
 .carousel__list > figure {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.container__picture {
+    padding: 10px;    
+}
+
+.container__picture > img {    
+    border-radius: 5px;
 }
 
 .carousel__indicators .glider-dot {
@@ -76,12 +88,12 @@
 
 @media (min-width: 500px) {
     .gallery__img {    
-        max-height: 40vh;    
+        max-height: 50vh;    
     }
 }
 
 @media (min-width: 768px) {
     .gallery__img {    
-        max-height: 60vh;    
+        max-height: 70vh;    
     }
 }

@@ -233,6 +233,26 @@ a, a:visited, a:active{
     height: 6px;
 }
 
+.preloader {
+    width: 70px;
+    height: 70px;
+    border: 10px solid #eee;
+    border-top: 8px solid #666;
+    border-radius: 50%;
+    animation-name: girar;
+    animation-duration: 900ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+  }
+  @keyframes girar {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
 @media (min-width: 768px) {
     .footer__contact > li {        
         min-width: 195px;        

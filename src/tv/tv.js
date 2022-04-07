@@ -236,6 +236,10 @@ class Specialties {
     }
 }
 
+function preloader() {
+    nodeAPI_Offer.classList.toggle("preloader");
+}
+
 //functions of EventListener
 const backToSpecialties = function () {
     Specialties.showSpecialties();
@@ -267,4 +271,5 @@ async function conexion(URL) {
     }
 }
 
+preloader()
 conexion(URL);

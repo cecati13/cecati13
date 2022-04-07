@@ -156,6 +156,7 @@ class Specialties {
         this.createContainer(arrayBySpecialties);
         this.createButtoBack();        
         Specialties.showSpecialties();
+        preloader();
     }
 
     textTitleCount(array){        
@@ -236,6 +237,10 @@ class Specialties {
     }
 }
 
+function preloader() {
+    nodeAPI_Offer.classList.toggle("preloader");
+}
+
 //functions of EventListener
 const backToSpecialties = function () {
     Specialties.showSpecialties();
@@ -266,5 +271,5 @@ async function conexion(URL) {
         nodeAPI_Offer.appendChild(titleError);
     }
 }
-
+preloader();
 conexion(URL);
