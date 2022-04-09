@@ -76,7 +76,8 @@
     display: flex;
     flex-direction: column;
     font-size: 2.4rem;    
-    width: 100vw;    
+    width: 70px;
+    /* width a 100vw se modificara desde JS al quitar el preload() */
 }
 
 .main__container__announce {
