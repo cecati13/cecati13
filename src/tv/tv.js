@@ -3,18 +3,13 @@ const URL = host + "API/v1/frontendURL/10"
 const URL_BASE_IMAGE = "https://cecati13web.blob.core.windows.net/assets-web-cecati13/";
 
 const nodeAPI_TV = document.getElementById("tv");
-
     
 class ShowCoursesTV {
     static textTitle = "Selecciona una especialidad para ver los cursos disponibles:"
 
     constructor(objCourses){        
-        //this.textTitleCount(arrayBySpecialties)
-        //this.title()
         const courses = this.createContainer(objCourses);
-        nodeAPI_TV.appendChild(courses)
-        //this.createButtoBack();        
-        //Specialties.showSpecialties();
+        nodeAPI_TV.appendChild(courses)        
         preloader();
     }
     
@@ -22,7 +17,6 @@ class ShowCoursesTV {
         const container = document.createElement("div");
         container.className = `container__courses`;
         container.id = "containerSpecialties";
-
         for (const key in objCourses) {
             const element = objCourses[key];
             const course = this.constructorCourse(element);             
@@ -42,25 +36,23 @@ class ShowCoursesTV {
         const container = document.createElement("div");
         container.className = "course";
         container.innerHTML = `                  
-            <p class="course__title">Especialidad: ${course.especialidad}</p>
-            <p class="course__title"><strong>Curso: ${course.curso}</strong></p>
+        <p class="course__title"><strong>Curso: ${course.curso}</strong></p>
+        <p class="course__title">Especialidad: ${course.especialidad}</p>
             <img src="${course.imageURL}" alt="Logo de Especialidad">
             <p class="course__profesor">Profesor: ${course.profesor.toLowerCase()}</p>
             <br>
             <p>Inicia:  <b>${course.fecha_inicio}</b></p>
             <p>Termina:  <b>${course.fecha_termino}</b></p>        
-            <p>Horario:  <b>${course.hora_inicio} a ${course.hora_fin}</b> hrs.</p>
-            <br>
+            <p>Horario:  <b>${course.hora_inicio} a ${course.hora_fin}</b> hrs.</p>            
             <p>Modalidad del curso: <b><i>${course.modalidad_curso}</i></b></p>
             <p>${course.horas} horas de duración</p>
             <p>Dias de clase: ${course.dias_de_clases}</p>        
             <p>${course.observaciones}</p>
-            <br>
-        `;
-        //<a class="button__link educativeOffer__button" href="../html/Inscribete.html">Inscribete...</a>
+        `;        
         return container;
     }
 
+    //determinar si se usaran estos metodos:
     textTitleCount(array){        
         const countSpecialties = array.length;
         Specialties.textTitle= `        
@@ -86,11 +78,9 @@ function preloader() {
 async function conexion(URL) {
     try {
         const info = await fetch(`${URL}`);        
-        const infoJSON = await info.json()                
-        
+        const infoJSON = await info.json()                        
         console.log(infoJSON);
         const specialitie = new ShowCoursesTV(infoJSON);        
-        //infoFetch = [...response];        
     } catch (error) {
         console.log(error)
         const titleError = document.createElement("h3");

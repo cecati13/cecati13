@@ -1,11 +1,21 @@
-.header {
+#header {
+    color: var(--fontColor);
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    height: 65px;
 }
 
-.header__port--C13 {
+.header__C13 {
     display: block;
-    padding-top: 15px;
-    font-size: 3rem;
+    padding-top: 10px;
+    font-size: 2rem;
+}
+
+.header__title {
+    font-size: 2rem;
+    padding-bottom: 5px;
 }
 
 #tv {
@@ -31,7 +41,7 @@
 
 .course {
     color: var(--contrastColor);
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     padding-bottom: 15px;
     text-align: center;
     width: 450px;
@@ -39,19 +49,19 @@
 }
 
 .course > img {
-    width: 150px;
+    width: 130px;
 }
 
 .course__title {
-    font-size: 2.3rem;
+    font-size: 2rem;
     background-color: var(--contrastColor);
     color: var(--mainColor);    
-    padding: 15px 10px;
+    padding: 7px 7px;
 }
 
 .course__profesor {
     text-transform: capitalize;
-    font-size: 2rem;
+    font-size: 1.8rem;
     margin-top: 10px;
     padding: 0px 15px;
 }
