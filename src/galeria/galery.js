@@ -3,23 +3,20 @@ const URL = host + "API/v1/frontendURL/40"
 const URL_BASE_IMAGE = "https://cecati13web.blob.core.windows.net/galeria/";
 const container = document.querySelector(".carousel__list");
 
-// window.addEventListener("load", ()=> {
-//     new Glider(container
-//         , {
-//         type: 'carousel',
-//         // startAt: 5,
-//         // perView: 5,
-//         dots: ".carousel__indicators",
-//         arrows: {
-//             prev: ".carousel__previous",
-//             next: ".carousel__next"
-//         }
-//     }
-//     );
-// })
-
 function preloader() {
-    container.classList.toggle("preloader");
+    const nodePreloader = document.querySelector(".preloader")
+    nodePreloader.classList.toggle("preloader");
+}
+
+const functionGlider = ()=> {    
+    new Glider(container, {
+        type: 'carousel',
+        dots: ".carousel__indicators",
+        arrows: {
+            prev: ".carousel__previous",
+            next: ".carousel__next"
+        }
+    });    
 }
 
 function galleryContainer (array) {
@@ -36,9 +33,10 @@ function galleryContainer (array) {
         `;        
         arrayContainer.push(picture)
         }
-    );
+    );    
     container.append(...arrayContainer)
-    preloader();    
+    preloader();
+    window.addEventListener("load", functionGlider())
 }
 
 class ObjFromArray {    
@@ -75,5 +73,4 @@ async function conexion(URL) {
     }
 }
 
-preloader();
 conexion(URL);

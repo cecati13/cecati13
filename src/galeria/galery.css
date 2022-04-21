@@ -1,5 +1,8 @@
 .gallery {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center ;
 }
 .gallery > h3 {
     font-size: 2.6rem;
@@ -8,14 +11,13 @@
 }
 
 .carousel {
-    width: 95vw;
-    margin-bottom: 15px;
+    width: 80vw;
 }
 
 .carousel__container{
-    /* position: relative; */
-    overflow: scroll;
+    position: relative;
 }
+
 
 .carousel__previous, 
 .carousel__next {
@@ -46,27 +48,17 @@
 }
 
 .gallery__img {    
-    max-height: 40vh;    
+    max-height: 30vh;    
 }
 
 .carousel__list {
-    text-align: center;
-    display: flex;
-    align-items: center;
+    text-align: center;    
 }
 
 .carousel__list > figure {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.container__picture {
-    padding: 10px;    
-}
-
-.container__picture > img {    
-    border-radius: 5px;
 }
 
 .carousel__indicators .glider-dot {
@@ -88,12 +80,12 @@
 
 @media (min-width: 500px) {
     .gallery__img {    
-        max-height: 50vh;    
+        max-height: 40vh;    
     }
 }
 
 @media (min-width: 768px) {
     .gallery__img {    
-        max-height: 70vh;    
+        max-height: 60vh;    
     }
 }
