@@ -1,0 +1,57 @@
+.header {
+    align-items: center;
+}
+
+.header__port--C13 {
+    display: block;
+    padding-top: 15px;
+    font-size: 3rem;
+}
+
+#tv {
+    padding: 5px;
+    width: 100vw;
+}
+
+.container__courses {
+    display: inline-flex
+}
+
+
+/* .containerCourses > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(180deg, var(--mainColor), var(--mainColor2));
+    border-radius: 7px;
+    margin: 10px 10px 25px 10px;    
+    padding: 5px;
+} */
+
+.course {
+    color: var(--contrastColor);
+    font-size: 1.8rem;
+    padding-bottom: 15px;
+    text-align: center;
+    width: 450px;
+    margin: 0 15px;
+}
+
+.course > img {
+    width: 150px;
+}
+
+.course__title {
+    font-size: 2.3rem;
+    background-color: var(--contrastColor);
+    color: var(--mainColor);    
+    padding: 15px 10px;
+}
+
+.course__profesor {
+    text-transform: capitalize;
+    font-size: 2rem;
+    margin-top: 10px;
+    padding: 0px 15px;
+}
