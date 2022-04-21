@@ -49,10 +49,11 @@
 }
 
 .course > img {
-    width: 130px;
+    width: 110px;
 }
 
 .course__title {
+    text-transform: capitalize;
     font-size: 2rem;
     background-color: var(--contrastColor);
     color: var(--mainColor);    

@@ -36,8 +36,8 @@ class ShowCoursesTV {
         const container = document.createElement("div");
         container.className = "course";
         container.innerHTML = `                  
-        <p class="course__title"><strong>Curso: ${course.curso}</strong></p>
-        <p class="course__title">Especialidad: ${course.especialidad}</p>
+        <p class="course__title">Curso: <strong>${course.curso}</strong></p>
+        <p class="course__title">Especialidad: ${course.especialidad.toLowerCase()}</p>
             <img src="${course.imageURL}" alt="Logo de Especialidad">
             <p class="course__profesor">Profesor: ${course.profesor.toLowerCase()}</p>
             <br>
