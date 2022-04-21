@@ -1,34 +1,18 @@
-const host = "http://localhost:3000/";
-const URL = host + "API/v1/frontendURL/50";
-const URLimage = host + "API/V1/frontendURL/imageHomePage?size=17"
+const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
+const announceURL = host + "API/v1/frontendURL/50";
+const imageURL = host + "API/V1/frontendURL/imageHomePage?size=17"
 const URL_BASE_IMAGE = "https://cecati13web.blob.core.windows.net/galeria/";
 const containerMain = document.querySelector(".main__container");
+const widthPort = window.innerWidth;
 
 const arrayImage = [
     "background_portada.jpg",
-    "zonas_comunes1.jpeg",
-    "zonas_comunes2.jpeg",
-    "zonas_comunes3.jpeg",
-    "zonas_comunes4.jpeg",
-    "zonas_comunes5.jpeg",
-    "zonas_comunes6.jpeg",
-    "zonas_comunes7.jpeg",
-    "zonas_comunes8.jpeg",
-    "zonas_comunes9.jpeg",
-    "zonas_comunes10.jpeg",
-    "zonas_comunes11.jpeg",
-    "zonas_comunes12.jpeg",
-    "zonas_comunes14.jpeg",
-    "zonas_comunes16.jpeg",
-    "zonas_comunes17.jpeg",
-    "zonas_comunes18.jpg",
 ]
 
 class HomePage {
     constructor(obj) {        
         this.createAnnounces(obj);        
-        this.removeClassAnimation();
-        containerMain.style.width="100vw"
+        this.removeClassAnimation();        
         preloader();
     }
 
@@ -42,25 +26,10 @@ class HomePage {
                 const container = document.createElement("div");
                 container.className = "main__container__announce";
                 const containerAnnounce = this.announce(element);
-                container.appendChild(containerAnnounce);                            
-                containerMain.appendChild(container);                
+                container.appendChild(containerAnnounce);
+                containerMain.appendChild(container);
             }
-        }
-        //revisar cuantos anuncios habra en el sitio
-        // const countAdvertisements = Object.keys(object).length;
-        // let classAdvertisements = "main__container__announce--div";       
-        // const names = Object.getOwnPropertyNames(object)
-        // let count = 0;
-        // while (count < countAdvertisements) {
-        //     const container = document.createElement("div");
-        //     container.className = "main__container__announce";
-        //     const value = names[count];
-        //     const containerAnnounce = this.announce(obj[value], classAdvertisements);            
-        //     container.appendChild(containerAnnounce);            
-        //     count++;
-        //     containerMain.appendChild(container);
-        // }
-        
+        }        
         const positions = numberRandom()
         const randomOne = positions[0];
         const randomTwo = positions[1];        
@@ -85,15 +54,12 @@ class HomePage {
     
     announce(obj){
         const container = document.createElement("div");
-        //container.className = stringClass;
-        const absolutePath = /^http?:\/\//i;
+        container.className = "main__container__announce--div";
         let animate = "";        
-        if (obj.animacion) {
+        const animation = obj.animacion.toUpperCase();        
+        if (animation.includes("SI")) {
             animate = "buttonAnimate";
-        }
-        if (!absolutePath.test(obj.link)) {
-            obj.link = document.querySelector(`#${obj.link}`);
-        }
+        }     
         if (obj.botones === undefined) {
             container.innerHTML = `
             <p class="main__container__announces--div__title">${obj.titulo}</p>
@@ -105,7 +71,7 @@ class HomePage {
             <p class="main__container__announce--div__title">${obj.titulo}</p>
             <p>${obj.informacion}</p>
             <p class="main__container__announce--div__note">${obj.notas}</p>
-            <a href="${obj.linkPage}" class="button__link ${animate}">${obj.botones}</a>
+            <a href="${obj.link}" class="button__link ${animate}">${obj.botones}</a>
             `;
         }
         return container;
@@ -117,7 +83,19 @@ class HomePage {
     }    
 }
 
-
+function createArrayImageFetch(imageJSON){
+    for (const key in imageJSON) {
+        if (widthPort < 768) {
+            arrayImage.push(imageJSON[key].imageSmall);
+        } 
+        else if (widthPort < 1024) {
+            arrayImage.push(imageJSON[key].imageMedium);
+        } 
+        else {
+            arrayImage.push(imageJSON[key].imageHigh);
+        }        
+    }
+}
 
 function numberRandom (){
     const min = 0;
@@ -201,30 +179,32 @@ function slide() {
 window.onload = slide();
 
 function preloader() {
-    containerMain.classList.toggle("preloader");
+    const nodePreloader = document.querySelector(".preloader")
+    nodePreloader.classList.toggle("preloader");
 }
 
-async function conexion(URL) {
+async function conexion() {
     try {
-        const infoImage = await fetch(URLimage);
+        const infoImage = await fetch(imageURL);
         const imageJSON = await infoImage.json();
-        console.log(imageJSON)
-        const info = await fetch(URL);
+        console.log(imageJSON);
+        createArrayImageFetch(imageJSON);
+
+        const info = await fetch(announceURL);
         const infoJSON = await info.json();
         console.log(infoJSON);        
         const announce = new HomePage(infoJSON);
-
 
     } catch (error) {
         console.log(error)
         preloader();
         const titleError = document.createElement("h3");
         titleError.innerText= `
-        Tenemos problemas con algunas funciones en el sitio.
+        UPS!
+        Lo sentimos, parece haber algunos problemas con algunas funciones en el sitio.
         Por favor intenta más tarde, lamentamos los inconvenientes.`;
         titleError.style.color = "var(--fontColor)";        
         containerMain.appendChild(titleError);
     }
 }
-preloader();
-conexion(URL);
+conexion();

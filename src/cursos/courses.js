@@ -249,7 +249,8 @@ const backToSpecialties = function () {
     AvailableCourses.alternateTitle(Specialties.textTitle);
 }
 
-function locateEvent(event) {
+
+function locateEvent(event) {    
     const ubication = event.target.dataset.specialty.toUpperCase();
     const showCourses = new AvailableCourses(ubication);
 }
@@ -273,3 +274,10 @@ async function conexion(URL) {
 }
 preloader();
 conexion(URL);
+window.HashChangeEvent  = (event) => {
+    debugger
+    alert("localizacion: " + document.location + "; estado " + JSON.stringify(event.state))
+    event.preventDefault();
+    console.log("evento onchange")
+    console.log(event)
+}
