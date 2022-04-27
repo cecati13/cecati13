@@ -1,7 +1,7 @@
 // const curp = document.querySelector("#curp");
 // const matricula = document.querySelector("#matricula");
-//const API = "http://localhost:3000/API/V1/students";
-const API = "https://backend-cursos-cecati13.uc.r.appspot.com/API/V1/students";
+const API = "http://localhost:3000/API/V1/students";
+//const API = "https://backend-cursos-cecati13.uc.r.appspot.com/API/V1/students";
 
 const result = document.querySelector(".consult__info__API")
 const formConsult= document.querySelector("#matriculaORcurp");
@@ -15,7 +15,7 @@ async function consult(valueMatricula, valueCurp) {
     console.log("Curp", valueCurp.toUpperCase())
     console.log("Valores desde API: ", response)
     const nodeResponse = document.createElement("div");
-    const textNode =     
+    const textNode =
         response.a_paterno + " " +
         response.a_materno + " " +
         response.nombre + ". Matricula: " +
