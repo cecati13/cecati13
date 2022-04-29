@@ -1,7 +1,7 @@
 // const curp = document.querySelector("#curp");
 // const matricula = document.querySelector("#matricula");
-const API = "http://localhost:3000/API/V1/students";
-//const API = "https://backend-cursos-cecati13.uc.r.appspot.com/API/V1/students";
+//const API = "http://localhost:3000/API/V1/students";
+const API = "https://backend-cursos-cecati13.uc.r.appspot.com/API/V1/students";
 
 const result = document.querySelector(".consult__info__API")
 const formConsult= document.querySelector("#matriculaORcurp");
