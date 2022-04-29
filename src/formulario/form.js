@@ -9,11 +9,10 @@ const formConsult= document.querySelector("#matriculaORcurp");
 async function consult(valueMatricula, valueCurp) {    
     const formData = new FormData();
     formData.set("matricula", valueMatricula)
-    formData.set("curp", valueCurp.toUpperCase())
-    const response = await send(formData);
-    console.log("Matricula", valueMatricula)
-    console.log("Curp", valueCurp.toUpperCase())
+    formData.set("curp", valueCurp.toUpperCase())    
+    const response = await send(formData);    
     console.log("Valores desde API: ", response)
+    showInfoSuccesful(response);
     const nodeResponse = document.createElement("div");
     const textNode =
         response.a_paterno + " " +
@@ -24,6 +23,19 @@ async function consult(valueMatricula, valueCurp) {
         console.log("TextNode: ", textNode)
     nodeResponse.innerText = textNode;
     result.appendChild(nodeResponse)
+}
+
+function showInfoSuccesful(info){
+    inputValue("nombre", info.nombre);
+    inputValue("a_paterno", info.a_paterno)
+    inputValue("a_materno", info.a_materno)
+    inputValue("matricula", info.matricula)
+    inputValue("curp", info.curp)
+}
+
+function inputValue(ubication, value){
+    const nodeValue = document.getElementById(ubication)
+    nodeValue.value = value
 }
 
 function noValues () {
