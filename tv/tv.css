@@ -46,6 +46,7 @@
     text-align: center;
     width: 450px;
     margin: 0 10px;
+    white-space: normal;
 }
 
 .course > img {
