@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,32 +14,146 @@
         JavaScript habilitado. Aquí están las <a href="https://www.enable-javascript.com/es/">
         instrucciones para habilitar JavaScript en tu navegador web</a>.
     </noscript>
-    <header class="header" id="header"></header>    
+    <header class="header" id="header"></header>
     <main id="app"></main>
     <section>
-        <h5>Formulario de inscripción</h5>
-        <p>Si has tomado antes alguno de nuestros cursos, por favor ingresa tu CURP o el numero de matricula que te fue asignado</p>
-        <form id="matriculaORcurp">
-            <label for="curp">Captura tu CURP:</label>
-            <input type="text" name="curp" id="curp" placeholder="Tu CURP...">
-            <span>ó</span>
-            <label for="matricula">Captura tu número de control:</label>
-            <input type="text" name="matricula" id="matricula" placeholder="Tu número de matrícula...">            
-            <input type="submit" value="Recuperar información"></input>
-        </form>
+        <h3>Formulario de inscripción</h3>
+
+        <div class="typeRegister">
+            <h4>¿Has tomado algún curso antes en el CECATI 13?</h4>
+            <button onclick="studentC13YES()">SI</button>
+            <button onclick="studentC13NO()">NO</button>
+        </div>
+
+        
+        <div id="dbRegister" class="register registerHide">
+            <button onclick="studentC13YES()" id="dbRegisterButton">NO he estado inscrito antes en el CECATI 13</button>
+            <h4>Para identificarte, por favor ingresa tu CURP o el numero de control o matricula que te fue asignado:</h4>
+            <form id="matriculaORcurp">
+                <label for="curpOnDB">Captura tu CURP:</label>
+                <input type="text" name="curpOnDB" id="curpOnDB" placeholder="Tu CURP...">
+                <span>ó</span>
+                <label for="matriculaOnDB">Captura tu número de control:</label>
+                <input type="text" name="matriculaOnDB" id="matriculaOnDB" placeholder="Tu número de matrícula...">
+                <input type="submit" value="Recuperar información"></input>
+            </form>
+            <div class="result__API"></div>
+        </div>
+        
+        <div id="updateRegister" class="registerHide">
+            <h4>¿Qué tipo de información deseas actualizar?</h4>
+            <p id="updateContact">Presiona aqui si deseas actualizar tus datos de <b>Contacto</b>.</p>
+            <form id="updateContact">
+                <label for="updateEmail">Confirma o actualiza tu correo electrónico</label><span class="required">*</span>
+                <input type="email" name="updateEmail" placeholder="tu correo electrónico...">
+                <label for="updateTelefono">Confirma o actualiza tu número telefónico</label><span class="required">*</span>
+                <input type="tel" name="updateTelefono" placeholder="Número Telefónico....">
+                <p>Recuerda que la mayoria de los docentes crean grupos de WhatsApp para dar instrucciones a sus estudiantes, verifica que tus datos esten actualizados.</p>
+            </form>
+            <form id="updateForm">                
+            <p id="updateAddress">Presiona aqui si deseas actualizar tu <b>Domicilio</b>.</p>
+            <form action="">
+                <label for="updateCalle">Calle y número</label><span class="required">*</span>
+                <input type="text" id="updateCalle" name="updateCalle" placeholder="Calle y número...">
+                <label for="updateColonia">Colonia</label><span class="required">*</span>
+                <input type="text" id="updateColonia" name="updateColonia" placeholder="Colonia...">
+                <label for="updateAlcaldia">Municipio o Alcaldía</label><span class="required">*</span>
+                <input type="text" id=updateAalcaldia" name="updateAlcaldia" placeholder="Municipio o Alcaldía...">                
+                <label for="updateCP">Código Postal</label><span class="required">*</span>
+                <input type="number" id="updateCP" name="updateCP" placeholder="Código Postal...">
+                <label for="updateEstado">Estado</label><span class="required">*</span>
+                <input type="text" id="updateEstado" name="updateEstado" placeholder="Estado...">
+
+                <label for="updateAddressCertificate">Adjuntar Comprobante de Domicilio</label>
+                <input type="file" name="updateAddressCertificate">
+            </form>
+            <p id="updateSchool">Presiona aqui si deseas actualizar tu <b>maximo grado de estudios</b>.</p>
+            <form action="">
+                <label for="updateScholarship">Escolaridad</label>
+                <input type="text" name="updateScholarship" id="updateScholarship" placeholder="Escribe el grado maximo de estudios.">
+                <label for="updateStudiesCertificate">Adjuntar Comprobante de máximo grado de estudios</label>
+                <input type="file" name="updateStudiesCertificate" >
+            </form>
+        </div>
+
+        <div id="newRegister" class="register registerHide">
+            <button onclick="studentC13NO()">NO he estado inscrito antes en el CECATI 13</button>
+            <h4>Por favor proporciona la siguiente información personal para tu inscripción</h4>
+            <form id="dataGeneral">
+                <label for="nombre">Nombre</label><span class="required">*</span>
+                <input type="text" id="nombre" name="nombre" placeholder="Escribe tu nombre de pila...">
+                <label for="a_paterno">Apellido Paterno</label><span class="required">*</span>
+                <input type="text" id="a_paterno" name="a_paterno" placeholder="Tu apellido paterno...">
+                <label for="a_materno">Apellido Materno</label><span class="required">*</span>
+                <input type="text" id="a_materno" name="a_materno" placeholder="Tu apellido materno...">
+                <label for="curp">CURP</label><span class="required">*</span>
+                <input type="text" id="curp" name="curp" placeholder="CURP...">
+                <p>Puedes consultar esta información en https://www.gob.mx/curp/</p>                
+                <label for="email">Correo Electrónico</label>
+                <input type="email" name="email" placeholder="Escribe un correo electronico válido...">
+                <label for="telefono">Teléfono</label><span class="required">*</span>
+                <input type="tel" name="telefono" placeholder="Número Telefónico donde podamos contactarte...">
+                <p>La mayoría de los docentes crean grupos de WhatsApp para dar instrucciones a sus estudiantes, por verifica que sea correcto.</p>
+                <label for="birthday">Fecha de Nacimiento</label><span class="required">*</span>
+                <input type="date" name="birthday" placeholder="Fecha de nacimiento...">
+                <p>La edad minima para inscribirte y tomar uno de nuestros cursos es de 15 años cumplidos</p>
+                <p>Domicilio.</p>
+                <label for="calle">Calle y número</label><span class="required">*</span>
+                <input type="text" id="calle" name="calle" placeholder="Calle y número...">
+                <label for="colonia">Colonia</label><span class="required">*</span>
+                <input type="text" id="colonia" name="colonia" placeholder="Colonia...">
+                <label for="alcaldia">Municipio o Alcaldía</label><span class="required">*</span>
+                <input type="text" id="alcaldia" name="alcaldia" placeholder="Municipio o Alcaldía...">
+                <!-- https://copomex.com/#pricing-section por 330 para agilizar este tramite -->
+                <label for="cp">Código Postal</label><span class="required">*</span>
+                <input type="number" id="cp" name="cp" placeholder="Código Postal...">
+                <label for="estado">Estado</label><span class="required">*</span>
+                <input type="text" id="estado" name="estado" placeholder="Estado...">
+                <label for="scholarship">Escolaridad</label><span class="required">*</span>
+                <input type="text" name="scholarship" id="scholarship" placeholder="Escribe el grado maximo de estudios.">
+
+                <p>¿Presenta alguna discapacidad? <span class="required">*</span></p>
+                <label for="disability">visual</label>
+                <input type="radio" name="disability" id="" value="visual">
+                <label for="disability">auditiva</label>
+                <input type="radio" name="disability" id="" value="auditiva">
+                <label for="disability">de comunicación</label>
+                <input type="radio" name="disability" id="" value="comunicacion">
+                <label for="disability">motriz</label>
+                <input type="radio" name="disability" id="" value="motriz">
+                <label for="disability">intelectual</label>
+                <input type="radio" name="disability" id="" value="intelectual">
+                <label for="disability">ninguna</label>
+                <input type="radio" name="disability" id="" value="ninguna">
+                <p>Documentos necesarios para tu inscripción:</p>
+                <ul>
+                    <li>Acta de Nacimiento</li>
+                    <li>Fotografia</li>
+                    <li>Comprobante de Domicilio</li>
+                    <li>Escolaridad</li>
+                </ul>
+                
+                <label for="birthCertificate">Adjuntar Acta de Nacimiento</label>
+                <input type="file" name="birthCertificate" >
+
+                <label for="photography">Adjuntar Fotografía</label>
+                <input type="file" name="photography" >
+                <figure>
+                    <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/formFotoCredencialExample.jpg" alt="">
+                    <figcaption>Fotografía en b/n o color, para la elaboración de la credencial de cursos híbridos y presenciales</figcaption>
+                </figure>
+
+                <label for="addressCertificate">Adjuntar Comprobante de Domicilio</label>
+                <input type="file" name="addressCertificate" >
+
+                <label for="studiesCertificate">Adjuntar Comprobante de máximo grado de estudios</label>
+                <input type="file" name="studiesCertificate" >
+                
+                <p>Usaremos esta información para pre-inscribirte al curso, y contactarte si fuera necesario<span id="selectedCourse"></span></p>
+                <input type="submit" value="Pre-inscribirse"></input>
+            </form>
+        </div>
         <br>
-        <form id="dataGeneral">
-            <label for="nombre">Nombre</label>
-            <input type="text" id="nombre" name="nombre" placeholder="Escribe tu nombre de pila...">
-            <label for="a_paterno">Apellido Paterno</label>
-            <input type="text" id="a_paterno" name="a_paterno" placeholder="Tu apellido paterno...">
-            <label for="a_materno">Apellido Materno</label>
-            <input type="text" id="a_materno" name="a_materno" placeholder="Tu apellido materno...">
-            <label for="email">Correo Electrónico</label>
-            <input type="email" name="email" placeholder="Escribe un correo electronico válido...">
-        </form>
-        <br>
-        <div class="consult__info__API"></div>
     </section>
     <footer class="footer" id="footer"></footer>
     

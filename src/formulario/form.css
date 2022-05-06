@@ -1,3 +1,20 @@
 section {
-    font-size: 1.7rem;
+    font-size: 1.6rem;
+}
+
+section > div {
+    padding: 15px;
+}
+
+form > input {
+    padding: 10px;
+    display: block;
+}
+
+.register{
+    width: 90vw;    
+}
+
+.registerHide {
+    display: none;
 }
