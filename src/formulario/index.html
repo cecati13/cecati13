@@ -20,11 +20,15 @@
         <h3>Formulario de inscripción</h3>
 
         <div class="typeRegister">
-            <h4>¿Has tomado algún curso antes en el CECATI 13?</h4>
-            <button onclick="studentC13YES()">SI</button>
-            <button onclick="studentC13NO()">NO</button>
+            <form action="">
+                <label for="curp">Para iniciar tu pre-inscripcion, por favor ingresa tu CURP</label><span class="required">*</span>
+                <input type="text" id="curp" name="curp" placeholder="CURP...">
+                <input type="submit">
+            </form>
+            <!-- <button onclick="studentC13YES()">SI</button>
+            <button onclick="studentC13NO()">NO</button> -->
+            <p>Si no conoces tu curp, puedes consultar en https://www.gob.mx/curp/ esta información </p>
         </div>
-
         
         <div id="dbRegister" class="register registerHide">
             <button onclick="studentC13YES()" id="dbRegisterButton">NO he estado inscrito antes en el CECATI 13</button>
@@ -76,27 +80,74 @@
             </form>
         </div>
 
-        <div id="newRegister" class="register registerHide">
+        <div id="newRegister" class="register">
             <button onclick="studentC13NO()">NO he estado inscrito antes en el CECATI 13</button>
             <h4>Por favor proporciona la siguiente información personal para tu inscripción</h4>
             <form id="dataGeneral">
+                <label for="curp">CURP</label><span class="required">*</span>
+                <input type="text" id="curp" name="curp" placeholder="CURP...">
+                <p>Los siguientes datos los usaremos para verificar que tu CURP sea correcta:</p>
                 <label for="nombre">Nombre</label><span class="required">*</span>
                 <input type="text" id="nombre" name="nombre" placeholder="Escribe tu nombre de pila...">
                 <label for="a_paterno">Apellido Paterno</label><span class="required">*</span>
                 <input type="text" id="a_paterno" name="a_paterno" placeholder="Tu apellido paterno...">
                 <label for="a_materno">Apellido Materno</label><span class="required">*</span>
                 <input type="text" id="a_materno" name="a_materno" placeholder="Tu apellido materno...">
-                <label for="curp">CURP</label><span class="required">*</span>
-                <input type="text" id="curp" name="curp" placeholder="CURP...">
-                <p>Puedes consultar esta información en https://www.gob.mx/curp/</p>                
+                <label for="genero">Hombre 
+                    <input type="radio" id="genero" name="genero" value="MASCULINO">
+                </label>
+                <label for="genero">Mujer
+                    <input type="radio" id="genero" name="genero" value="FEMENINO">
+                </label>
+                <label for="birthday">Fecha de Nacimiento</label><span class="required">*</span>
+                <input type="date" name="birthday" placeholder="Fecha de nacimiento...">
+                <label for="estado">
+                    <span>Lugar de Nacimiento</span>
+                    <input list="estado">
+                    <datalist id="estado">
+                        <option value="AGUASCALIENTES"></option>
+                        <option value="BAJA_CALIFORNIA"></option>
+                        <option value="BAJA_CALIFORNIA_SUR"></option>
+                        <option value="CAMPECHE"></option>
+                        <option value="COAHUILA"></option>
+                        <option value="COLIMA"></option>
+                        <option value="CHIAPAS"></option>
+                        <option value="CHIHUAHUA"></option>
+                        <option value="CIUDAD_DE_MEXICO"></option>
+                        <!-- <option value="DISTRITO_FEDERAL"></option> -->
+                        <!-- valor debe de cambiarse en Backend para poder construir y validar -->
+                        <option value="DURANGO"></option>
+                        <option value="GUANAJUATO"></option>
+                        <option value="GUERRERO"></option>
+                        <option value="HIDALGO"></option>
+                        <option value="JALISCO"></option>
+                        <option value="ESTADO_DE_MEXICO"></option>
+                        <option value="NO_ESPECIFICADO"></option>
+                        <option value="MICHOACAN"></option>
+                        <option value="MORELOS"></option>
+                        <option value="NAYARIT"></option>
+                        <option value="NUEVO_LEON"></option>
+                        <option value="OAXACA"></option>
+                        <option value="PUEBLA"></option>
+                        <option value="QUERETARO"></option>
+                        <option value="QUINTANA_ROO"></option>
+                        <option value="SAN_LUIS_POTOSI"></option>
+                        <option value="SINALOA"></option>
+                        <option value="SONORA"></option>
+                        <option value="TABASCO"></option>
+                        <option value="TAMAULIPAS"></option>
+                        <option value="TLAXCALA"></option>
+                        <option value="VERACRUZ"></option>
+                        <option value="YUCATAN"></option>
+                        <option value="ZACATECAS"></option>
+                    </datalist>
+                </label>
+                <p class="Edad Minima">Lo sentimos, la edad minima para poder inscribirte a alguno de nuestros cursos es 15 años cumplidos</p>
                 <label for="email">Correo Electrónico</label>
                 <input type="email" name="email" placeholder="Escribe un correo electronico válido...">
                 <label for="telefono">Teléfono</label><span class="required">*</span>
                 <input type="tel" name="telefono" placeholder="Número Telefónico donde podamos contactarte...">
                 <p>La mayoría de los docentes crean grupos de WhatsApp para dar instrucciones a sus estudiantes, por verifica que sea correcto.</p>
-                <label for="birthday">Fecha de Nacimiento</label><span class="required">*</span>
-                <input type="date" name="birthday" placeholder="Fecha de nacimiento...">
-                <p>La edad minima para inscribirte y tomar uno de nuestros cursos es de 15 años cumplidos</p>
                 <p>Domicilio.</p>
                 <label for="calle">Calle y número</label><span class="required">*</span>
                 <input type="text" id="calle" name="calle" placeholder="Calle y número...">
@@ -109,8 +160,18 @@
                 <input type="number" id="cp" name="cp" placeholder="Código Postal...">
                 <label for="estado">Estado</label><span class="required">*</span>
                 <input type="text" id="estado" name="estado" placeholder="Estado...">
-                <label for="scholarship">Escolaridad</label><span class="required">*</span>
-                <input type="text" name="scholarship" id="scholarship" placeholder="Escribe el grado maximo de estudios.">
+                
+                <label for="escolaridad">
+                    <span>Escolaridad</span>
+                    <input list="escolaridad" id="scholarship">
+                    <datalist id="escolaridad">
+                        <option value="Primaria"></option>
+                        <option value="Primaria inconclusa"></option>
+                        <option value="Secundaria"></option>
+                        <option value="Secundaria incompleta"></option>
+                        <!-- Incluir opciones faltantes y analizar usar Vue con V-for -->
+                    </datalist>
+                </label>
 
                 <p>¿Presenta alguna discapacidad? <span class="required">*</span></p>
                 <label for="disability">visual</label>
@@ -127,21 +188,13 @@
                 <input type="radio" name="disability" id="" value="ninguna">
                 <p>Documentos necesarios para tu inscripción:</p>
                 <ul>
-                    <li>Acta de Nacimiento</li>
-                    <li>Fotografia</li>
+                    <li>Acta de Nacimiento</li>                    
                     <li>Comprobante de Domicilio</li>
                     <li>Escolaridad</li>
                 </ul>
                 
                 <label for="birthCertificate">Adjuntar Acta de Nacimiento</label>
                 <input type="file" name="birthCertificate" >
-
-                <label for="photography">Adjuntar Fotografía</label>
-                <input type="file" name="photography" >
-                <figure>
-                    <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/formFotoCredencialExample.jpg" alt="">
-                    <figcaption>Fotografía en b/n o color, para la elaboración de la credencial de cursos híbridos y presenciales</figcaption>
-                </figure>
 
                 <label for="addressCertificate">Adjuntar Comprobante de Domicilio</label>
                 <input type="file" name="addressCertificate" >
