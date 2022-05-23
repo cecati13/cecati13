@@ -92,7 +92,7 @@ class Base {
         <div class="header__port__title">
             <a href="${ub}/"><h1 class="header__port--C13">CECATI 13</h1></a>
             <h2 class="header__port__title--h1">Centro de Capacitación para el Trabajo Industrial No. 13</h2>
-            <h2 class="header__port__title--h2">Profesor "Abraham Lezama Breton"</h2>
+            <h2 class="header__port__title--h2">Profesor "Abraham Lezama Bretón"</h2>
         </div>
         <img class="header__port--imgC13" src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/LogoCecati.png" alt="Logo CECATI 13">
         `;

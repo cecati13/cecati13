@@ -115,8 +115,23 @@
     max-width: 400px;
 }
 
-.course > img {
+.course--img-button {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.course--img-button > img {
     width: 115px;
+}
+
+.course--img-button > a {
+    background-color: var(--fontColor);
+    border-radius: 15px;
+    padding: 2px;
+    padding-bottom: 10px;
+    color: var(--mainColor);
+    font-size: 1.1rem;
 }
 
 .containerCourse--title {
@@ -133,15 +148,14 @@
     padding: 0px 15px;
 }
 
-.floating__button {
-    position: fixed;
-    right: 1vw;
-    top: 60vh;    
+.floating__button {    
     height: 70px;
     padding: 6px;
     border-radius: 5px;
+    margin-bottom: 0;
 }
 
+/* No necesario con inscripcion con datos del curso individual */
 .floating__button--HIDE{
     display: none;
 }

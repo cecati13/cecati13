@@ -38,6 +38,7 @@ class AvailableCourses {
         course.imageURL = (course.imagenURL != undefined ? URL_BASE_IMAGE + course.imagenURL : "");
         const container = document.createElement("div");
         //container.className = "course";
+        const preregister = this.preRegistrationInformation(course);
         container.innerHTML = `
         <div class="course">
             <p class="containerCourse--title"><strong>${course.curso}</strong></p>
@@ -52,11 +53,34 @@ class AvailableCourses {
             <p>Dias de clase: ${course.dias_de_clases}</p>        
             <p>${course.observaciones}</p>
             <br>
-            <img src="${course.imageURL}" alt="Logo de Especialidad">
+            <div class="course--img-button">
+                <a href="/src/formulario" data-numberCourse="pre-${course.number}">
+                    <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/inscripcion.svg"
+                    alt="Inscripción" class="button__link floating__button" id="buttonFloatingReg">
+                    <p>Pre-inscripción</p>
+                </a>
+                <img src="${course.imageURL}" alt="Logo de Especialidad">
+            </div>
+            <div id="pre-${course.number}" style="display:none">${preregister}</div>
         </div>
         `;
-        //<a class="button__link educativeOffer__button" href="../html/Inscribete.html">Inscribete...</a>
+        container.addEventListener("click", event => saveCourse(event))
+        
+                // <a class="button__link educativeOffer__button" href="../html/Inscribete.html">Inscribete...</a>
         return container;
+    }
+
+    preRegistrationInformation(course) {
+        const newObject = {
+           ...course,           
+        };
+        delete newObject.imageURL;
+        delete newObject.imagenURL;
+        delete newObject.inscritos;
+        delete newObject.observaciones;
+
+        const information = JSON.stringify(newObject);
+        return information;
     }
 
     mountNode(containerCourses){
@@ -98,22 +122,38 @@ class AvailableCourses {
 class ObjFromArray {
     static countCourses = 0;
     constructor (objCourses){        
-        const arrayWithPlaces = this.coursesWithPlaces(objCourses)        
-        const specialities = this.sortBySpeciality(arrayWithPlaces);        
+        const arrayWithPlaces = this.coursesWithPlaces(objCourses)
+        const arrayWithDateAvailable = this.avalilableDate(arrayWithPlaces)       
+        const specialities = this.sortBySpeciality(arrayWithDateAvailable);
         return specialities;
+    }
+
+    
+    avalilableDate(array){
+        //si la fecha rebasa el 10% de las horas totales del curso. NO PUBLICAR
+        return array
     }
 
     coursesWithPlaces(objCourses){
         const withPlace = [];
-        for (const key in objCourses) {
-            const item = objCourses[key];
+        for (const key in objCourses) {            
+            const item = objCourses[key];            
             const places = Number.parseInt(item.inscritos)
-            if (places < numberPlacesWithCourses && places != NaN) {
-                withPlace.push(item)
+            if (places < numberPlacesWithCourses && places != NaN) {                
+                withPlace.push(item);
             }
         }
-        ObjFromArray.countCourses = withPlace.length;                
-        return withPlace
+        let totalCourses = withPlace.length
+        ObjFromArray.countCourses = totalCourses;
+        const assignPreInscription = withPlace.map( course => {            
+        const newCourse = {
+            ...course,
+            number: totalCourses
+        }
+        totalCourses--;
+        return newCourse
+        })        
+        return assignPreInscription
     }
 
     sortBySpeciality(objCourses){        
@@ -196,7 +236,7 @@ class Specialties {
                 data-specialty="${element.specialty.toLowerCase()}">${element.specialty.toLowerCase()}</div>
             </div>`             
         });
-        container.addEventListener("click", event => locateEvent(event));      
+        container.addEventListener("click", event => locateEvent(event));
         nodeAPI_Offer.appendChild(container);
     }
 
@@ -210,15 +250,15 @@ class Specialties {
             <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/arrowBack.svg" alt="Retroceder">
             <span>REGRESAR</span>        
         </div>
-        <a href="${buttonHref}">
-            <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/inscripcion.svg" 
-            alt="Inscripción" class="button__link floating__button floating__button--HIDE" id="buttonFloatingReg">
-        </a>
         `;        
+        // <a href="${buttonHref}">
+        //     <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/inscripcion.svg" 
+        //     alt="Inscripción" class="button__link floating__button floating__button--HIDE" id="buttonFloatingReg">
+        // </a>
         //PARA USAR CUANDO LA INSCRIPCION LLEVE DIRECTO AL FORMULARIO PRECARGADO CON EL CURSO
         // registrationButton.innerText = "Preinscríbete...";
         // registrationButton.className = "button__link floating__button floating__button--HIDE";
-        //registrationButton.id = "buttonFloatingReg";
+        // registrationButton.id = "buttonFloatingReg";
         nodeAPI_Offer.appendChild(buttonBack);
     }
 
@@ -229,8 +269,8 @@ class Specialties {
 
     static showButtonBack() {
         //habilitar si se usa boton flotante
-        const nodeButtonFloatingReg = document.querySelector("#buttonFloatingReg");
-        nodeButtonFloatingReg.classList.toggle("floating__button--HIDE");
+        // const nodeButtonFloatingReg = document.querySelector("#buttonFloatingReg");
+        // nodeButtonFloatingReg.classList.toggle("floating__button--HIDE");
         const nodeButtonBack = document.querySelector("#buttonBack");
         nodeButtonBack.classList.toggle("buttonBack--HIDE");
         nodeButtonBack.addEventListener("click", backToSpecialties)
@@ -249,10 +289,19 @@ const backToSpecialties = function () {
     AvailableCourses.alternateTitle(Specialties.textTitle);
 }
 
+function saveCourse(e) {
+    debugger
+    const locate = e.target.dataset.numbercourse 
+    if(locate == 'pre-\d'){
+        console.log(locate)
+    }
+}
+
 
 function locateEvent(event) {    
     const ubication = event.target.dataset.specialty.toUpperCase();
     const showCourses = new AvailableCourses(ubication);
+
 }
 
 async function conexion(URL) {
@@ -262,9 +311,10 @@ async function conexion(URL) {
         const response = new ObjFromArray(infoJSON);
         console.log(response);
         const specialitie = new Specialties(response);        
-        infoFetch = [...response];        
+        infoFetch = [...response];
     } catch (error) {
         console.log(error)
+        preloader();
         const titleError = document.createElement("h3");
         titleError.innerHTML= `
         <h3 class="error__API">Lo sentimos, la información no esta disponible en este momento.
