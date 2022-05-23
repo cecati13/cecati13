@@ -1,0 +1,20 @@
+{
+  "name": "cecati13",
+  "version": "1.0.0",
+  "description": "Proyecto de mejora del sitio oficial del CECATI 13",
+  "main": "base.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dvnegrete/cecati13.git"
+  },
+  "keywords": [],
+  "author": "Damián Valenzuela <dvnegrete@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dvnegrete/cecati13/issues"
+  },
+  "homepage": "https://github.com/dvnegrete/cecati13#readme"
+}
