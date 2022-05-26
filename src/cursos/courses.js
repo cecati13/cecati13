@@ -1,6 +1,8 @@
 const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
 const URL = host + "API/v1/frontendURL/10"
 const URL_BASE_IMAGE = "https://cecati13web.blob.core.windows.net/assets-web-cecati13/";
+//Nombre de key guardado en Session Storage para preinscribir Curso
+const keyCourse = "Cecati13";
 
 let infoFetch = [];
 const nodeAPI_Offer = document.getElementById("sectionCourses");
@@ -56,12 +58,13 @@ class AvailableCourses {
             <div class="course--img-button">
                 <a href="/src/formulario" data-numberCourse="pre-${course.number}">
                     <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/inscripcion.svg"
-                    alt="Inscripción" class="button__link floating__button" id="buttonFloatingReg">
-                    <p>Pre-inscripción</p>
+                    alt="Inscripción" class="button__link floating__button" id="buttonFloatingReg"
+                    data-numberCourse="pre-${course.number}">
+                    <p data-numberCourse="pre-${course.number}">Pre-inscripción</p>
                 </a>
                 <img src="${course.imageURL}" alt="Logo de Especialidad">
             </div>
-            <div id="pre-${course.number}" style="display:none">${preregister}</div>
+            <textarea id="pre-${course.number}" style="display:none">${preregister}</textarea>
         </div>
         `;
         container.addEventListener("click", event => saveCourse(event))
@@ -290,10 +293,14 @@ const backToSpecialties = function () {
 }
 
 function saveCourse(e) {
-    debugger
+    const expresion = /pre-\d\d/
     const locate = e.target.dataset.numbercourse 
-    if(locate == 'pre-\d'){
-        console.log(locate)
+    if(expresion.test(locate)){   
+        sessionStorage.removeItem(keyCourse);
+        const nodeCourse = document.querySelector(`#${locate}`);
+        const valueCourse = nodeCourse.value;
+        sessionStorage.setItem(keyCourse, valueCourse)
+        console.log("Guardado en Storage")
     }
 }
 

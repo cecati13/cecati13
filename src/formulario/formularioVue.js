@@ -1,6 +1,7 @@
 const app = Vue.createApp({
   data() {
     return {
+      curso:{},
       curp: "",
 
       estadoNacimiento: {
@@ -41,18 +42,38 @@ const app = Vue.createApp({
       },     
 
       arrayEscolaridad:[
-        "Primaria",
-        "Primaria inconclusa",
-        "Secundaria",
-        "Secundaria incompleta",
-        "Básico",
-        "Medio Superior",
-        "Medio Superior incompleto",
-        "Superior incompleto",
-        "Superior",
-        "Maestria",
-        "Doctorado",
-        "Tecnico",
+        // "Primaria",
+        // "Primaria inconclusa",
+        // "Secundaria",
+        // "Secundaria incompleta",
+        // "Básico",
+        // "Medio Superior",
+        // "Medio Superior incompleto",
+        // "Superior incompleto",
+        // "Superior",
+        // "Maestria",
+        // "Doctorado",
+        // "Tecnico",
+        "SIN ESTUDIOS",
+        "1.- PRIMARIA",
+        "PRIMARIA TERMINADA",
+        "CARRERA COMERCIAL Y PRIMARIA",
+        "CARRERA COMERCIAL Y SECUNDARIA",
+        "1.- SECUNDARIA",
+        "SECUNDARIA TERMINADA",
+        "1.- CARRERA TECNICA",
+        "CARRERA TECNICA TERMINADA",
+        "1.- BACHILLERATO",
+        "1.-PREPARATORIA",
+        "BACHILLERATO O PREPARATORIA TERMINADA",
+        "1.- CARRERA NORMALISTA",
+        "NORMAL TERMINADA",
+        "1.- NORMAL SUPERIOR",
+        "NORMAL SUPERIOR TERMINADA",
+        "1.- AÑO CARRERA PROFESIONAL",
+        "PASANTE PROFESIONAL",
+        "LICENCIATURA (TITULADO)",
+        "POSGRADO(MAESTRIA, DOCTORADO)"
       ],
 
       valueEstado: {
@@ -96,7 +117,6 @@ const app = Vue.createApp({
     };
   },
 
-
   watch:{
     open(value){
       if (value) {
@@ -112,7 +132,7 @@ const app = Vue.createApp({
   methods: {
     prueba() {
       console.log("prueba para consulta de api")
-    },
+    },    
 
     async consult(valueCurp) {
       console.log(valueCurp)
@@ -164,14 +184,33 @@ const app = Vue.createApp({
   computed: {
     fullName(){
       return this.firstName + " " + this.lastName;
-    }
-  },
+    },
+    getCourse(){
+      const getItem = sessionStorage.getItem("Cecati13");
+      const courseInfo = JSON.parse(getItem);
+      console.log(courseInfo)
+      this.curso = courseInfo;
+      return courseInfo;
+    },
 
+  },
+  // <course 
+  //   v-bind:valueCourse="curso"
+  //   v-bind:valueStorageCourse="getCourse">
+  // </course>
+  
   template: `
   <section>
     <h3>Formulario de inscripción</h3>
-
-    <course></course>
+      
+    <article class="register">
+      <p>Has selecionado el curso: </p>
+      <input type="text" v-bind:value="getCourse.curso"/>
+      <p>que inicia el: </p>
+      <input type="text" v-bind:value="getCourse.fecha_inicio"/>
+      <p>con el Profesor(a):</p>
+      <input type="text" v-bind:value="getCourse.profesor"/>
+    </article>
     
     <v-typeRegister></v-typeRegister>
     
@@ -188,16 +227,6 @@ const app = Vue.createApp({
     
   </section>
     `,
-})
-
-app.component("course", {
-  template: `
-  <article class="register">
-    <p>Has selecionado el curso <span></span></p>
-    <p>que inicia el: <span></span></p>
-    <p>con el Profesor(a): <span></span></p>
-  </article>
-  `
 })
 
 app.component("v-typeRegister", {
