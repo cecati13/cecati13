@@ -1,8 +1,11 @@
 const app = Vue.createApp({
   data() {
     return {
+      keyCourseStorage: "CourseCecati13",
+      keyStudentStorage: "studentC13",
       curso:{},
       curp: "",
+      studentDB: {},
 
       estadoNacimiento: {
         AGUASCALIENTES: "AGUASCALIENTES",
@@ -113,54 +116,53 @@ const app = Vue.createApp({
 
       discapacidades: [
         "Ninguna", "Visual", "Auditiva", "de Comunicación", "motriz", "Intelectual"
-      ],         
+      ],
     };
   },
 
+  provide(){
+    return {
+      course: this.getCourse
+    }
+  },
+
   watch:{
-    open(value){
-      if (value) {
-        this.textPuerta = "Puerta abierta";
-        this.styles.backgroundColor = "#b5e7a0";
+    studentDB(value, old){
+      if (value.curp != undefined) {
+        console.log("Wath Student con datos de estudiante registro. Pruebas para v-if")        
       } else {
-        this.textPuerta = "Puerta Cerrada";
-        this.styles.backgroundColor = "#eca1a6"
+        console.log(value)
+        console.log(old)
       }
     }
   },
 
   methods: {
-    prueba() {
-      console.log("prueba para consulta de api")
-    },    
-
     async consult(valueCurp) {
-      console.log(valueCurp)
-      // const formData = new FormData();      
-      // formData.set("curp", valueCurp.toUpperCase())
-      // const response = await send(formData);
-      // if (response.error) {
-      //     preloader(result);
-      //     console.log("Valores desde API: ", response)
-      //     alert("Hay un error en la información capturada, por favor revisa e intenta nuevamente")
-      // } else {
-      //     const container = consultSucessful(response);
-      //     const storageResponse = JSON.stringify(response);
-      //     sessionStorage.setItem("pre-registerStudent", storageResponse);        
-      //     cleanInputs()                
-      //     result.appendChild(container);
-      //     preloader(result);
-      // }
+      const formData = new FormData();
+      formData.set("curp", valueCurp.toUpperCase())
+      const response = await this.send(formData);
+      console.log("prueba para consulta de api")
+      if (response.error) {
+          //preloader(result);
+          console.log("Valores desde API: ", response)
+          alert("Hay un error en la información capturada, por favor revisa e intenta nuevamente")
+      } else {
+          this.isStudent();
+          const storageResponse = JSON.stringify(response);
+          sessionStorage.setItem(this.keyStudentStorage, storageResponse);
+          // preloader(result);
+      }
     },
-
+    
     async send(formData) {
       const API = "http://localhost:3000/API/V1/students";
       //backend no preparado aun para recibir formdata
       //enviar mientras tanto como un json Stringify para que lo reciba como application/json
-      const jsonSend = {
-          matricula: formData.get("matricula"),
-          curp: formData.get("curp")
+      const jsonSend = {        
+        curp: formData.get("curp")
       };   
+      console.log("dentro de async send: ", jsonSend.curp)
       const response = await fetch( API, {
           method: "POST",
           headers: {
@@ -173,8 +175,12 @@ const app = Vue.createApp({
   },
 
     isStudent(){
-      console.log("Hola Vue, Si eres estudiante")
-    },    
+      console.log("Bienvenido, Ya tenemos tus datos registrados de un curso anterior")
+      const dbRegister = document.getElementById("dbRegister");
+      dbRegister.classList.toggle("registerHide")
+      //copiar datos de estudiante en session Storage a variable studentDB
+      this.studentDB = JSON.parse(sessionStorage.getItem(this.keyStudentStorage));
+    },
 
     input(e) {
       this.text = e.target.value;
@@ -186,7 +192,7 @@ const app = Vue.createApp({
       return this.firstName + " " + this.lastName;
     },
     getCourse(){
-      const getItem = sessionStorage.getItem("Cecati13");
+      const getItem = sessionStorage.getItem(this.keyCourseStorage);
       const courseInfo = JSON.parse(getItem);
       console.log(courseInfo)
       this.curso = courseInfo;
@@ -202,26 +208,23 @@ const app = Vue.createApp({
   template: `
   <section>
     <h3>Formulario de inscripción</h3>
-      
-    <article class="register">
-      <p>Has selecionado el curso: </p>
-      <input type="text" v-bind:value="getCourse.curso"/>
-      <p>que inicia el: </p>
-      <input type="text" v-bind:value="getCourse.fecha_inicio"/>
-      <p>con el Profesor(a):</p>
-      <input type="text" v-bind:value="getCourse.profesor"/>
-    </article>
+
+    <v-course></v-course>
+
+    <v-typeRegister
+      v-on:consultCURP="consult"
+    />
     
-    <v-typeRegister></v-typeRegister>
-    
-    <v-newRegister 
+    <v-newRegister
       v-bind:estadoNacimiento="estadoNacimiento"
       v-bind:valueEstado="valueEstado" 
       v-bind:valueEscolaridad="arrayEscolaridad"
       v-bind:valueDiscapacidad="discapacidades">
     </v-newRegister>
 
-    <v-dbRegister></v-dbRegister>
+    <v-dbRegister
+      v-bind:studentDB="studentDB"
+    ></v-dbRegister>
 
     <v-updateRegister></v-updateRegister>
     
@@ -230,22 +233,13 @@ const app = Vue.createApp({
 })
 
 app.component("v-typeRegister", {
-  props: {
-
-  },
   methods:{
-    pruebaLog(){
-      console.log("Hola Vue, Si eres estudiante");
-    },
-    
-    
     curpVerify(e) {
       e.preventDefault()
       const nodeCurp = document.querySelector("#valueCurp")
       const curpValue = nodeCurp.value;      
       if (curpValue.length === 18) {
-        console.log("verificar CURP en API")
-        this.$emit("consult(curpValue)")        
+        this.$emit("consultCURP", curpValue)        
       } else {
         console.log("corrige tu curp a 18 posiciones")
       }
@@ -277,18 +271,18 @@ app.component("v-typeRegister", {
     //<input type="text" id="curp" name="curp" placeholder="CURP...">
 })
 
-app.component("v-dbRegister", {
+app.component("v-dbRegister", {  
   props: {
-
+    studentDB: Object
   },
   template: `
   <div id="dbRegister" class="result__API register registerHide">    
-    <h4>Bienvenido a un nuevo curso en CECATI 13, CASTREJON ARMANDO</h4>      
+    <h4>Bienvenido a un nuevo curso en CECATI 13, {{ studentDB.nombre }} {{studentDB.a_materno}}</h4>      
     <p>Por favor verifica que la siguiente información en nuestro sistema correspondan a tú registro.</p>
     <p>Por tú seguridad, ocultamos parte de la información que a continuación te pedimos que verifiques</p>
     <br>
-    <p>Correo electrónico registrado: pr*****@****l.com</p>
-    <p>Numero telefónico:  ** **** *456</p>
+    <p>Correo electrónico registrado: {{ studentDB.email }}</p>
+    <p>Numero telefónico:  {{ studentDB.telefono }}</p>
     
     <br>
     <p>Si deseas actualizar alguna información que registraste en tu ultimo curso con nosotros, indica continuación cual seria:</p>
@@ -296,7 +290,7 @@ app.component("v-dbRegister", {
       <button>Domicilio</button>
       <button>Grado de estudios</button>      
       
-    <course></course>
+      <v-course></v-course>
     <p>Si deseas continuar con tu inscripción presiona el siguiente boton</p>
     <button>Pre-inscribir</button>    
   </div>
@@ -367,7 +361,7 @@ app.component("v-newRegister", {
   },
 
   template: `
-  <div id="newRegister" class="register">
+  <div id="newRegister" class="register registerHide">
     <form id="dataGeneral">
       <tagCurp></tagCurp>
       <h4>Para Verificar que tú CURP sea correcta por favor proporciona los sigueintes datos personales:</h4>      
@@ -467,12 +461,31 @@ app.component("v-newRegister", {
 })
 
 app.component("tagCurp", {
-  props: {
-    //regresar
+  inject: {
+    valueCurp: {
+      
+    }
   },
   template: `
   <label for="curp">CURP</label><span class="required">*</span>
   <input type="text" id="valueCurp" name="curp" placeholder="CURP...">
+  `
+})
+
+app.component("v-course", {
+  // props:{
+  //   course: Object
+  // },
+  inject: ["course"],
+  template: `
+  <article class="register">
+    <div v-bind:value="course">
+    Curso: {{ course.curso }},
+    con el profesor {{ course.profesor }}
+    que inicia el {{ course.fecha_inicio }}, de la
+    especialidad {{ course.especialidad }}.
+    </div>    
+  </article>
   `
 })
 

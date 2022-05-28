@@ -2,7 +2,7 @@ const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
 const URL = host + "API/v1/frontendURL/10"
 const URL_BASE_IMAGE = "https://cecati13web.blob.core.windows.net/assets-web-cecati13/";
 //Nombre de key guardado en Session Storage para preinscribir Curso
-const keyCourse = "Cecati13";
+const keyCourseStorage = "CourseCecati13";
 
 let infoFetch = [];
 const nodeAPI_Offer = document.getElementById("sectionCourses");
@@ -296,10 +296,10 @@ function saveCourse(e) {
     const expresion = /pre-\d\d/
     const locate = e.target.dataset.numbercourse 
     if(expresion.test(locate)){   
-        sessionStorage.removeItem(keyCourse);
+        sessionStorage.removeItem(keyCourseStorage);
         const nodeCourse = document.querySelector(`#${locate}`);
         const valueCourse = nodeCourse.value;
-        sessionStorage.setItem(keyCourse, valueCourse)
+        sessionStorage.setItem(keyCourseStorage, valueCourse)
         console.log("Guardado en Storage")
     }
 }
