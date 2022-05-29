@@ -2,10 +2,12 @@ const app = Vue.createApp({
   data() {
     return {
       keyCourseStorage: "CourseCecati13",
-      keyStudentStorage: "studentC13",
+      keyStudentStorage: "studentC13",      
       curso:{},
       curp: "",
       studentDB: {},
+      ageUser: "",
+      ageRequeriment: true,
 
       estadoNacimiento: {
         AGUASCALIENTES: "AGUASCALIENTES",
@@ -122,18 +124,24 @@ const app = Vue.createApp({
 
   provide(){
     return {
-      course: this.getCourse
+      course: this.getCourse,
+      student: this.getStudent
     }
   },
 
   watch:{
     studentDB(value, old){
       if (value.curp != undefined) {
-        console.log("Wath Student con datos de estudiante registro. Pruebas para v-if")        
+        console.log("Wath Student con datos de estudiante registro. Pruebas para v-if")
+        console.log("getStudent ", this.getStudent)
       } else {
         console.log(value)
         console.log(old)
       }
+    },
+    
+    ageRequeriment(value, old){
+
     }
   },
 
@@ -141,17 +149,22 @@ const app = Vue.createApp({
     async consult(valueCurp) {
       const formData = new FormData();
       formData.set("curp", valueCurp.toUpperCase())
-      const response = await this.send(formData);
-      console.log("prueba para consulta de api")
+      const response = await this.send(formData);      
       if (response.error) {
-          //preloader(result);
-          console.log("Valores desde API: ", response)
-          alert("Hay un error en la información capturada, por favor revisa e intenta nuevamente")
+        //preloader(result);
+        console.log("Valores desde API: ", response)
+        //abrir formualrio de nuevo registro
+        this.userIsStudent = false;
+        this.hideTypeRegister();
+        this.isNewRegister();
+
       } else {
-          this.isStudent();
-          const storageResponse = JSON.stringify(response);
-          sessionStorage.setItem(this.keyStudentStorage, storageResponse);
-          // preloader(result);
+        this.hideTypeRegister();
+        this.userIsStudent = true;
+        this.isStudent();
+        const storageResponse = JSON.stringify(response);
+        sessionStorage.setItem(this.keyStudentStorage, storageResponse);
+        // preloader(result);
       }
     },
     
@@ -164,33 +177,71 @@ const app = Vue.createApp({
       };   
       console.log("dentro de async send: ", jsonSend.curp)
       const response = await fetch( API, {
-          method: "POST",
-          headers: {
-              //"Content-Type": "multipart/form-data"
-              "Content-Type": "application/json"
-          },
-          body: JSON.stringify(jsonSend)
+        method: "POST",
+        headers: {
+          //"Content-Type": "multipart/form-data"
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(jsonSend)
       })
       return response.json()
-  },
+    },
+
+    isNewRegister(){
+      const newRegister = document.getElementById("newRegister")
+      newRegister.classList.toggle("registerHide")
+    },
+
+    hideTypeRegister(){
+      const typeRegister = document.querySelector(".typeRegister")
+      typeRegister.classList.toggle("registerHide");
+    },
 
     isStudent(){
       console.log("Bienvenido, Ya tenemos tus datos registrados de un curso anterior")
+      this.studentDB = JSON.parse(sessionStorage.getItem(this.keyStudentStorage));
       const dbRegister = document.getElementById("dbRegister");
       dbRegister.classList.toggle("registerHide")
       //copiar datos de estudiante en session Storage a variable studentDB
-      this.studentDB = JSON.parse(sessionStorage.getItem(this.keyStudentStorage));
     },
 
-    input(e) {
-      this.text = e.target.value;
-    },
+    isAgeOver15(date){      
+      const dateNow = new Date();
+      const yearNow = parseInt(dateNow.getFullYear());
+      const monthNow = parseInt(dateNow.getMonth()) + 1;
+      const dayNow = parseInt(dateNow.getDate());
+
+      // 2016-07-11
+      const birthYear = parseInt(String(date).substring(0, 4));
+      const birthMonth = parseInt(String(date).substring(5, 7));
+      const birthDay = parseInt(String(date).substring(8, 10));
+
+      let age = yearNow - birthYear;
+      if (monthNow < birthMonth) {
+          age--;
+      } else if (monthNow === birthMonth) {
+          if (dayNow < birthDay) {
+              age--;
+          }
+      }
+      console.log("edad: ", age)
+      if (age <= 15) {
+        this.ageRequeriment = false;        
+      } else {
+        this.ageRequeriment = true;
+      }
+      console.log("valor de AgeRequeriment: ", this.ageRequeriment)
+    },    
   },
 
   computed: {
     fullName(){
       return this.firstName + " " + this.lastName;
     },
+    getStudent(){
+      return this.studentDB
+    },
+
     getCourse(){
       const getItem = sessionStorage.getItem(this.keyCourseStorage);
       const courseInfo = JSON.parse(getItem);
@@ -215,16 +266,19 @@ const app = Vue.createApp({
       v-on:consultCURP="consult"
     />
     
-    <v-newRegister
+    <v-dbRegister      
+      v-bind:studentDB="studentDB"
+    ></v-dbRegister>
+
+    <v-newRegister       
       v-bind:estadoNacimiento="estadoNacimiento"
       v-bind:valueEstado="valueEstado" 
       v-bind:valueEscolaridad="arrayEscolaridad"
-      v-bind:valueDiscapacidad="discapacidades">
-    </v-newRegister>
+      v-bind:valueDiscapacidad="discapacidades"
+      v-on:birthDate="isAgeOver15"  
+      v-bind:ageRequeriment="ageRequeriment"   
+    ></v-newRegister>
 
-    <v-dbRegister
-      v-bind:studentDB="studentDB"
-    ></v-dbRegister>
 
     <v-updateRegister></v-updateRegister>
     
@@ -241,7 +295,7 @@ app.component("v-typeRegister", {
       if (curpValue.length === 18) {
         this.$emit("consultCURP", curpValue)        
       } else {
-        console.log("corrige tu curp a 18 posiciones")
+        alert("Revisa que tu CURP este completa. Deben ser 18 posiciones")        
       }
       
       //const values = new FormData(formConsult);
@@ -271,13 +325,14 @@ app.component("v-typeRegister", {
     //<input type="text" id="curp" name="curp" placeholder="CURP...">
 })
 
-app.component("v-dbRegister", {  
+app.component("v-dbRegister", {
   props: {
     studentDB: Object
   },
+  // inject: ["student"],
   template: `
-  <div id="dbRegister" class="result__API register registerHide">    
-    <h4>Bienvenido a un nuevo curso en CECATI 13, {{ studentDB.nombre }} {{studentDB.a_materno}}</h4>      
+  <div id="dbRegister" class="result__API register registerHide">
+    <h4>Bienvenido a un nuevo curso en CECATI 13, {{ studentDB.nombre }} {{studentDB.a_materno}}</h4>
     <p>Por favor verifica que la siguiente información en nuestro sistema correspondan a tú registro.</p>
     <p>Por tú seguridad, ocultamos parte de la información que a continuación te pedimos que verifiques</p>
     <br>
@@ -338,18 +393,23 @@ app.component("v-updateRegister", {
 })
 
 app.component("v-newRegister", {
-  props: {
+  props: {    
+    ageRequeriment: Boolean,
     estadoNacimiento: Object,    
     valueEstado: Object,
     valueEscolaridad: Array,
     valueDiscapacidad: Array
   }, 
 
-  data() {
-    return {      
-      estadoRepublica: "Aguascalientes",
-    }
-  },
+  // data() {
+  //   return {      
+      
+  //   }
+  // },
+
+  // watch: {
+    
+  // },
 
   methods: {
     showMunicipio(e){
@@ -357,106 +417,140 @@ app.component("v-newRegister", {
       this.estadoRepublica = e.target.value
       // const listMunicipios = valueEstado[estadoRepublica]
       // return listMunicipios
-    }
+    },   
+    
+    changeDate(e){
+      e.preventDefault()
+      const nodebBirthdate = document.querySelector("#birthdate")
+      const dateValue = nodebBirthdate.value; 
+      console.log(dateValue)           
+      this.$emit("birthDate", dateValue)
+      
+    },
   },
 
   template: `
   <div id="newRegister" class="register registerHide">
-    <form id="dataGeneral">
-      <tagCurp></tagCurp>
-      <h4>Para Verificar que tú CURP sea correcta por favor proporciona los sigueintes datos personales:</h4>      
-      <label for="nombre">Nombre</label><span class="required">*</span>
-      <input type="text" id="nombre" name="nombre" placeholder="Escribe tu nombre de pila...">
-      <label for="a_paterno">Apellido Paterno</label><span class="required">*</span>
-      <input type="text" id="a_paterno" name="a_paterno" placeholder="Tu apellido paterno...">
-      <label for="a_materno">Apellido Materno</label><span class="required">*</span>
-      <input type="text" id="a_materno" name="a_materno" placeholder="Tu apellido materno...">
-      <label for="genero">Hombre 
-          <input type="radio" id="genero" name="genero" value="MASCULINO">
-      </label>
-      <label for="genero">Mujer
-          <input type="radio" id="genero" name="genero" value="FEMENINO">
-      </label>
-      <br>
-      <label for="birthday">Fecha de Nacimiento</label><span class="required">*</span>
-      <input type="date" name="birthday" placeholder="Fecha de nacimiento...">
-      <p class="Edad Minima">Lo sentimos, la edad minima para poder inscribirte a alguno de nuestros cursos es 15 años cumplidos</p>
-      <label for="estado">
-        <span>Lugar de Nacimiento</span>
-        <select name="estado">        
-          <option v-for="item in estadoNacimiento" :key="item">{{ item }}</option>
-      </label>
-      
-      <br>
-      
-      <h4>Ahora proporcionanos algunos datos de contacto:</h4>
-      <label for="email">Correo Electrónico</label>
-      <input type="email" name="email" placeholder="Escribe un correo electronico válido...">
-      <label for="telefono">Teléfono</label><span class="required">*</span>
-      <input type="tel" name="telefono" placeholder="Número Telefónico donde podamos contactarte...">
-      <p>La mayoría de los docentes crean grupos de WhatsApp para dar instrucciones a sus estudiantes, por verifica que sea correcto.</p>
-      
-      <br>
+  <form id="dataGeneral">
+    <tagCurp></tagCurp>
+    <h4>Para Verificar que tú CURP sea correcta por favor proporciona los sigueintes datos personales:</h4>      
+    <label for="birthday">Fecha de Nacimiento</label><span class="required">*</span>
+    <input
+      id="birthdate"
+      type="date" name="birthday" 
+      placeholder="Fecha de nacimiento..."
+      v-on:input="changeDate"
+    >
+    <p v-if="!ageRequeriment">
+      Lo sentimos, la edad minima para poder inscribirte a alguno de nuestros cursos es 15 años cumplidos
+    </p>
+    <label for="nombre">Nombre</label><span class="required">*</span>
+    <input type="text" id="nombre" name="nombre" placeholder="Escribe tu nombre de pila...">
+    <label for="a_paterno">Apellido Paterno</label><span class="required">*</span>
+    <input type="text" id="a_paterno" name="a_paterno" placeholder="Tu apellido paterno...">
+    <label for="a_materno">Apellido Materno</label><span class="required">*</span>
+    <input type="text" id="a_materno" name="a_materno" placeholder="Tu apellido materno...">
+    <label for="genero">Hombre 
+        <input type="radio" id="genero" name="genero" value="MASCULINO">
+    </label>
+    <label for="genero">Mujer
+        <input type="radio" id="genero" name="genero" value="FEMENINO">
+    </label>
+    <br>
+    <label for="estado">
+      <span>Lugar de Nacimiento</span>
+      <select name="estado">        
+        <option v-for="item in estadoNacimiento" :key="item">{{ item }}</option>
+    </label>
+    
+    <br>
+    
+    <h4>Datos de contacto:</h4>
+    <label for="email">Correo Electrónico</label>
+    <input type="email" name="email" placeholder="Escribe un correo electronico válido...">
+    <label for="telefono">Teléfono</label><span class="required">*</span>
+    <input type="tel" name="telefono" placeholder="Número Telefónico donde podamos contactarte...">
+    <p>La mayoría de los docentes crean grupos de WhatsApp para dar instrucciones a sus estudiantes, por verifica que sea correcto.</p>
+    
+    <br>
 
-      <p>Domicilio.</p>
-      <h4>Por favor indica tu domicilio:</h4>
-      <label for="calle">Calle y número</label><span class="required">*</span>
-      <input type="text" id="calle" name="calle" placeholder="Calle y número...">
-      <label for="colonia">Colonia</label><span class="required">*</span>
-      <input type="text" id="colonia" name="colonia" placeholder="Colonia...">
-      <!-- https://copomex.com/#pricing-section por 330 para agilizar este tramite -->
-      <label for="codigoPostal"> <span>Código Postal</span><span class="required">*</span>
-      <input type="number" id="codigoPostal" name="codigoPostal" placeholder="Código Postal..." />      
-      </label>
-      <label for="estado">
-      <span>Estado</span>
-      <select name="estado" id="estado" v-on:change="showMunicipio">
-        <option v-for="(item, i) in valueEstado" v-bind:value="i">
-          {{ i }}
-        </option>
-      </label>      
-      <label for="alcaldia">
-        <span class="required">Municipio o Alcaldía*</span>      
-        <select name="alcaldia">
-          <option v-for="item in valueEstado[estadoRepublica]" :key="item" @municipio="municipio"> {{ item }}</option>
-        </select>
-      </label>
-          
-      <br>
+    <p>Domicilio.</p>
+    <h4>Por favor indica tu domicilio:</h4>
+    <label for="calle">Calle y número</label><span class="required">*</span>
+    <input type="text" id="calle" name="calle" placeholder="Calle y número...">
+    <label for="colonia">Colonia</label><span class="required">*</span>
+    <input type="text" id="colonia" name="colonia" placeholder="Colonia...">
+    <!-- https://copomex.com/#pricing-section por 330 para agilizar este tramite -->
+    <label for="codigoPostal"> <span>Código Postal</span><span class="required">*</span>
+    <input type="number" id="codigoPostal" name="codigoPostal" placeholder="Código Postal..." />      
+    </label>
+    <label for="estado">
+    <span>Estado</span>
+    <select name="estado" id="estado" v-on:change="showMunicipio">
+      <option v-for="(item, i) in valueEstado" v-bind:value="i">
+        {{ i }}
+      </option>
+    </label>      
+    <label for="alcaldia">
+      <span class="required">Municipio o Alcaldía*</span>      
+      <select name="alcaldia">
+        <option v-for="item in valueEstado[estadoRepublica]" :key="item" @municipio="municipio"> {{ item }}</option>
+      </select>
+    </label>
+        
+    <br>
 
-      <label for="escolaridad">
-          <span>Escolaridad</span>
-          <select name="escolaridad" id="scholarship">            
-            <option v-for="item in valueEscolaridad" :key="item">{{ item }}</option>          
-      </label>
+    <label for="escolaridad">
+        <span>Escolaridad</span>
+        <select name="escolaridad" id="scholarship">            
+          <option v-for="item in valueEscolaridad" :key="item">{{ item }}</option>          
+    </label>
 
-      <p>¿Presenta alguna discapacidad? <span class="required">*</span></p>
-      <label for="disability">
-        <select name="disability" id="disability">
-          <option v-for= "disability in valueDiscapacidad">{{ disability }}</option>
-        </select>
-      </label>
-      
-      <p>Documentos necesarios para tu inscripción:</p>
-      <ul>
-          <li>Acta de Nacimiento</li>                    
-          <li>Comprobante de Domicilio</li>
-          <li>Escolaridad</li>
-      </ul>
-      
-      <label for="birthCertificate">Adjuntar Acta de Nacimiento</label>
-      <input type="file" name="birthCertificate" >
+    <p>¿Presenta alguna discapacidad? <span class="required">*</span></p>
+    <label for="disability">
+      <select name="disability" id="disability">
+        <option v-for= "disability in valueDiscapacidad">{{ disability }}</option>
+      </select>
+    </label>
+    
+    <p>Documentos necesarios para tu inscripción:</p>
+    <ul>
+        <li>Acta de Nacimiento</li>                    
+        <li>Comprobante de Domicilio</li>
+        <li>Escolaridad</li>
+    </ul>
+    
+    <label for="birthCertificate">Adjuntar Acta de Nacimiento</label>
+    <input type="file" name="birthCertificate" >
 
-      <label for="addressCertificate">Adjuntar Comprobante de Domicilio</label>
-      <input type="file" name="addressCertificate" >
+    <label for="addressCertificate">Adjuntar Comprobante de Domicilio</label>
+    <input type="file" name="addressCertificate" >
 
-      <label for="studiesCertificate">Adjuntar Comprobante de máximo grado de estudios</label>
-      <input type="file" name="studiesCertificate" >
-      
-      <p>Usaremos esta información para pre-inscribirte al curso, y contactarte si fuera necesario<span id="selectedCourse"></span></p>
-      <input type="submit" value="Pre-inscribirse"></input>
+    <label for="studiesCertificate">Adjuntar Comprobante de máximo grado de estudios</label>
+    <input type="file" name="studiesCertificate" >
+    
+    <p>Usaremos esta información para pre-inscribirte al curso, y contactarte si fuera necesario<span id="selectedCourse"></span></p>
+    <input type="submit" value="Pre-inscribirse"></input>
     </form>
   </div>
+  `
+})
+
+app.component("v-contact", {
+  template: `
+  
+  `
+})
+
+app.component("v-address", {
+  template: `
+  
+  `
+})
+
+app.component("v-scholarship", {
+  template: `
+  
   `
 })
 
