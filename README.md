@@ -9,6 +9,7 @@ Consultas a API para consulta de cursos, mensaje en home, galeria, y preguntas f
 
 # 3er. avance.
 Formulario de inscripcion con consultas a Backend para agilizar el trámite.
+## Usando VueJS en formulario de inscripción, GSheets y Firebase para Storage.
 
 
 
