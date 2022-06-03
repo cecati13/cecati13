@@ -1,21 +1,24 @@
 const app = Vue.createApp({
   data() {
     return {
+      API: "http://localhost:3000/API/V1/students/",
       keyCourseStorage: "CourseCecati13",
       keyStudentStorage: "studentC13",      
       curso:{},
-      curp: "",      
       reactive: {
         studentDB: {},
-        ageRequeriment: true,
+        ageRequeriment: true,        
+        curp: "",
+        
       }
     };
   },
 
   provide() {
     return {
+      API: this.API,
       course: this.getCourse,
-      reactive: this.reactive,      
+      reactive: this.reactive,
     }
   },
 
@@ -47,9 +50,12 @@ const app = Vue.createApp({
 
   methods: {
     async consult(valueCurp) {
+      const curpFormat = valueCurp.toUpperCase()
       const formData = new FormData();
-      formData.set("curp", valueCurp.toUpperCase())
-      const response = await this.send(formData);      
+      formData.set("curp", curpFormat)
+      const response = await this.send(formData);
+      console.log("consult reponse desde API",response)
+      this.reactive.curp = curpFormat;
       if (response.error) {
         //preloader(result);
         console.log("Valores desde API: ", response)
@@ -69,7 +75,7 @@ const app = Vue.createApp({
     },
     
     async send(formData) {
-      const API = "http://localhost:3000/API/V1/students";
+      const API = `${this.API}`;
       //backend no preparado aun para recibir formdata
       //enviar mientras tanto como un json Stringify para que lo reciba como application/json
       const jsonSend = {        
@@ -108,13 +114,7 @@ const app = Vue.createApp({
     },        
   },
 
-  computed: {    
-    // getStudentDB(){
-    //   return this.studentDB
-    // },
-    getAgeRequeriment(){
-      return this.ageRequeriment
-    },
+  computed: {
     getCourse(){
       const getItem = sessionStorage.getItem(this.keyCourseStorage);
       const courseInfo = JSON.parse(getItem);
@@ -335,7 +335,7 @@ app.component("v-dataGeneral", {
     }
   },
 
-  inject: ["reactive"],
+  inject: ["API", "reactive"],
 
   methods: {
     isAgeOver15(e){
@@ -357,22 +357,69 @@ app.component("v-dataGeneral", {
           if (dayNow < birthDay) {
               age--;
           }
-      }
-      
+      }      
       
       if (age <= 15) {
         this.reactive.ageRequeriment = false;      
       } else {
         this.reactive.ageRequeriment = true;
-      }
-      console.log("valor de AgeRequeriment: ", this.reactive.ageRequeriment)
+      }      
     },
+
+    verifyDataGeneral(e){
+      e.preventDefault()
+      console.log(e)
+      const curp = e.target.children['curp'].value
+      const birthday = e.target.children['birthday'].value
+      const nombre = e.target.children['nombre'].value
+      const a_paterno = e.target.children['a_paterno'].value
+      const a_materno = e.target.children['a_materno'].value
+      const nodePlaceOfBirth = document.getElementById("placeOfBirth")
+      const placeOfBirth = nodePlaceOfBirth.value
+      const genero = document.getElementById("genero")
+      const gender = genero.value === "MASCULINO" ? "MASCULINO" : "FEMENINO";
+      const nodeDisability = document.getElementById("disability")
+      const disability = nodeDisability.value;
+      const nodeBirthCertificate = document.getElementById("birthCertificate")
+      const birthCertificate = nodeBirthCertificate.files;
+      const data ={
+        curp: curp,
+        birthday: birthday,
+        nombre: nombre,
+        a_paterno: a_paterno,
+        a_materno: a_materno,
+        placeOfBirth: placeOfBirth,
+        gender: gender,
+        disability: disability,
+        birthCertificate: birthCertificate
+      }
+      this.sendDataGeneral(data)
+    },
+
+    async sendDataGeneral(data){
+      //falta trabajar que sea solo uan funcion globarl para hacer fetch, y solo generar enpoints con su data a enviar
+      console.log(data)
+      const endpoint = `${this.API}newStudent/dataGeneral`;      
+      //backend no preparado aun para recibir formdata
+      //enviar mientras tanto como un json Stringify para que lo reciba como application/json      
+      const response = await fetch( endpoint, {
+        method: "POST",
+        headers: {
+          //"Content-Type": "multipart/form-data"
+          "Content-Type": "application/json"
+        },
+        //body: "prueba de mensaje"
+        body: JSON.stringify(data)
+      })
+      console.log(response)
+      //return response.json()
+    }
   },
 
   template: `
-  <form id="dataGeneral">
+  <form id="dataGeneral" v-on:submit="verifyDataGeneral">
     <tagCurp></tagCurp>
-    <h4>Para Verificar que tú CURP sea correcta por favor proporciona los sigueintes datos personales:</h4>      
+    <h4>Para Verificar que tú CURP sea correcta por favor proporciona los siguientes datos personales:</h4>      
     <label for="birthday">Fecha de Nacimiento</label><span class="required">*</span>
     <input
       id="birthdate"
@@ -384,28 +431,34 @@ app.component("v-dataGeneral", {
       Lo sentimos, la edad minima para poder inscribirte a alguno de nuestros cursos es 15 años cumplidos
     </p>
     <label for="nombre">Nombre</label><span class="required">*</span>
-    <input type="text" id="nombre" name="nombre" placeholder="Escribe tu nombre de pila...">
+    <input type="text" name="nombre" placeholder="Escribe tu nombre de pila...">
 
     <label for="a_paterno">Apellido Paterno</label><span class="required">*</span>
-    <input type="text" id="a_paterno" name="a_paterno" placeholder="Tu apellido paterno...">
+    <input type="text" name="a_paterno" placeholder="Tu apellido paterno...">
 
     <label for="a_materno">Apellido Materno</label><span class="required">*</span>
-    <input type="text" id="a_materno" name="a_materno" placeholder="Tu apellido materno...">
+    <input type="text" name="a_materno" placeholder="Tu apellido materno...">
     
-    <label for="genero">Hombre 
-        <input type="radio" id="genero" name="genero" value="MASCULINO">
+    <label for="genero" name="MASCULINO">Hombre 
+        <input type="radio" value="MASCULINO" id="genero">
     </label>
-    <label for="genero">Mujer
-        <input type="radio" id="genero" name="genero" value="FEMENINO">
+    <label for="genero" name="FEMENINO">Mujer
+        <input type="radio" value="FEMENINO">
     </label>
     <br>
     <label for="estado">
       <span>Lugar de Nacimiento</span>
-      <select name="estado">        
+      <select name="estado" id="placeOfBirth">        
         <option v-for="item in estadoNacimiento" :key="item">{{ item }}</option>
     </label>
     <label for="birthCertificate">Adjuntar Acta de Nacimiento</label>
-    <input type="file" name="birthCertificate">
+    <input 
+      type="file" 
+      name="birthCertificate" 
+      id="birthCertificate" 
+      accept=".jpg, .jpeg, .pdf" 
+      capture="environment"
+    >
     <br>
     <p>¿Presenta alguna discapacidad? <span class="required">*</span></p>
     <label for="disability">
@@ -413,6 +466,8 @@ app.component("v-dataGeneral", {
         <option v-for= "disability in discapacidades">{{ disability }}</option>
       </select>
     </label>
+
+    <button>Enviar</button>
   </form>
   `
 })
@@ -552,14 +607,10 @@ app.component("v-scholarship", {
 })
 
 app.component("tagCurp", {
-  inject: {
-    valueCurp: {
-      
-    }
-  },
+  inject: ["reactive"],
   template: `
   <label for="curp">CURP</label><span class="required">*</span>
-  <input type="text" id="valueCurp" name="curp" placeholder="CURP...">
+  <input type="text" id="valueCurp" name="curp" placeholder="CURP..." v-bind:value=reactive.curp>
   `
 })
 
