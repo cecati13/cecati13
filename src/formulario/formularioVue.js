@@ -1,7 +1,8 @@
 const app = Vue.createApp({
   data() {
-    return {
-      API: "http://localhost:3000/API/V1/students/",
+    return {      
+      API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1/students",
+      //API: "http://localhost:3000/API/V1/students/",
       keyCourseStorage: "CourseCecati13",
       keyStudentStorage: "studentC13",      
       curso:{},
@@ -331,7 +332,7 @@ app.component("v-dataGeneral", {
       
       discapacidades: [
         "Ninguna", "Visual", "Auditiva", "de Comunicación", "motriz", "Intelectual"
-      ],
+      ]      
     }
   },
 
@@ -357,7 +358,7 @@ app.component("v-dataGeneral", {
           if (dayNow < birthDay) {
               age--;
           }
-      }      
+      }
       
       if (age <= 15) {
         this.reactive.ageRequeriment = false;      
@@ -366,58 +367,82 @@ app.component("v-dataGeneral", {
       }      
     },
 
-    verifyDataGeneral(e){
+    async verifyDataGeneral(e){
       e.preventDefault()
-      console.log(e)
+      // const form = document.forms.namedItem("dataGeneral")
+      // const dataFORM = new FormData(form);
+
       const curp = e.target.children['curp'].value
-      const birthday = e.target.children['birthday'].value
+      const birthday = e.target.children['birthday'].value      
       const nombre = e.target.children['nombre'].value
       const a_paterno = e.target.children['a_paterno'].value
       const a_materno = e.target.children['a_materno'].value
       const nodePlaceOfBirth = document.getElementById("placeOfBirth")
       const placeOfBirth = nodePlaceOfBirth.value
       const genero = document.getElementById("genero")
-      const gender = genero.value === "MASCULINO" ? "MASCULINO" : "FEMENINO";
+      let gender
+      if (genero.checked && genero.value ==="MASCULINO") {
+        gender = "MASCULINO"
+      } else {
+        gender = "FEMENINO"
+      }
       const nodeDisability = document.getElementById("disability")
       const disability = nodeDisability.value;
       const nodeBirthCertificate = document.getElementById("birthCertificate")
-      const birthCertificate = nodeBirthCertificate.files;
-      const data ={
-        curp: curp,
-        birthday: birthday,
-        nombre: nombre,
-        a_paterno: a_paterno,
-        a_materno: a_materno,
-        placeOfBirth: placeOfBirth,
-        gender: gender,
-        disability: disability,
-        birthCertificate: birthCertificate
-      }
-      this.sendDataGeneral(data)
+      const birthCertificate = nodeBirthCertificate.files[0];
+      console.log("file birthCertificate: ", birthCertificate)      
+      const dataFORM = new FormData();
+      //seis campos setteados en español, para validación en el backend con dependencia CURP
+      dataFORM.append("curp", curp)
+      dataFORM.append("fechaNacimiento", birthday)
+      dataFORM.append("nombre", nombre)
+      dataFORM.append("a_paterno", a_paterno)
+      dataFORM.append("a_materno", a_materno)
+      dataFORM.append("estado", placeOfBirth)
+      dataFORM.append("genero", gender)
+      dataFORM.append("disability", disability)
+      dataFORM.append("birthCertificate", birthCertificate)
+                
+      const responseFile = await this.sendDataGeneralForm(dataFORM)      
+      console.log("Respuesta a validación de CURP en Backend: ", responseFile)
+    },  
+
+    async sendDataGeneralForm(formData){
+      //falta trabajar que sea solo uan funcion global para hacer fetch, y solo generar enpoints con su data a enviar
+      console.log(formData.get("birthCertificate"))
+      const endpoint = `${this.API}newStudent/dataGeneral`;      
+      const response = await fetch( endpoint, {
+        method: "post",
+        //al subir archivos no usar headers especificando el tipo, y que el navegador determine el boundary adecuado
+        body: formData
+      })
+      const info = await response.json()      
+      return info
     },
 
-    async sendDataGeneral(data){
-      //falta trabajar que sea solo uan funcion globarl para hacer fetch, y solo generar enpoints con su data a enviar
-      console.log(data)
-      const endpoint = `${this.API}newStudent/dataGeneral`;      
-      //backend no preparado aun para recibir formdata
-      //enviar mientras tanto como un json Stringify para que lo reciba como application/json      
-      const response = await fetch( endpoint, {
-        method: "POST",
-        headers: {
-          //"Content-Type": "multipart/form-data"
-          "Content-Type": "application/json"
-        },
-        //body: "prueba de mensaje"
-        body: JSON.stringify(data)
-      })
-      console.log(response)
-      //return response.json()
-    }
+    // async sendDataGeneral(data){
+    //   //falta trabajar que sea solo uan funcion global para hacer fetch, y solo generar enpoints con su data a enviar
+    //   console.log(data)
+    //   const endpoint = `${this.API}newStudent/dataGeneral`;      
+    //   //backend no preparado aun para recibir formdata
+    //   //enviar mientras tanto como un json Stringify para que lo reciba como application/json      
+    //   const response = await fetch( endpoint, {
+    //     method: "POST",
+    //     headers: {
+    //       //"Content-Type": "multipart/form-data; boundary=something",          
+    //       "Content-Type": "application/json"
+    //     },
+    //     //body: "prueba de mensaje"
+    //     //body: JSON.stringify(data)
+    //     body: JSON.stringify(data)
+    //   })
+    //   const info = await response.json()      
+    //   return info
+    // }
   },
-
+  
   template: `
-  <form id="dataGeneral" v-on:submit="verifyDataGeneral">
+  <form id="dataGeneral" v-on:submit="verifyDataGeneral" name="dataGeneral">
     <tagCurp></tagCurp>
     <h4>Para Verificar que tú CURP sea correcta por favor proporciona los siguientes datos personales:</h4>      
     <label for="birthday">Fecha de Nacimiento</label><span class="required">*</span>
@@ -440,10 +465,10 @@ app.component("v-dataGeneral", {
     <input type="text" name="a_materno" placeholder="Tu apellido materno...">
     
     <label for="genero" name="MASCULINO">Hombre 
-        <input type="radio" value="MASCULINO" id="genero">
+        <input type="radio" value="MASCULINO" name="genero" id="genero">
     </label>
     <label for="genero" name="FEMENINO">Mujer
-        <input type="radio" value="FEMENINO">
+        <input type="radio" value="FEMENINO" name="genero">
     </label>
     <br>
     <label for="estado">
