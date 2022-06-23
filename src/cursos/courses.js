@@ -54,22 +54,31 @@ class AvailableCourses {
             <p>${course.horas} horas de duración</p>
             <p>Dias de clase: ${course.dias_de_clases}</p>        
             <p>${course.observaciones}</p>
-            <br>
-            <div class="course--img-button">
-                <a href="/src/formulario" data-numberCourse="pre-${course.number}">
-                    <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/inscripcion.svg"
-                    alt="Inscripción" class="button__link floating__button" id="buttonFloatingReg"
-                    data-numberCourse="pre-${course.number}">
-                    <p data-numberCourse="pre-${course.number}">Pre-inscripción</p>
-                </a>
-                <img src="${course.imageURL}" alt="Logo de Especialidad">
-            </div>
+            <br>            
             <textarea id="pre-${course.number}" style="display:none">${preregister}</textarea>
         </div>
         `;
-        container.addEventListener("click", event => saveCourse(event))
+        const containerImgButton = this.createContainerButton(course);
+        containerImgButton.addEventListener("click", event => saveCourse(event))
+        container.appendChild(containerImgButton);
+
         
                 // <a class="button__link educativeOffer__button" href="../html/Inscribete.html">Inscribete...</a>
+        return container;
+    }
+
+    createContainerButton(course){
+        const container = document.createElement("div");
+        container.className = "course--img-button";
+        container.innerHTML = `        
+        <a href="/src/formulario" data-numberCourse="pre-${course.number}">
+            <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/inscripcion.svg"
+            alt="Inscripción" class="button__link floating__button" id="buttonFloatingReg"
+            data-numberCourse="pre-${course.number}">
+            <p data-numberCourse="pre-${course.number}">INSCRIBIRME</p>
+        </a>
+        <img src="${course.imageURL}" alt="Logo de Especialidad">        
+        `;
         return container;
     }
 
@@ -295,13 +304,13 @@ const backToSpecialties = function () {
 function saveCourse(e) {
     const expresion = /pre-\d\d/
     const locate = e.target.dataset.numbercourse 
-    if(expresion.test(locate)){   
+    //if(expresion.test(locate)){   
         sessionStorage.removeItem(keyCourseStorage);
         const nodeCourse = document.querySelector(`#${locate}`);
         const valueCourse = nodeCourse.value;
         sessionStorage.setItem(keyCourseStorage, valueCourse)
         console.log("Guardado en Storage")
-    }
+    //}
 }
 
 
@@ -332,7 +341,7 @@ async function conexion(URL) {
 preloader();
 conexion(URL);
 window.HashChangeEvent  = (event) => {
-    debugger
+    
     alert("localizacion: " + document.location + "; estado " + JSON.stringify(event.state))
     event.preventDefault();
     console.log("evento onchange")

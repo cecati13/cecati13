@@ -1,13 +1,15 @@
 const app = Vue.createApp({
   data() {
-    return {      
-      API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1/students",
-      //API: "http://localhost:3000/API/V1/students/",
+    return {
+      //API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1/students",
+      API: "http://localhost:3000/API/V1/students/",
       keyCourseStorage: "CourseCecati13",
-      keyStudentStorage: "studentC13",      
+      keyStudentStorage: "studentC13",       
       curso:{},
+      MAX_SIZE_FILES: 3000000, // 5MB
       reactive: {
         studentDB: {},
+        newStudent:{},        
         ageRequeriment: true,        
         curp: "",
         
@@ -20,6 +22,7 @@ const app = Vue.createApp({
       API: this.API,
       course: this.getCourse,
       reactive: this.reactive,
+      MAX_SIZE_FILES: this.MAX_SIZE_FILES
     }
   },
 
@@ -129,7 +132,7 @@ const app = Vue.createApp({
   <section>
     <h3>Formulario de inscripción</h3>
 
-    <v-course></v-course>
+    <v-course id="header__course"></v-course>
 
     <v-typeRegister
       v-on:consultCURP="consult"
@@ -266,28 +269,90 @@ app.component("v-updateRegister", {
 })
 
 app.component("v-newRegister", {
+  data: function() {
+    return {
+      showData: {},
+    }
+  },
+  inject: ["reactive"],  
+
   methods: {
     changeDate(e){
       e.preventDefault()
-      const nodebBirthdate = document.querySelector("#birthdate")
-      const dateValue = nodebBirthdate.value; 
+      const nodeBirthdate = document.querySelector("#birthdate")
+      const dateValue = nodeBirthdate.value; 
     },
+
+    continueContact(object){
+      const form = ["dataGeneral","formContact"];
+      this.toogle(form);
+      this.assignPropertiesAndValues(object);
+    },
+    
+    continueAddress(object){
+      const form = ["formContact","formAddress"];
+      this.toogle(form);
+      console.log("en FORM Address reactive.newStudent: ", this.reactive.newStudent)
+      this.assignPropertiesAndValues(object);
+    },
+    
+    continueScholarship(object){
+      const form = ["formAddress","formScholarship"];
+      this.toogle(form);
+      this.assignPropertiesAndValues(object);      
+    },
+
+    finishRegistration(object){
+      //crear y montar v-inscription-newRegister      
+      this.assignPropertiesAndValues(object);
+      console.log("en methodos de component newRegister, valor de reactive.newStudent: ", this.reactive.newStudent)
+      this.showData = { ...this.reactive.newStudent }
+      const form = ["formScholarship", "finishRegistration", "header__course"];      
+      this.toogle(form);
+    },
+    
+    assignPropertiesAndValues(object){
+      for (const key in object) {        
+        const element = object[key];
+        Object.defineProperty(this.reactive.newStudent, key, {
+          value: element
+        })       
+      }
+    },
+
+    toogle(node){
+      node.forEach(element => {
+        const form = document.getElementById(element)
+        form.classList.toggle("registerHide")        
+      });
+    },
+
   },
 
   template: `
   <div id="newRegister" class="register registerHide">     
-    <v-dataGeneral></v-dataGeneral>
-    <br>    
-    <v-contact></v-contact>
+    <v-dataGeneral 
+      v-on:continueContact="continueContact">
+    </v-dataGeneral>
     <br>
-    <v-address></v-address>
+    <v-contact
+      v-on:continueAddress="continueAddress">
+    </v-contact>
     <br>
-    <v-scholarship></v-scholarship>
+    <v-address
+      v-on:continueScholarship="continueScholarship">
+    </v-address>
     <br>
-    <p>Usaremos esta información para pre-inscribirte al curso, y contactarte si fuera necesario<span id="selectedCourse"></span></p>
-    <input type="submit" value="Pre-inscribirse"></input>    
-  </div>
-  `
+    <v-scholarship
+      v-on:finishRegistration="finishRegistration">
+    >
+    </v-scholarship>
+    <v-inscription-newRegister
+      v-bind:showData="showData"
+      >
+    </v-inscription-newRegister>    
+    </div>
+    `
 })
 
 app.component("v-dataGeneral", {
@@ -336,7 +401,7 @@ app.component("v-dataGeneral", {
     }
   },
 
-  inject: ["API", "reactive"],
+  inject: ["API", "reactive", "MAX_SIZE_FILES"],
 
   methods: {
     isAgeOver15(e){
@@ -388,57 +453,80 @@ app.component("v-dataGeneral", {
       }
       const nodeDisability = document.getElementById("disability")
       const disability = nodeDisability.value;
-      const nodeBirthCertificate = document.getElementById("birthCertificate")
-      const birthCertificate = nodeBirthCertificate.files[0];
-      console.log("file birthCertificate: ", birthCertificate)      
-      const dataFORM = new FormData();
+      
+      //usar FormData cuando se envien archivos
+
+      //const dataFORM = new FormData();
       //seis campos setteados en español, para validación en el backend con dependencia CURP
-      dataFORM.append("curp", curp)
-      dataFORM.append("fechaNacimiento", birthday)
-      dataFORM.append("nombre", nombre)
-      dataFORM.append("a_paterno", a_paterno)
-      dataFORM.append("a_materno", a_materno)
-      dataFORM.append("estado", placeOfBirth)
-      dataFORM.append("genero", gender)
-      dataFORM.append("disability", disability)
-      dataFORM.append("birthCertificate", birthCertificate)
-                
-      const responseFile = await this.sendDataGeneralForm(dataFORM)      
-      console.log("Respuesta a validación de CURP en Backend: ", responseFile)
-    },  
+      // dataFORM.append("curp", curp)
+      // dataFORM.append("fechaNacimiento", birthday)
+      // dataFORM.append("nombre", nombre)
+      // dataFORM.append("a_paterno", a_paterno)
+      // dataFORM.append("a_materno", a_materno)
+      // dataFORM.append("estado", placeOfBirth)
+      // dataFORM.append("genero", gender)
+      // dataFORM.append("disability", disability)
+      
+      //Se hara un solo envio de los 3 documentos al final del llenado del formulario      
+      const birthCertificate = e.target.children["birthCertificate"].files[0]
+      const birthCertificateBlob = URL.createObjectURL(e.target.children["birthCertificate"].files[0]);
+      //dataFORM.append("actaNacimiento", birthCertificate)
+
+      const dataFORM = {
+        curp: curp,
+        fechaNacimiento: birthday,
+        nombre: nombre,
+        a_paterno: a_paterno,
+        a_materno: a_materno,
+        estado: placeOfBirth,
+        genero: gender,
+        disability: disability,        
+        actaNacimientoRender: birthCertificateBlob
+      }
+      
+      if (birthCertificate.size > `${this.MAX_SIZE_FILES}`) {
+        alert("El archivo tiene que ser menor a 3MB")
+      } else {
+        const responseFile = await this.sendDataGeneralForm(dataFORM)        
+        if (responseFile.responseObj !== undefined ) {
+          //temporalmente añadir el blob al objeto de acta de nacimiento
+          Object.defineProperty(this.reactive.newStudent, "actaNacimiento", {
+            value: birthCertificate
+          })
+          // })
+          //temporalmente añadir el blob al objeto de acta de nacimiento
+          console.log("continuar inscripcion", responseFile)
+          this.$emit("continueContact", responseFile.responseObj)
+          //VERIFICAR SI USUARIO CAMBIO LA CURP Y VERIFICAR QUE NO ESTE INSCRITO EN EL SISTEMA
+        } else if (responseFile.curp == "false") {
+          console.log("La CURP no corresponde con los datos enviados. Verifica la información.")
+          alert("Error. Verifica la información.")
+        } else {
+          console.log("no se ha obtenido respuesta del servidor")
+        }
+      }
+    },
 
     async sendDataGeneralForm(formData){
       //falta trabajar que sea solo uan funcion global para hacer fetch, y solo generar enpoints con su data a enviar
-      console.log(formData.get("birthCertificate"))
+      //console.log(formData.get("birthCertificate"))
       const endpoint = `${this.API}newStudent/dataGeneral`;      
       const response = await fetch( endpoint, {
         method: "post",
+        headers: {
+          //"Content-Type": "multipart/form-data"
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+
+
         //al subir archivos no usar headers especificando el tipo, y que el navegador determine el boundary adecuado
-        body: formData
+        //si vamos a subir archivos, se debe usar el formData, y no el json y quitar el headers
+        //body: formData
       })
       const info = await response.json()      
       return info
-    },
-
-    // async sendDataGeneral(data){
-    //   //falta trabajar que sea solo uan funcion global para hacer fetch, y solo generar enpoints con su data a enviar
-    //   console.log(data)
-    //   const endpoint = `${this.API}newStudent/dataGeneral`;      
-    //   //backend no preparado aun para recibir formdata
-    //   //enviar mientras tanto como un json Stringify para que lo reciba como application/json      
-    //   const response = await fetch( endpoint, {
-    //     method: "POST",
-    //     headers: {
-    //       //"Content-Type": "multipart/form-data; boundary=something",          
-    //       "Content-Type": "application/json"
-    //     },
-    //     //body: "prueba de mensaje"
-    //     //body: JSON.stringify(data)
-    //     body: JSON.stringify(data)
-    //   })
-    //   const info = await response.json()      
-    //   return info
-    // }
+    }   
   },
   
   template: `
@@ -492,21 +580,44 @@ app.component("v-dataGeneral", {
       </select>
     </label>
 
-    <button>Enviar</button>
+    <v-button></v-button>
   </form>
   `
 })
 
 app.component("v-contact", {
+
+  methods:{
+    verifyContact(e){
+      e.preventDefault()
+      const email = e.target.children['email'].value
+      const phone = e.target.children['telefono'].value
+      const expReg= /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+      const validateEmail = expReg.test(email)
+      if (phone.length >= 10 && validateEmail) {
+        console.log("valores de v-contact", email, phone)
+        const objContact = {
+          email: email,
+          telefono: phone
+        }
+        this.$emit("continueAddress", objContact)
+      } else {
+        console.log("verificar telefono o email")
+        alert("Error. Verifica que tu teléfono y correo electrónico sean correctos.")
+      }
+    }
+  },
+
   template: `
-  <h4>Datos de contacto:</h4>
-  <form>
+  <form id="formContact" class="registerHide" v-on:submit="verifyContact">
+    <h4>Datos de contacto:</h4>
     <label for="email">Correo Electrónico</label>
     <input type="email" name="email" placeholder="Escribe un correo electronico válido...">
     <label for="telefono">Teléfono</label><span class="required">*</span>
     <input type="tel" name="telefono" placeholder="Número Telefónico donde podamos contactarte...">
+    <p>La mayoría de los docentes crean grupos de WhatsApp para dar instrucciones a sus estudiantes, por verifica que sea correcto.</p>
+    <v-button></v-button>
   </form>
-  <p>La mayoría de los docentes crean grupos de WhatsApp para dar instrucciones a sus estudiantes, por verifica que sea correcto.</p>
   `
 })
 
@@ -551,6 +662,34 @@ app.component("v-address", {
     }
   },
   methods: {
+    continueScholarship(e){
+      e.preventDefault()
+      const calle = e.target.children['calle'].value;
+      const colonia = e.target.children['colonia'].value;
+      const cp = e.target.children['cp'].value;
+      const nodeEstado = document.querySelector("#estado");
+      const estado = nodeEstado.value;
+      const nodeAlcaldia = document.querySelector("#alcaldia");
+      const alcaldia = nodeAlcaldia.value;
+      //const nodeAddressCertificate = document.getElementById("addressCertificate")
+      const addressCertificate = e.target.children["addressCertificate"].files[0]
+      const addressCertificateRender = URL.createObjectURL(e.target.children["addressCertificate"].files[0]);
+
+      const objAddress = {
+        calle: calle,
+        colonia: colonia,
+        cp: cp,
+        estado: estado,
+        alcaldia: alcaldia,
+        comprobanteDomicilio: addressCertificate,
+        comprobanteDomicilioRender:addressCertificateRender
+      }
+      this.$emit("continueScholarship", objAddress)
+
+      const dataFORM = new FormData();
+      dataFORM.append("domicilio", addressCertificate)
+    },
+
     showMunicipio(e){
       console.log(e.target)
       this.estadoRepublica = e.target.value
@@ -559,16 +698,22 @@ app.component("v-address", {
     },   
   },
   template: `  
-  <h4>Por favor indica tu domicilio:</h4>
-  <form>
+  <form id="formAddress" class="registerHide" v-on:submit="continueScholarship">
+    <h4>Por favor indica tu domicilio:</h4>
     <label for="calle">Calle y número</label><span class="required">*</span>
-    <input type="text" id="calle" name="calle" placeholder="Calle y número...">
+    <input type="text" name="calle" placeholder="Calle y número...">
     <label for="colonia">Colonia</label><span class="required">*</span>
-    <input type="text" id="colonia" name="colonia" placeholder="Colonia...">
+    <input type="text" name="colonia" placeholder="Colonia...">
     <!-- https://copomex.com/#pricing-section por 330 para agilizar este tramite -->
-    <label for="codigoPostal"> <span>Código Postal</span><span class="required">*</span>
-    <input type="number" id="codigoPostal" name="codigoPostal" placeholder="Código Postal..." />      
+    <label for="cp"> <span>Código Postal</span><span class="required">*</span>
     </label>
+    <input 
+      type="number" 
+      name="cp" 
+      placeholder="Código Postal..."
+      min="01000"
+      max="99999"
+    />      
     <label for="estado">
     <span>Estado</span>
     <select name="estado" id="estado" v-on:change="showMunicipio">
@@ -578,13 +723,14 @@ app.component("v-address", {
     </label>      
     <label for="alcaldia">
       <span class="required">Municipio o Alcaldía*</span>      
-      <select name="alcaldia">
+      <select name="alcaldia" id="alcaldia">
         <option v-for="item in valueEstado[estadoRepublica]" :key="item" @municipio="municipio"> {{ item }}</option>
       </select>
     </label>
 
     <label for="addressCertificate">Adjuntar Comprobante de Domicilio</label>
-    <input type="file" name="addressCertificate" >
+    <input type="file" name="addressCertificate" id="addressCertificate">
+    <v-button></v-button>
   </form>
   `
 })
@@ -616,18 +762,41 @@ app.component("v-scholarship", {
       ],
     }
   },
+
+  methods: {
+    finishRegistration(e){
+      e.preventDefault()      
+      const scholarship = document.getElementById("scholarship").value;
+      const studiesCertificate = e.target.children['studiesCertificate'].files[0]
+      const studiesCertificateRender = URL.createObjectURL(e.target.children['studiesCertificate'].files[0]);
+      const objScholarship = {
+        escolaridad: scholarship,
+        comprobanteEstudios: studiesCertificate,
+        comprobanteEstudiosRender: studiesCertificateRender
+      }
+      this.$emit("finishRegistration", objScholarship)
+    }
+  },
+
   template: `
-  <h4>Grado Escolar</h4>
-  <form>
-    <label for="escolaridad">
+  <form  id="formScholarship" class="registerHide" v-on:submit="finishRegistration">
+    <h4>Grado Escolar</h4>
+    <label for="scholarship">
     <span>Escolaridad</span>
-    <select name="escolaridad" id="scholarship">            
-      <option v-for="item in listaEscolaridades" :key="item">{{ item }}</option>          
+    <select name="scholarship" id="scholarship">            
+      <option v-for="item in listaEscolaridades" :key="item">{{ item }}</option>
     </label>  
 
     <label for="studiesCertificate">Adjuntar Comprobante de máximo grado de estudios</label>
-    <input type="file" name="studiesCertificate" >
+    <input type="file" name="studiesCertificate">
+    <v-button></v-button>
   </form>
+  `
+})
+
+app.component("v-button", {
+  template: `
+  <button>Continuar</button>
   `
 })
 
@@ -636,6 +805,102 @@ app.component("tagCurp", {
   template: `
   <label for="curp">CURP</label><span class="required">*</span>
   <input type="text" id="valueCurp" name="curp" placeholder="CURP..." v-bind:value=reactive.curp>
+  `
+})
+
+app.component("v-inscription-newRegister", {
+  inject: ["API", "reactive"],
+
+  methods: {
+    isDocumentUpload(name){
+      if (this.reactive.newStudent[name] == undefined) {
+        return ""
+      } else {
+        return this.reactive.newStudent[name]
+      }
+    },
+
+    async inscription(e){
+      e.preventDefault()
+      const formData = new FormData()
+      formData.append("curp", this.reactive.newStudent.curp)
+      formData.append("fechaNacimiento", this.reactive.newStudent.birthday)
+      formData.append("nombre", this.reactive.newStudent.nombre)
+      formData.append("a_paterno", this.reactive.newStudent.a_paterno)
+      formData.append("a_materno", this.reactive.newStudent.a_materno)
+      formData.append("estado", this.reactive.newStudent.placeOfBirth)
+      formData.append("genero", this.reactive.newStudent.gender)
+      formData.append("alcaldia", this.reactive.newStudent.alcaldia)
+      formData.append("calle", this.reactive.newStudent.calle)
+      formData.append("colonia", this.reactive.newStudent.colonia)
+      formData.append("cp", this.reactive.newStudent.cp)
+      formData.append("email", this.reactive.newStudent.email)
+      formData.append("escolaridad", this.reactive.newStudent.escolaridad)
+      formData.append("estado", this.reactive.newStudent.estado)
+      formData.append("telefono", this.reactive.newStudent.disability.telefono)
+      formData.append("actaNacimiento", this.reactive.newStudent.actaNacimiento)
+      formData.append("comprobanteDomicilio", this.reactive.newStudent.comprobanteDomicilio)
+      formData.append("comprobanteEstudios", this.reactive.newStudent.comprobanteEstudios)
+
+      const responseFile = await this.sendForInscripcion(formData)
+      console.log(responseFile)
+    },
+
+    async sendForInscripcion(formData){
+      const endpoint = `${this.API}newStudent/inscription`;
+      const response = await fetch( endpoint, {
+        method: "post",        
+        //si vamos a subir archivos, se debe usar el formData, y no el json y quitar el headers
+        body: formData
+      })
+      const info = await response.json()      
+      return info
+    }
+  },
+ 
+  template: `
+  <div class="registerHide" id="finishRegistration">
+    <p>Gracias por proporcionarnos tus datos {{ reactive.newStudent.nombre }} {{ reactive.newStudent.a_paterno }} {{ reactive.newStudent.a_materno }}</p>
+    <p>Verificaremos que la información que proporcionaste coincida con los documentos que adjuntaste, y en un plazo de entre 48 y 72 horas hábiles te daremos mas instrucciones</p>
+    <br>    
+    <p>Te recordamos que te estas inscribiendo al curso:</p>
+    <v-course></v-course>
+    <br>
+    <div>
+      <p>Esta es la información que proporcionaste: </p>
+      <p>CURP: {{ reactive.newStudent.curp }}</p>
+      <figure>
+        <img v-bind:src=isDocumentUpload("actaNacimientoRender") alt="Acta de nacimiento">
+        <figcaption>Acta de nacimiento</figcaption>
+      </figure>
+      <br>
+      <p>Domicilio: {{ reactive.newStudent.calle}}, {{ reactive.newStudent.colonia }}, en 
+        {{ reactive.newStudent.alcaldia }}, {{ reactive.newStudent.estado  }}, 
+        Código Postal {{ reactive.newStudent.cp }}
+      </p>
+      <figure>
+        <img v-bind:src=isDocumentUpload("comprobanteDomicilioRender") alt="Comprobante de Domicilio">
+        <figcaption>Comprobante de Domicilio</figcaption>
+      </figure>
+      <br>
+      <p>Teléfono de contacto: {{ reactive.newStudent.telefono }}</p>
+      <p>Correo electrónico: {{ reactive.newStudent.email }}</p>
+      <br>
+      <p>Grado escolar: {{ this.reactive.newStudent.escolaridad}}</p>
+      <figure>
+        <img v-bind:src=isDocumentUpload("comprobanteEstudiosRender") alt="Comprobante de Estudios">
+        <figcaption>Comprobante de Estudios</figcaption>
+      </figure>
+      <br>
+      <p>Si deseas corregir alguna inforamción, selecciona una sección usando los alguno de los siguientes botones:</p>
+      <button>Datos de Contacto</button>
+      <button>Domicilio</button>
+      <button>Grado de estudios</button>
+    </div>
+    <br>
+    <br>
+    <button v-on:click="inscription">Inscribirme</button>    
+  </div>
   `
 })
 
