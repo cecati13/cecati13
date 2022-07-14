@@ -1,4 +1,5 @@
 const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
+//const host = "http://localhost:3000/";
 const URL = host + "API/v1/frontendURL/10"
 const URL_BASE_IMAGE = "https://cecati13web.blob.core.windows.net/assets-web-cecati13/";
 
@@ -13,7 +14,7 @@ class AvailableCourses {
             const containerCourses = this.sendCourses(courses);
             this.mountNode(containerCourses);
             Specialties.showSpecialties();
-            window.scroll(top);            
+            window.scroll(top);
             AvailableCourses.alternateTitle(`Cursos de ${nameSpeciality.toUpperCase()}`);            
         }
     }
@@ -49,7 +50,8 @@ class AvailableCourses {
             <br>
             <p>Modalidad del curso: <b><i>${course.modalidad_curso}</i></b></p>
             <p>${course.horas} horas de duración</p>
-            <p>Dias de clase: ${course.dias_de_clases}</p>        
+            <p>Dias de clase: ${course.dias_de_clases}</p>
+            <p>Costo del curso: <b>$${course.costo}</b></p>
             <p>${course.observaciones}</p>
             <br>
             <img src="${course.imageURL}" alt="Logo de Especialidad">
