@@ -1,7 +1,8 @@
-const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
-//const host = "http://localhost:3000/";
+//const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
+const host = "http://localhost:3000/";
 const URL = host + "API/v1/frontendURL/10"
 const URL_BASE_IMAGE = "https://cecati13web.blob.core.windows.net/assets-web-cecati13/";
+const URL_BASE_FI = "http://cecati13.com.mx/informacion/";
 
 let infoFetch = [];
 const nodeAPI_Offer = document.getElementById("sectionCourses");
@@ -36,7 +37,7 @@ class AvailableCourses {
             const textObs = course.observaciones;
             course.observaciones = "Observaciones: " + textObs;
         }
-        course.imageURL = (course.imagenURL != undefined ? URL_BASE_IMAGE + course.imagenURL : "");
+        course.imageURL = (course.imagenURL != undefined ? URL_BASE_IMAGE + course.imagenURL : "");        
         const container = document.createElement("div");
         //container.className = "course";
         container.innerHTML = `
@@ -55,6 +56,12 @@ class AvailableCourses {
             <p>${course.observaciones}</p>
             <br>
             <img src="${course.imageURL}" alt="Logo de Especialidad">
+            <a  
+                href="${(course.ficha_informacion != undefined ? URL_BASE_FI + course.ficha_informacion : "./notFound.html")}"
+                target="${course.ficha_informacion != undefined ? "_blank" : ""}" 
+                id="containerCourse--info">
+                    Ficha de información del curso
+            </a>
         </div>
         `;
         //<a class="button__link educativeOffer__button" href="../html/Inscribete.html">Inscribete...</a>

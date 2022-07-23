@@ -133,6 +133,21 @@
     padding: 0px 15px;
 }
 
+#containerCourse--info {
+    background-color: var(--fontColor);
+    border-radius: 1em;
+    color: var(--mainColor);
+    display: flex;
+    justify-content: space-evenly;
+    font-size: 20px;
+    margin: 10px 40px;
+    padding: 10px;
+}
+
+/* #containerCourse--info a:visited, a:active {
+    color: var(--fontColor2);
+} */
+
 .floating__button {
     position: fixed;
     right: 1vw;
