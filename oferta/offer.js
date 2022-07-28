@@ -1,8 +1,8 @@
 const BD_SPECIALITIES = {
     administracion : {
         name: "Administración",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/administracion1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/administracion.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/administracion1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/administracion.png",
         objective: "Establecer procesos de administración en micro y pequeña empresa, asesoría sobre mercadotecnia y establecer comunicación con el cliente, conforme a las especificaciones técnicas y procedimientos establecidos para proporcionar un servicio de calidad",
         laborField: "Las principales fuentes de empleo son: empresas que cuentan con el área de administración y servicio al cliente, así como formas de trabajo independiente",
         courses: [
@@ -48,8 +48,8 @@ const BD_SPECIALITIES = {
 
     contabilidad : {
         name: "Aplicación de normas y procedimientos contables y fiscales",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/contabilidad1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/contabilidad.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/contabilidad1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/contabilidad.png",
         objective: "Realizar el registro mecánico y electrónico de las operaciones financieras de una entidad, conforme a las especificaciones técnicas y procedimientos establecidos, para proporcionar un servicio de calidad",
         laborField: "Las principales fuentes de empleo son: despachos de contadores públicos o privados, empresas pequeñas, medianas o grandes en el área de recursos financieros, almacenes, área de auditoría, en general toda empresa o entidad que este obligada a llevar registros contables, también puede recurrirse al autoempleo ofreciendo sus servicios a pequeños negocios para realizar los trámites necesarios ante la Secretaría de Hacienda y Crédito Público que no requieran de cédula profesional",
         courses:[
@@ -66,8 +66,8 @@ const BD_SPECIALITIES = {
 
     artesaniasFibrasTextiles : {
         name: "Artesanías con fibras textiles",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/fibras_textiles1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/fibras_textiles.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/fibras_textiles1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/fibras_textiles.png",
         objective: "Elaborar diferentes objetos a través de técnicas, símbolos y formas, conforme a los procesos de las artes manuales como: bordado en tela, chaquira, macramé y tejido a mano, considerando las prácticas de trabajo seguras",
         laborField: "Las principales fuentes de empleo son: tiendas de decoración, comercios artesanales, plazas, tianguis, mercados, ciudadelas, ferias de exposición, museos, escuelas de artesanías, microempresas e instalaciones públicas de fomento a las artesanías y el folklore",
         courses: [
@@ -80,8 +80,8 @@ const BD_SPECIALITIES = {
 
     artesGraficas : {
         name: "Artes Gráficas",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/artes_graficas1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/artes_graficas.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/artes_graficas1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/artes_graficas.png",
         objective: "Aplicar los procesos de Artes Gráficas, con el fin de elevar la calidad de los servicios públicos  de educación",
         laborField: "Las principales fuentes de empleo son: empresas que cuentan con el área de artes gráficas, talleres de impresión, editoriales, periódicos, revistas, así como formas de trabajo independiente",
         courses: [
@@ -98,8 +98,8 @@ const BD_SPECIALITIES = {
 
     artesaniasMetalicas : {
         name: "Artesanías Metálicas",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/metalicas1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/metalicas.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/metalicas1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/metalicas.png",
         objective: "Utilizar las herramientas y equipo necesario en cada una de las artes manuales que componen las artesanías metálicas como: Repujado en metal, vidrio artístico, esmalte a fuego y herrería artística; así como las técnicas de selección y transformación de materiales con diseño, decorados y ornamentación de buen gusto",
         laborField: "Las principales fuentes de empleo son: comercios artesanales (plazas tianguis, tiendas propias), mercados artesanales (ciudadela, ferias de exposición como World Trade Center México), talleres artesanales, microempresas, museo de artesanías, internet y autoempleo",
         courses: [
@@ -112,8 +112,8 @@ const BD_SPECIALITIES = {
 
     artesaniasPastasPinturasACabados : {
         name: "Artesanías con pastas, pinturas y acabados",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/pinturas_y_acabados1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/pinturas_y_acabados.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/pinturas_y_acabados1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/pinturas_y_acabados.png",
         objective: "Elaborar diferentes objetos a través de técnicas, símbolos y formas, conforme a los procesos de las artes manuales como: pintura textil, migajón, pintura en cerámica, poliéster, cerámica artificial, trabajos en papel y cartón",
         laborField: "Las principales fuentes de empleo son: tiendas de decoración, comercios artesanales, galerías de arte, plazas, tianguis, mercados, ciudadelas, ferias de exposición, museos, escuelas de artesanías, microempresas e instalaciones públicas de fomento a las artesanías y el folklore",
         courses: [
@@ -128,8 +128,8 @@ const BD_SPECIALITIES = {
 
     asistenciaEducativa : {
         name: "Asistencia Educativa inicial y preescolar",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/asistente_educativo1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/asistente_educativo.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/asistente_educativo1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/asistente_educativo.png",
         objective: "Ofrecer una red amplia y estructurada de servicios de formación para el trabajo en el campo de la Asistencia Educativa Inicial y Preescolar, para atender flexiblemente los intereses de la persona/estudiante, quien podrá estructurar rutas personales de formación o elegir uno o más trayectos formativos, diseñados con la finalidad de responder a las demandas del contexto económico, productivo, social y educativo, optimizando con ello las posibilidades diferenciales de inserción de la persona/estudiante en dicho contexto",
         laborField: "Las principales fuentes de empleo son: guarderías públicas y privadas, instituciones de educación inicial y preescolar públicas y privadas, centros de atención infantil, estancias infantiles, albergues y establecimientos de asistencia social",
         courses: [
@@ -159,8 +159,8 @@ const BD_SPECIALITIES = {
     
     asistenciaEjecutiva : {
         name : "Asistencia Ejecutiva",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/asistente_ejecutivo1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/asistente_ejecutivo.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/asistente_ejecutivo1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/asistente_ejecutivo.png",
         objective: "Aplicar la taquigrafía, mecanografía y las relaciones personales, con el fin de establecer comunicación con el cliente, conforme a las especificaciones técnicas y procedimientos establecidos para proporcionar un servicio de calidad",
         laborField: "Las principales fuentes de empleo son: oficinas gubernamentales, despachos de una gran gama de servicios de oficina",
         courses: [
@@ -177,8 +177,8 @@ const BD_SPECIALITIES = {
 
     atencionAdultosMayores : {
         name : "Atención Integral a personas adultas mayores",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/ayuda_mayores1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/ayuda_mayores.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/ayuda_mayores1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/ayuda_mayores.png",
         objective: "Ofrecer una red amplia y estructurada de servicios de formación para el trabajo en el campo de Asistencia Social, para atender flexiblemente los intereses de la persona/estudiante, quien podrá estructurar rutas personales de formación o elegir uno o más trayectos formativos, diseñados con la finalidad de responder a las demandas del contexto económico, productivo, social y educativo, optimizando con ello las posibilidades diferenciales de inserción de los egresados de dicho contexto",
         laborField: "Las principales fuentes de empleo son: instituciones de salud públicas y privadas, hospitales, asilos, casas hogar, centros de rehabilitación",
         courses: [
@@ -195,8 +195,8 @@ const BD_SPECIALITIES = {
 
     atencionPersonasConDiscapacidad : {
         name : "Atención Integral a personas con discapacidad",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/ayuda_discapacitados1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/ayuda_discapacitados.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/ayuda_discapacitados1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/ayuda_discapacitados.png",
         objective: "Aplicar los procesos de asistencia familiar y de salud, con el fin de atender a personas con discapacidad auditiva, visual, habilitación física funcional y cuidados básicos de la salud para personas con discapacidad",
         laborField: "La demanda y localización de empleo en esta área se encuentra en todo el país, especialmente en instituciones públicas y privadas como: estancias infantiles, asilos, centros de salud y centros de rehabilitación",
         courses: [
@@ -219,8 +219,8 @@ const BD_SPECIALITIES = {
 
     confeccionIndustrialRopa : {
         name : "Confección Industrial de Ropa",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/confeccion_de_ropa1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/confeccion_de_ropa.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/confeccion_de_ropa1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/confeccion_de_ropa.png",
         objective: "Realizar los procesos de alta costura, confección de prendas para dama, caballero, niño y niña, conforme a las especificaciones técnicas y procedimientos de seguridad e higiene establecidas, para proporcionar un servicio de calidad",
         laborField: "Las principales fuentes de empleo son: Industrias, casa de moda, casa de novias, talleres de costura, fabricación de ropa en general, manufactura de textiles y prendas de vestir, maquiladoras y talleres propios de Confección industrial de ropa",
         courses: [
@@ -237,8 +237,8 @@ const BD_SPECIALITIES = {
 
     cuidadosCosmetologicos : {
         name: "Cuidados cosmetólogicos faciales y corporales",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/belleza1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/belleza.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/belleza1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/belleza.png",
         objective : "Ofrecer una red amplia y estructurada de servicios de formación para el trabajo en el campo de Cuidados Cosmetológicos Faciales y Corporales, para atender flexiblemente los intereses de la persona/estudiante, quien podrá estructurar rutas personales de formación o elegir uno o más trayectos formativos, diseñados con la finalidad de responder a las demandas del contexto económico, productivo, social y educativo, optimizando con ello las posibilidades diferenciales de inserción de la persona/estudiante en dicho contexto",
         laborField: "Las principales fuentes de empleo son: salones de belleza, SPA, clínicas de belleza y estéticas, también se puede recurrir al autoempleo mediante la apertura de un negocio propio",
         courses: [
@@ -257,8 +257,8 @@ const BD_SPECIALITIES = {
 
     carpinteria : {
         name : "Diseño y Fabricación de muebles de madera",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/diseño_muebles1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/diseño_muebles.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/diseño_muebles1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/diseño_muebles.png",
         objective: "Realizar los procesos de diseño y fabricación de muebles de madera, conforme a las especificaciones técnicas y procedimientos de seguridad e higiene establecidos, para proporcionar un servicio de calidad",
         laborField: "Las fábricas de muebles en general, fábricas y talleres de puertas, ventanas y armarios, talleres de reparación y mantenimiento de productos de madera, talleres de ebanistería fina, laqueados y barnices, madererías, tiendas de puertas, ventanas y armarios, constructoras en donde se realizan trabajos de carpintería, compañías de mantenimiento, fábricas de construcción e instalación de cocinas integrales, también el autoempleo es muy frecuente en esta área, sobre todo en su forma familiar",
         courses: [
@@ -282,8 +282,8 @@ const BD_SPECIALITIES = {
 
     diseñoDeModa : {
         name : "Diseño de Moda",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/diseño_de_modas1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/diseño_de_modas.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/diseño_de_modas1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/diseño_de_modas.png",
         objective: "Ofrecer una red amplia y estructurada de servicios de formación para el trabajo en el campo del Vestido y Textil, en Diseño de Moda, para atender flexiblemente los intereses de la persona/estudiante, quien podrá estructurar rutas personales de formación o elegir uno o más trayectos formativos, diseñados con la finalidad de responder a las demandas del contexto económico, productivo, social y educativo, optimizando con ello las posibilidades diferenciales de inserción de la persona/estudiante en dicho contexto",
         laborField: "Las principales fuentes de empleo son: Casa de moda de vestidos de noche y alta costura, talleres de costura dedicados a la creación de diseño y estilos de moda, patronaje, graduación y fabricación de ropa, en general, tiendas departamentales de alto prestigio, para realizar ajustes a la medida, fábricas de confección y maquila de camisas y pantalones y talleres de diseño de moda y confección de ropa deportiva, casual y accesorios",
         courses: [
@@ -308,8 +308,8 @@ const BD_SPECIALITIES = {
 
     dibujoArquitectonico : {
         name : "Elaboración de Dibujos Arquitectonico e Industrial",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/dibujo_arquitectonico1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/dibujo_arquitectonico.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/dibujo_arquitectonico1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/dibujo_arquitectonico.png",
         objective: "Realizar los procesos en dibujo industrial y arquitectónico, conforme a las especificaciones técnicas y procedimientos de seguridad e higiene establecidas, para proporcionar un servicio de calidad",
         laborField: "Las principales fuentes de empleo son: empresas constructoras y despachos particulares, servicios en examinar y estudiar croquis, bocetos y notas para verificar dimensiones y especificaciones de proyectos, integrar paquetes con planos e informes de la obra, calcular dimensiones y superficies para trazar planos y dibujos industriales y arquitectónico",
         courses: [
@@ -323,8 +323,8 @@ const BD_SPECIALITIES = {
 
     artesaniasDeMadera : {
         name : "Elaboración y restauración de artesanías de madera",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/artesanias_en_maderas1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/artesanias_en_maderas.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/artesanias_en_maderas1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/artesanias_en_maderas.png",
         objective: "Ofrecer una red amplia y estructurada de servicios de formación para el trabajo en el campo de la Elaboración y Restauración de Artesanías de Madera, para atender flexiblemente los intereses de la persona/estudiante, quien podrá estructurar rutas personales de formación para elegir uno o más trayectos formativos, diseñados con la finalidad de responder a las demandas del contexto económico, productivo, social y educativo, optimizando con ello las posibilidades diferenciales de inserción de la persona/estudiante en dicho contexto",
         laborField: "Las principales fuentes de empleo son: industrias manufactureras, talleres comunitarios o en grupos familiares, fábricas de materiales trensables, de productos y utensilios para el hogar y de otros productos de madera, locales comerciales, ferias, mercados y exposiciones artesanales, entre otros",
         courses: [
@@ -343,8 +343,8 @@ const BD_SPECIALITIES = {
 
     estilismoYDiseñoDeImagen : {
         name : "Estilismo y Diseño de Imagen",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/estilismo1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/estilismo.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/estilismo1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/estilismo.png",
         objective: "Ofrecer una red amplia y estructurada de servicios de formación para el trabajo en el campo del Estilismo y Diseño de Imagen, para atender flexiblemente los intereses de la persona/estudiante, quien podrá estructurar rutas personales de formación o elegir uno o más trayectos formativos, diseñados con la finalidad de responder a las demandas del contexto económico, productivo, social y educativo, optimizando con ello las posibilidades diferenciales de inserción de la persona/estudiante en dicho contexto",
         laborField: "Las principales fuentes de empleo son: salones de belleza, barberías, SPA, clínicas de belleza, peluquerías y estéticas, también se puede recurrir al autoempleo mediante la apertura de un negocio propio",
         courses: [
@@ -369,8 +369,8 @@ const BD_SPECIALITIES = {
 
     expresionGraficaDigital : {
         name : "Expresión Gráfica Digital",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/expresion_grafica1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/expresion_grafica.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/expresion_grafica1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/expresion_grafica.png",
         objective: "Aplicar los procesos de presentaciones electrónicas, presentaciones gráficas y presentaciones fotográficas, respetando las normas y procedimientos de seguridad e higiene establecidos a fin de otorgar un servicio de calidad",
         laborField: "Las principales fuentes de empleo son: empresas públicas y privadas relacionadas con medios de comunicación y de publicidad, instituciones bancarias y comerciales, agencia de viajes, hospitales, escuelas, etc., en donde se utilice sistema de cómputo",
         courses: [
@@ -391,8 +391,8 @@ const BD_SPECIALITIES = {
 
     floristeria : {
         name : "Floristería",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/floristeria1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/floristeria.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/floristeria1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/floristeria.png",
         objective: "Desarrollar las habilidades y destrezas para llevar a cabo los procesos para el diseño y ornamento floral",
         laborField: "La opción de autoempleo como profesional independiente, cooperativas, empresas y talleres relacionados con la floristería, la jardinería, interiorismo, industria floral y la ornamentación, sin olvidar de empresas y talleres de carácter artesanal y artístico públicos o privados",
         courses: [
@@ -406,8 +406,8 @@ const BD_SPECIALITIES = {
 
     soporteTecnico : {
         name : "Soporte técnico a equipos y sistemas computacionales",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/soporte_tecnico1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/soporte_tecnico.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/soporte_tecnico1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/soporte_tecnico.png",
         objective: "Ofrecer una red amplia y estructurada de servicios de formación para el trabajo en el campo del Soporte Técnico a Equipos y Sistemas Computacionales, para atender flexiblemente los intereses de la persona/estudiante, quien podrá estructurar rutas personales de formación para elegir uno o más trayectos formativos, diseñados con la finalidad de responder a las demandas del contexto económico, productivo, social y educativo, optimizando con ello las posibilidades diferenciales de inserción de la persona/estudiante en dicho contexto",
         laborField: "Las principales fuentes de empleo son: Instituciones de bienes y/o servicios públicos y privados",
         courses: [
@@ -431,8 +431,8 @@ const BD_SPECIALITIES = {
 
     tapiceria : {
         name : "Tapicería",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/tapiceria1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/tapiceria.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/tapiceria1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/tapiceria.png",
         objective: "Realizar los procesos de tapicería en la fabricación de muebles y en la decoración de interiores, conforme a las especificaciones técnicas y procedimientos de seguridad e higiene establecidos, para proporcionar un servicio de calidad",
         laborField: "Las principales fuentes de empleo son: fábricas de muebles, colchones, empresas especializadas en vestiduras de automóviles, talleres de reparación de muebles, comercializadoras de cubre asientos, talleres artesanales, tiendas de antigüedades, restauradoras o el autoempleo",
         courses: [
@@ -443,8 +443,8 @@ const BD_SPECIALITIES = {
 
     ingles : {
         name : "Uso de la lengua inglesa en diversos contextos",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/ingles1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/ingles.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/ingles1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/ingles.png",
         objective: "Ofrecer una red amplia y estructurada de servicios de formación para el trabajo en el campo del Uso de la Lengua Inglesa en Diversos Contextos, para atender flexiblemente los intereses de la persona/estudiante, quien podrá estructurar rutas personales de formación o elegir uno o más trayectos formativos, diseñados con la finalidad de responder a las demandas del contexto económico, productivo, social y educativo, optimizando con ello las posibilidades diferenciales de inserción de la persona/estudiante en dicho contexto",
         laborField: "Las principales fuentes de empleo para los egresados de esta especialidad son: áreas turísticas, embajadas, institución o empresas que requiera de esta lengua",
         courses: [
@@ -469,8 +469,8 @@ const BD_SPECIALITIES = {
 
     ofimatica : {
         name: "Ofimática",
-        logoRed: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/informatica1.png",
-        logoWhite: "https://cecati13web.blob.core.windows.net/assets-web-cecati13/informatica.png",
+        logoRed: "https://storage.googleapis.com/cecati13/assets/informatica1.png",
+        logoWhite: "https://storage.googleapis.com/cecati13/assets/informatica.png",
         objective: "Aplicar los procesos de operación de base de datos, windows e internet, elaboración de textos, elaboración de presentaciones electrónicas y elaboración de hojas de cálculo, conforme a las especificaciones técnicas y procedimientos de seguridad e higiene establecidas, para proporcionar un servicio de calidad.",
         laborField: "Las principales fuentes de empleo son: empresas públicas y privadas, instituciones bancarias y comerciales, agencia de viajes, hospitales, escuelas, etc., en donde se utilice equipo de cómputo.",
         courses : [
@@ -580,7 +580,7 @@ const buttonClosed = function () {
     const buttonClose = document.createElement("div");
     buttonClose.className = "buttonBack";
     buttonClose.innerHTML= `  
-    <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/arrowBack.svg" alt="Retroceder">
+    <img src="https://storage.googleapis.com/cecati13/assets/arrowBack.svg" alt="Retroceder">
     <span>REGRESAR</span>    
     `;  
     buttonClose.addEventListener("click", ()=> closedInformation());

@@ -1,6 +1,6 @@
 const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
 const URL = host + "API/v1/frontendURL/40"
-const URL_BASE_IMAGE = "https://cecati13web.blob.core.windows.net/galeria/";
+const URL_BASE_IMAGE = "https://storage.googleapis.com/cecati13/galeria/";
 const container = document.querySelector(".carousel__list");
 
 function preloader() {

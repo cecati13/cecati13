@@ -1,7 +1,7 @@
 //const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
 const host = "http://localhost:3000/";
 const URL = host + "API/v1/frontendURL/10"
-const URL_BASE_IMAGE = "https://cecati13web.blob.core.windows.net/assets-web-cecati13/";
+const URL_BASE_ASSETS = "https://storage.googleapis.com/cecati13/assets/";
 const URL_BASE_FI = "http://cecati13.com.mx/informacion/";
 
 let infoFetch = [];
@@ -37,7 +37,7 @@ class AvailableCourses {
             const textObs = course.observaciones;
             course.observaciones = "Observaciones: " + textObs;
         }
-        course.imageURL = (course.imagenURL != undefined ? URL_BASE_IMAGE + course.imagenURL : "");        
+        course.imageURL = (course.imagenURL != undefined ? URL_BASE_ASSETS + course.imagenURL : "");        
         const container = document.createElement("div");
         //container.className = "course";
         container.innerHTML = `
@@ -60,7 +60,8 @@ class AvailableCourses {
                 href="${(course.ficha_informacion != undefined ? URL_BASE_FI + course.ficha_informacion : "./notFound.html")}"
                 target="${course.ficha_informacion != undefined ? "_blank" : ""}" 
                 id="containerCourse--info">
-                    Ficha de información del curso
+                <img src="${URL_BASE_ASSETS}moreInfo.png">
+                    INFORMACIÓN
             </a>
         </div>
         `;
@@ -198,7 +199,7 @@ class Specialties {
             container.innerHTML += `
             <div class="Specialties--containers" data-specialty="${element.specialty.toLowerCase()}">
                 <div class="Specialties--container--logo" data-specialty="${element.specialty.toLowerCase()}">
-                    <img src="${URL_BASE_IMAGE}${image}" class="Specialties--containers--img"
+                    <img src="${URL_BASE_ASSETS}${image}" class="Specialties--containers--img"
                     data-specialty="${element.specialty.toLowerCase()}" alt="curso">
                 </div>
                 <div class="Specialties--container--title" 
@@ -216,11 +217,11 @@ class Specialties {
         const buttonHref = inscripcion.href;
         buttonBack.innerHTML = `
         <div class="buttonBack buttonBack--HIDE" id="buttonBack">
-            <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/arrowBack.svg" alt="Retroceder">
+            <img src="${URL_BASE_ASSETS}arrowBack.svg" alt="Retroceder">
             <span>REGRESAR</span>        
         </div>
         <a href="${buttonHref}">
-            <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/inscripcion.svg" 
+            <img src="${URL_BASE_ASSETS}inscripcion.svg" 
             alt="Inscripción" class="button__link floating__button floating__button--HIDE" id="buttonFloatingReg">
         </a>
         `;        

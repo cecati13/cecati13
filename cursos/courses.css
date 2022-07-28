@@ -92,7 +92,7 @@
 
 .containerCourses {
     display: flex;
-    flex-wrap: wrap-reverse;
+    flex-wrap: wrap;
     justify-content: space-around;
 }
 
@@ -135,18 +135,39 @@
 
 #containerCourse--info {
     background-color: var(--fontColor);
-    border-radius: 1em;
+    border-radius: 5em;
     color: var(--mainColor);
-    display: flex;
-    justify-content: space-evenly;
-    font-size: 20px;
-    margin: 10px 40px;
-    padding: 10px;
+    display: flex;    
+    align-items: center;    
+    justify-self: flex-start;
+    margin: auto;
+    margin-top: 7px;
+    width: 200px;
+    padding: 3px;
 }
 
-/* #containerCourse--info a:visited, a:active {
-    color: var(--fontColor2);
-} */
+#containerCourse--info img {
+    height: 30px;
+    margin-right: 10px;
+}
+
+/* Not Found para Fichas de Información */
+.mainNotFound{
+    color: var(--fontColor);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 2.5rem;
+    height: 50vh;
+    max-width: 700px;
+    padding: 20px;
+    text-align: center;
+}
+
+.mainNotFound > p {
+    margin-bottom: 30px;
+}
+/*Termina: Not Found para Fichas de Información */
 
 .floating__button {
     position: fixed;

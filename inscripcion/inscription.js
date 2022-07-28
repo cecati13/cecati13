@@ -168,7 +168,7 @@ class Inscriptions {
         content:        
             `Una vez realizado tu deposito sube la misma al formulario
             que te proporcionaron para tal fin.`,
-        observations: "Costo de cursos: $300.00."
+        observations: "El costo depende del curso seleccionado"
     }    
     stepFive = {
         stepNumber: 5,

@@ -1,7 +1,7 @@
 const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
 const announceURL = host + "API/v1/frontendURL/50";
 const imageURL = host + "API/V1/frontendURL/imageHomePage?size=17"
-const URL_BASE_IMAGE = "https://cecati13web.blob.core.windows.net/galeria/";
+const URL_BASE_IMAGE = "https://storage.googleapis.com/cecati13/galeria/";
 const containerMain = document.querySelector(".main__container");
 const widthPort = window.innerWidth;
 

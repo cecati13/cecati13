@@ -1,6 +1,6 @@
 .main {
     color: var(--mainColor2);
-    background-image: url("https://cecati13web.blob.core.windows.net/galeria/background_portada.jpg");
+    background-image: url("https://storage.googleapis.com/cecati13/galeria/background_portada.jpg");
     background-position: 50% 60%;
     background-repeat: no-repeat;
     background-attachment: fixed;
