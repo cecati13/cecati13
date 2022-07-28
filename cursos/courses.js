@@ -1,5 +1,5 @@
-//const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
-const host = "http://localhost:3000/";
+const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
+//const host = "http://localhost:3000/";
 const URL = host + "API/v1/frontendURL/10"
 const URL_BASE_ASSETS = "https://storage.googleapis.com/cecati13/assets/";
 const URL_BASE_FI = "http://cecati13.com.mx/informacion/";
@@ -279,6 +279,7 @@ async function conexion(URL) {
         <h3 class="error__API">Lo sentimos, la información no esta disponible en este momento.
         Por favor intenta más tarde, lamentamos los inconvenientes.</h3>`;
         nodeAPI_Offer.appendChild(titleError);
+        preloader();
     }
 }
 preloader();

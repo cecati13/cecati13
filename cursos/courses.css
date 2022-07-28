@@ -193,14 +193,6 @@
 }
 /* Terminan estilos de diseño con PDF */
 
-.error__API{    
-    color: var(--contrastColor);
-    margin: auto;
-    margin-top: 90px;
-    text-align: center;
-    vertical-align: middle;
-}
-
 @media (min-width: 1024px) {
     .Specialties--containers {
         max-width: 450px;

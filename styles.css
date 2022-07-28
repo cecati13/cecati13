@@ -233,6 +233,14 @@ a, a:visited, a:active{
     height: 6px;
 }
 
+.error__API{    
+    color: var(--contrastColor);
+    margin: auto;
+    margin-top: 90px;
+    text-align: center;
+    vertical-align: middle;
+}
+
 .preloader {
     width: 70px;
     height: 70px;

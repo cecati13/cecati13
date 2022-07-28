@@ -199,11 +199,11 @@ async function conexion() {
         console.log(error)
         preloader();
         const titleError = document.createElement("h3");
-        titleError.innerText= `
-        UPS!
-        Lo sentimos, parece haber algunos problemas con algunas funciones en el sitio.
-        Por favor intenta más tarde, lamentamos los inconvenientes.`;
-        titleError.style.color = "var(--fontColor)";        
+        titleError.innerHTML= `
+        <h3 class="error__API">UPS!
+        Lo sentimos, parece haber problemas con algunas funciones en el sitio.
+        Por favor intenta más tarde, lamentamos los inconvenientes.</h3>`;
+        titleError.style.backgroundColor = "var(--mainColor)"
         containerMain.appendChild(titleError);
     }
 }

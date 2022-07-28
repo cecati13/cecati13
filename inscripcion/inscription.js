@@ -10,7 +10,12 @@ async function conexionURL(URL){
         const inscription = new Inscriptions(urlValue);
         return urlValue;
    } catch(error) {
-    console.log(error)
+    const titleError = document.createElement("h3");
+        titleError.innerHTML= `
+        <h3 class="error__API">Lo sentimos, la información no esta disponible en este momento.
+        Por favor intenta más tarde, lamentamos los inconvenientes.</h3>`;
+        nodeParent.appendChild(titleError);
+        preloader();
    }
 }
 

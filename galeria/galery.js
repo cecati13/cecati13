@@ -64,12 +64,13 @@ async function conexion(URL) {
         console.log(response);        
     } catch (error) {
         console.log(error)
-        const nodeGallery = document.querySelector("#gallery");
+        const nodeGallery = document.querySelector(".gallery");
         const titleError = document.createElement("h3");
         titleError.innerHTML= `
         <h3 class="error__API">Lo sentimos, la información no esta disponible en este momento.
         Por favor intenta más tarde, lamentamos los inconvenientes.</h3>`;
         nodeGallery.appendChild(titleError);
+        preloader();
     }
 }
 
