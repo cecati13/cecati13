@@ -37,9 +37,10 @@ class AvailableCourses {
             const textObs = course.observaciones;
             course.observaciones = "Observaciones: " + textObs;
         }
-        course.imageURL = (course.imagenURL != undefined ? URL_BASE_ASSETS + course.imagenURL : "");        
+        course.imageURL = (course.imagenURL != undefined ? URL_BASE_ASSETS + course.imagenURL : "");
         const container = document.createElement("div");
         //container.className = "course";
+        const preregister = this.preRegistrationInformation(course);
         container.innerHTML = `
         <div class="course">
             <p class="containerCourse--title"><strong>${course.curso}</strong></p>
@@ -63,10 +64,43 @@ class AvailableCourses {
                 <img src="${URL_BASE_ASSETS}moreInfo.png">
                     INFORMACIÓN
             </a>
+            <textarea id="pre-${course.number}" style="display:none">${preregister}</textarea>
         </div>
-        `;
-        //<a class="button__link educativeOffer__button" href="../html/Inscribete.html">Inscribete...</a>
+            `;
+        const containerImgButton = this.createContainerButton(course);
+        //containerImgButton.addEventListener("click", event => saveCourse(event))
+        //container.appendChild(containerImgButton);
+            //<a class="button__link educativeOffer__button" href="../html/Inscribete.html">Inscribete...</a>
         return container;
+    }
+
+    createContainerButton(course){
+        console.log(course)
+        console.log(course.number)
+        const containerAnchor = document.createElement("a");
+        containerAnchor.className = "course--img-button";
+        containerAnchor.dataset.numberCourse = `pre-${course.number}`;
+        containerAnchor.href = "/src/formulario"
+        containerAnchor.innerHTML = `       
+            <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/inscripcion.svg"
+            alt="Inscripción" class="button__link floating__button" id="buttonFloatingReg"
+            data-numberCourse="pre-${course.number}">
+            <p data-numberCourse="pre-${course.number}">INSCRIBIRME</p>        
+        `;      
+        return containerAnchor;
+    }
+
+    preRegistrationInformation(course) {
+        const newObject = {
+           ...course,           
+        };
+        delete newObject.imageURL;
+        delete newObject.imagenURL;
+        delete newObject.inscritos;
+        delete newObject.observaciones;
+
+        const information = JSON.stringify(newObject);
+        return information;
     }
 
     mountNode(containerCourses){
@@ -122,8 +156,17 @@ class ObjFromArray {
                 withPlace.push(item)
             }
         }
-        ObjFromArray.countCourses = withPlace.length;                
-        return withPlace
+        let totalCourses = withPlace.length
+        ObjFromArray.countCourses = totalCourses;
+        const assignPreInscription = withPlace.map( course => {
+        const newCourse = {
+            ...course,
+            number: totalCourses
+        }
+        totalCourses--;
+        return newCourse
+        })
+        return assignPreInscription
     }
 
     sortBySpeciality(objCourses){        
