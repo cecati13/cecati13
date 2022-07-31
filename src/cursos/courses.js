@@ -52,7 +52,8 @@ class AvailableCourses {
             <br>
             <p>Modalidad del curso: <b><i>${course.modalidad_curso}</i></b></p>
             <p>${course.horas} horas de duración</p>
-            <p>Dias de clase: ${course.dias_de_clases}</p>        
+            <p>Dias de clase: ${course.dias_de_clases}</p>
+            <p>Costo del curso: ${course.costo}</p>
             <p>${course.observaciones}</p>
             <br>            
             <textarea id="pre-${course.number}" style="display:none">${preregister}</textarea>

@@ -1,6 +1,8 @@
 const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
+//const host = "http://localhost:3000/";
 const URL = host + "API/v1/frontendURL/10"
-const URL_BASE_IMAGE = "https://cecati13web.blob.core.windows.net/assets-web-cecati13/";
+const URL_BASE_ASSETS = "https://storage.googleapis.com/cecati13/assets/";
+const URL_BASE_FI = "http://cecati13.com.mx/informacion/";
 
 let infoFetch = [];
 const nodeAPI_Offer = document.getElementById("sectionCourses");
@@ -13,7 +15,7 @@ class AvailableCourses {
             const containerCourses = this.sendCourses(courses);
             this.mountNode(containerCourses);
             Specialties.showSpecialties();
-            window.scroll(top);            
+            window.scroll(top);
             AvailableCourses.alternateTitle(`Cursos de ${nameSpeciality.toUpperCase()}`);            
         }
     }
@@ -35,9 +37,10 @@ class AvailableCourses {
             const textObs = course.observaciones;
             course.observaciones = "Observaciones: " + textObs;
         }
-        course.imageURL = (course.imagenURL != undefined ? URL_BASE_IMAGE + course.imagenURL : "");
+        course.imageURL = (course.imagenURL != undefined ? URL_BASE_ASSETS + course.imagenURL : "");
         const container = document.createElement("div");
         //container.className = "course";
+        const preregister = this.preRegistrationInformation(course);
         container.innerHTML = `
         <div class="course">
             <p class="containerCourse--title"><strong>${course.curso}</strong></p>
@@ -49,14 +52,55 @@ class AvailableCourses {
             <br>
             <p>Modalidad del curso: <b><i>${course.modalidad_curso}</i></b></p>
             <p>${course.horas} horas de duración</p>
-            <p>Dias de clase: ${course.dias_de_clases}</p>        
+            <p>Dias de clase: ${course.dias_de_clases}</p>
+            <p>Costo del curso: <b>$${course.costo}</b></p>
             <p>${course.observaciones}</p>
             <br>
             <img src="${course.imageURL}" alt="Logo de Especialidad">
+            <a  
+                href="${(course.ficha_informacion != undefined ? URL_BASE_FI + course.ficha_informacion : "./notFound.html")}"
+                target="${course.ficha_informacion != undefined ? "_blank" : ""}" 
+                id="containerCourse--info">
+                <img src="${URL_BASE_ASSETS}moreInfo.png">
+                    INFORMACIÓN
+            </a>
+            <textarea id="pre-${course.number}" style="display:none">${preregister}</textarea>
         </div>
-        `;
-        //<a class="button__link educativeOffer__button" href="../html/Inscribete.html">Inscribete...</a>
+            `;
+        const containerImgButton = this.createContainerButton(course);
+        //containerImgButton.addEventListener("click", event => saveCourse(event))
+        //container.appendChild(containerImgButton);
+            //<a class="button__link educativeOffer__button" href="../html/Inscribete.html">Inscribete...</a>
         return container;
+    }
+
+    createContainerButton(course){
+        console.log(course)
+        console.log(course.number)
+        const containerAnchor = document.createElement("a");
+        containerAnchor.className = "course--img-button";
+        containerAnchor.dataset.numberCourse = `pre-${course.number}`;
+        containerAnchor.href = "/src/formulario"
+        containerAnchor.innerHTML = `       
+            <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/inscripcion.svg"
+            alt="Inscripción" class="button__link floating__button" id="buttonFloatingReg"
+            data-numberCourse="pre-${course.number}">
+            <p data-numberCourse="pre-${course.number}">INSCRIBIRME</p>        
+        `;      
+        return containerAnchor;
+    }
+
+    preRegistrationInformation(course) {
+        const newObject = {
+           ...course,           
+        };
+        delete newObject.imageURL;
+        delete newObject.imagenURL;
+        delete newObject.inscritos;
+        delete newObject.observaciones;
+
+        const information = JSON.stringify(newObject);
+        return information;
     }
 
     mountNode(containerCourses){
@@ -112,8 +156,17 @@ class ObjFromArray {
                 withPlace.push(item)
             }
         }
-        ObjFromArray.countCourses = withPlace.length;                
-        return withPlace
+        let totalCourses = withPlace.length
+        ObjFromArray.countCourses = totalCourses;
+        const assignPreInscription = withPlace.map( course => {
+        const newCourse = {
+            ...course,
+            number: totalCourses
+        }
+        totalCourses--;
+        return newCourse
+        })
+        return assignPreInscription
     }
 
     sortBySpeciality(objCourses){        
@@ -189,7 +242,7 @@ class Specialties {
             container.innerHTML += `
             <div class="Specialties--containers" data-specialty="${element.specialty.toLowerCase()}">
                 <div class="Specialties--container--logo" data-specialty="${element.specialty.toLowerCase()}">
-                    <img src="${URL_BASE_IMAGE}${image}" class="Specialties--containers--img"
+                    <img src="${URL_BASE_ASSETS}${image}" class="Specialties--containers--img"
                     data-specialty="${element.specialty.toLowerCase()}" alt="curso">
                 </div>
                 <div class="Specialties--container--title" 
@@ -207,11 +260,11 @@ class Specialties {
         const buttonHref = inscripcion.href;
         buttonBack.innerHTML = `
         <div class="buttonBack buttonBack--HIDE" id="buttonBack">
-            <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/arrowBack.svg" alt="Retroceder">
+            <img src="${URL_BASE_ASSETS}arrowBack.svg" alt="Retroceder">
             <span>REGRESAR</span>        
         </div>
         <a href="${buttonHref}">
-            <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/inscripcion.svg" 
+            <img src="${URL_BASE_ASSETS}inscripcion.svg" 
             alt="Inscripción" class="button__link floating__button floating__button--HIDE" id="buttonFloatingReg">
         </a>
         `;        
@@ -269,6 +322,7 @@ async function conexion(URL) {
         <h3 class="error__API">Lo sentimos, la información no esta disponible en este momento.
         Por favor intenta más tarde, lamentamos los inconvenientes.</h3>`;
         nodeAPI_Offer.appendChild(titleError);
+        preloader();
     }
 }
 preloader();

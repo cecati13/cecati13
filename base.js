@@ -38,18 +38,18 @@ class Base {
         <a id="contact" href="${ub}/contacto">Contacto y Ubicación</a>
         </li>
         <li>
-        <a id="calendar" href="https://www.gob.mx/sep?tab=Calendario%20escolar" 
+        <a id="calendar" href="https://storage.googleapis.com/cecati13/Calendario%20Escolar%202022-2023.pdf" 
         target="_blank">Calendario Escolar</a>        
         </li>
         <li>
             <a id="facebook" href="https://www.facebook.com/cecati.trece/about" target="_blank">
                 <div class="footer__contact--img--text">Facebook</div>
-                <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/facebook-logo.png" 
+                <img src="https://storage.googleapis.com/cecati13/assets/facebook-logo.png" 
                 alt="Facebook" class="footer__contact--img" height="50px">
             </a>
             <a id="youtube" href="https://www.youtube.com/channel/UC5LX_ksGHFpydgsMJdWCv0A" target="_blank">
                 <div class="footer__contact--img--text">YouTube</div>
-                <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/youtube-logo.png"
+                <img src="https://storage.googleapis.com/cecati13/assets/youtube-logo.png"
                 alt="YouTube" class="footer__contact--img" height="50px">
             </a>
         </li>
@@ -94,7 +94,7 @@ class Base {
             <h2 class="header__port__title--h1">Centro de Capacitación para el Trabajo Industrial No. 13</h2>
             <h2 class="header__port__title--h2">Profesor "Abraham Lezama Bretón"</h2>
         </div>
-        <img class="header__port--imgC13" src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/LogoCecati.png" alt="Logo CECATI 13">
+        <img class="header__port--imgC13" src="https://storage.googleapis.com/cecati13/assets/LogoCecati.png" alt="Logo CECATI 13">
         `;
         return container;
     }

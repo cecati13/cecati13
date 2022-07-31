@@ -59,10 +59,10 @@ async function conexion(URL) {
         console.log(error)
         const titleError = document.createElement("h3");
         titleError.innerHTML= `
-        <h3 class="error__API">Error al consultar la información. 
-        Por favor intenta más tarde. 
-        Estamos trabajando para darte un mejor servicio.</h3>`;
+        <h3 class="error__API">Lo sentimos, la información no esta disponible en este momento.
+        Por favor intenta más tarde, lamentamos los inconvenientes.</h3>`;
         nodeAPIQuestions.appendChild(titleError);
+        preloader();
     }
 }
 
