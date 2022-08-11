@@ -64,35 +64,35 @@ class AvailableCourses {
                 <img src="${URL_BASE_ASSETS}moreInfo.png">
                     INFORMACIÓN
             </a>
+            <div id="node${course.number}"></div>
+            
             <textarea id="pre-${course.number}" style="display:none">${preregister}</textarea>
-        </div>
+            </div>
             `;
         const containerImgButton = this.createContainerButton(course);
-        //containerImgButton.addEventListener("click", event => saveCourse(event))
-        //container.appendChild(containerImgButton);
-            //<a class="button__link educativeOffer__button" href="../html/Inscribete.html">Inscribete...</a>
+        containerImgButton.addEventListener("click", event => saveCourse(event));        
+        container.appendChild(containerImgButton);
         return container;
     }
 
-    createContainerButton(course){
-        console.log(course)
-        console.log(course.number)
+    createContainerButton(course){        
+        console.log("course number: ",course.number)
         const containerAnchor = document.createElement("a");
-        containerAnchor.className = "course--img-button";
+        containerAnchor.className = "course--img-button button-inscription";
         containerAnchor.dataset.numberCourse = `pre-${course.number}`;
         containerAnchor.href = "/src/formulario"
-        containerAnchor.innerHTML = `       
-            <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/inscripcion.svg"
-            alt="Inscripción" class="button__link floating__button" id="buttonFloatingReg"
+        containerAnchor.innerHTML = `
+            <img src="${URL_BASE_ASSETS}inscripcion.svg"
+            alt="Inscripción" class="button__link" id="buttonFloatingReg"
             data-numberCourse="pre-${course.number}">
-            <p data-numberCourse="pre-${course.number}">INSCRIBIRME</p>        
-        `;      
+            <p data-numberCourse="pre-${course.number}">Inscribirme...</p>
+        `;
         return containerAnchor;
     }
 
     preRegistrationInformation(course) {
         const newObject = {
-           ...course,           
+           ...course,
         };
         delete newObject.imageURL;
         delete newObject.imagenURL;
@@ -263,15 +263,7 @@ class Specialties {
             <img src="${URL_BASE_ASSETS}arrowBack.svg" alt="Retroceder">
             <span>REGRESAR</span>        
         </div>
-        <a href="${buttonHref}">
-            <img src="${URL_BASE_ASSETS}inscripcion.svg" 
-            alt="Inscripción" class="button__link floating__button floating__button--HIDE" id="buttonFloatingReg">
-        </a>
-        `;        
-        //PARA USAR CUANDO LA INSCRIPCION LLEVE DIRECTO AL FORMULARIO PRECARGADO CON EL CURSO
-        // registrationButton.innerText = "Preinscríbete...";
-        // registrationButton.className = "button__link floating__button floating__button--HIDE";
-        //registrationButton.id = "buttonFloatingReg";
+        `;
         nodeAPI_Offer.appendChild(buttonBack);
     }
 
@@ -280,10 +272,7 @@ class Specialties {
         nodeSpecialties.classList.toggle("container__Specialties--HIDE");
     }
 
-    static showButtonBack() {
-        //habilitar si se usa boton flotante
-        const nodeButtonFloatingReg = document.querySelector("#buttonFloatingReg");
-        nodeButtonFloatingReg.classList.toggle("floating__button--HIDE");
+    static showButtonBack() {        
         const nodeButtonBack = document.querySelector("#buttonBack");
         nodeButtonBack.classList.toggle("buttonBack--HIDE");
         nodeButtonBack.addEventListener("click", backToSpecialties)
