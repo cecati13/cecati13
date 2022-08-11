@@ -3,6 +3,8 @@ const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
 const URL = host + "API/v1/frontendURL/10"
 const URL_BASE_ASSETS = "https://storage.googleapis.com/cecati13/assets/";
 const URL_BASE_FI = "http://cecati13.com.mx/informacion/";
+//Nombre de key guardado en Session Storage para preinscribir Curso
+const keyCourseStorage = "CourseCecati13";
 
 let infoFetch = [];
 const nodeAPI_Offer = document.getElementById("sectionCourses");
@@ -38,8 +40,7 @@ class AvailableCourses {
             course.observaciones = "Observaciones: " + textObs;
         }
         course.imageURL = (course.imagenURL != undefined ? URL_BASE_ASSETS + course.imagenURL : "");
-        const container = document.createElement("div");
-        //container.className = "course";
+        const container = document.createElement("div");        
         const preregister = this.preRegistrationInformation(course);
         container.innerHTML = `
         <div class="course">
@@ -80,7 +81,7 @@ class AvailableCourses {
         const containerAnchor = document.createElement("a");
         containerAnchor.className = "course--img-button button-inscription";
         containerAnchor.dataset.numberCourse = `pre-${course.number}`;
-        containerAnchor.href = "/src/formulario"
+        containerAnchor.href = "/curso-inscripcion"
         containerAnchor.innerHTML = `
             <img src="${URL_BASE_ASSETS}inscripcion.svg"
             alt="Inscripción" class="button__link" id="buttonFloatingReg"
@@ -145,6 +146,11 @@ class ObjFromArray {
         const arrayWithPlaces = this.coursesWithPlaces(objCourses)        
         const specialities = this.sortBySpeciality(arrayWithPlaces);        
         return specialities;
+    }
+
+    avalilableDate(array){
+        //si la fecha rebasa el 10% de las horas totales del curso. NO PUBLICAR
+        return array
     }
 
     coursesWithPlaces(objCourses){
@@ -291,6 +297,18 @@ const backToSpecialties = function () {
     AvailableCourses.alternateTitle(Specialties.textTitle);
 }
 
+function saveCourse(e) {
+    //const expresion = /pre-\d\d/
+    const locate = e.target.dataset.numbercourse 
+    //if(expresion.test(locate)){   
+        sessionStorage.removeItem(keyCourseStorage);
+        const nodeCourse = document.querySelector(`#${locate}`);
+        const valueCourse = nodeCourse.value;
+        sessionStorage.setItem(keyCourseStorage, valueCourse)
+        console.log("Guardado en Storage")
+    //}
+}
+
 function locateEvent(event) {
     const ubication = event.target.dataset.specialty.toUpperCase();
     const showCourses = new AvailableCourses(ubication);
@@ -316,3 +334,11 @@ async function conexion(URL) {
 }
 preloader();
 conexion(URL);
+//Codigo migrado desde las pruebas de src/cursos julio 2022
+// window.HashChangeEvent  = (event) => {
+    
+//     alert("localizacion: " + document.location + "; estado " + JSON.stringify(event.state))
+//     event.preventDefault();
+//     console.log("evento onchange")
+//     console.log(event)
+// }

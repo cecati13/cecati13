@@ -739,26 +739,16 @@ app.component("v-scholarship", {
   data(){
     return {
       listaEscolaridades:[      
-        "SIN ESTUDIOS",
-        "1.- PRIMARIA",
-        "PRIMARIA TERMINADA",
-        "CARRERA COMERCIAL Y PRIMARIA",
-        "CARRERA COMERCIAL Y SECUNDARIA",
-        "1.- SECUNDARIA",
-        "SECUNDARIA TERMINADA",
-        "1.- CARRERA TECNICA",
-        "CARRERA TECNICA TERMINADA",
-        "1.- BACHILLERATO",
-        "1.-PREPARATORIA",
-        "BACHILLERATO O PREPARATORIA TERMINADA",
-        "1.- CARRERA NORMALISTA",
-        "NORMAL TERMINADA",
-        "1.- NORMAL SUPERIOR",
-        "NORMAL SUPERIOR TERMINADA",
-        "1.- AÑO CARRERA PROFESIONAL",
-        "PASANTE PROFESIONAL",
-        "LICENCIATURA (TITULADO)",
-        "POSGRADO(MAESTRIA, DOCTORADO)"
+        "Solo sabe leer y escribir",
+        "Primaria inconclusa",
+        "Primaria concluida",
+        "Secundaria inconclusa",
+        "Secundaria concluida",
+        "Bachillerato o equivalente inconcluso",
+        "Bachillerato o equivalente concluido",
+        "Educación superior inconclusa",
+        "Educación superior concluida",
+        "Postgrado (maestría, doctorado)"
       ],
     }
   },
