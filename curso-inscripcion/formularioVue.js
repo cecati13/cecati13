@@ -79,6 +79,7 @@ const app = Vue.createApp({
     },
     
     async send(formData) {
+      console.log(formData)
       const API = `${this.API}`;
       //backend no preparado aun para recibir formdata
       //enviar mientras tanto como un json Stringify para que lo reciba como application/json
@@ -287,25 +288,27 @@ app.component("v-newRegister", {
       const form = ["dataGeneral","formContact"];
       this.toogle(form);
       this.assignPropertiesAndValues(object);
+      console.log("en FORM contact reactive.newStudent: ", this.reactive.newStudent)
     },
     
     continueAddress(object){
       const form = ["formContact","formAddress"];
       this.toogle(form);
-      console.log("en FORM Address reactive.newStudent: ", this.reactive.newStudent)
       this.assignPropertiesAndValues(object);
+      console.log("en FORM Address reactive.newStudent: ", this.reactive.newStudent)
     },
     
     continueScholarship(object){
       const form = ["formAddress","formScholarship"];
       this.toogle(form);
-      this.assignPropertiesAndValues(object);      
+      this.assignPropertiesAndValues(object);
+      console.log("en FORM scholarship reactive.newStudent: ", this.reactive.newStudent)
     },
 
     finishRegistration(object){
       //crear y montar v-inscription-newRegister      
       this.assignPropertiesAndValues(object);
-      console.log("en methodos de component newRegister, valor de reactive.newStudent: ", this.reactive.newStudent)
+      console.log("finishRegistration newRegister, valor de reactive.newStudent: ", this.reactive.newStudent)
       this.showData = { ...this.reactive.newStudent }
       const form = ["formScholarship", "finishRegistration", "header__course"];      
       this.toogle(form);
