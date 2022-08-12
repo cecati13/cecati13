@@ -20,6 +20,7 @@ const app = Vue.createApp({
   provide() {
     return {
       API: this.API,
+      keyCourseStorage: this.keyCourseStorage,
       course: this.getCourse,
       reactive: this.reactive,
       MAX_SIZE_FILES: this.MAX_SIZE_FILES
@@ -802,7 +803,7 @@ app.component("tagCurp", {
 })
 
 app.component("v-inscription-newRegister", {
-  inject: ["API", "reactive"],
+  inject: ["API", "keyCourseStorage","reactive"],
 
   methods: {
     isDocumentUpload(name){
@@ -814,10 +815,10 @@ app.component("v-inscription-newRegister", {
     },
 
     async inscription(e){
-      e.preventDefault()
+      e.preventDefault()      
       const formData = new FormData()
       formData.append("curp", this.reactive.newStudent.curp)
-      formData.append("fechaNacimiento", this.reactive.newStudent.birthday)
+      formData.append("fechaNacimiento", this.reactive.newStudent.birthdate)
       formData.append("nombre", this.reactive.newStudent.nombre)
       formData.append("a_paterno", this.reactive.newStudent.a_paterno)
       formData.append("a_materno", this.reactive.newStudent.a_materno)
@@ -830,10 +831,27 @@ app.component("v-inscription-newRegister", {
       formData.append("email", this.reactive.newStudent.email)
       formData.append("escolaridad", this.reactive.newStudent.escolaridad)
       formData.append("estado", this.reactive.newStudent.estado)
-      formData.append("telefono", this.reactive.newStudent.disability.telefono)
+      //por que tiene disability
+      //formData.append("telefono", this.reactive.newStudent.disability.telefono)
+      formData.append("telefono", this.reactive.newStudent.telefono)
       formData.append("actaNacimiento", this.reactive.newStudent.actaNacimiento)
       formData.append("comprobanteDomicilio", this.reactive.newStudent.comprobanteDomicilio)
       formData.append("comprobanteEstudios", this.reactive.newStudent.comprobanteEstudios)
+      //sessionStorage
+      const dataCourse = JSON.parse(sessionStorage.getItem(this.keyCourseStorage));
+      formData.append("costo", dataCourse.costo);
+      formData.append("curso", dataCourse.curso);
+      formData.append("dias_de_clases", dataCourse.dias_de_clases);
+      formData.append("especialidad", dataCourse.especialidad);
+      formData.append("fecha_inicio", dataCourse.fecha_inicio);
+      formData.append("fecha_termino", dataCourse.fecha_termino);
+      formData.append("ficha_informacion", dataCourse.ficha_informacion);
+      formData.append("hora_inicio", dataCourse.hora_inicio);
+      formData.append("hora_inicio", dataCourse.hora_inicio);
+      formData.append("horas", dataCourse.horas);
+      formData.append("modalidad_curso", dataCourse.modalidad_curso);
+      formData.append("profesor", dataCourse.profesor);
+      formData.append("tipo_de_curso", dataCourse.tipo_de_curso);
 
       const responseFile = await this.sendForInscripcion(formData)
       console.log(responseFile)
