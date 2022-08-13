@@ -29,10 +29,12 @@
 .container__question--interrogation{
     background-color: var(--contrastColor);    
     border-radius: 5px 5px 0 0;
-    color: var(--fontColor2);
+    color: var(--mainColor);
     padding: 50px;
     text-align: center;
     width: 100%;
+    font-size: 2rem;
+    font-weight: 600;
 }
 
 .container__question--answer {
