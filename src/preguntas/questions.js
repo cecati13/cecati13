@@ -11,7 +11,7 @@ class Questions {
 
     title(){
         const title = document.createElement("h3");
-        title.innerText = "Preguntas Frecuentes";
+        title.innerText = "Seccion de Preguntas Frecuentes";
         title.id = "questionsTitle"
         title.className ="section__questions--title";
         nodeAPIQuestions.appendChild(title);

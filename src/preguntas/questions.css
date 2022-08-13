@@ -27,10 +27,10 @@
 }
 
 .container__question--interrogation{
-    background-color: var(--fontColor2);    
+    background-color: var(--contrastColor);    
     border-radius: 5px 5px 0 0;
-    color: var(--mainColor);
-    padding: 20px;
+    color: var(--fontColor2);
+    padding: 50px;
     text-align: center;
     width: 100%;
 }
