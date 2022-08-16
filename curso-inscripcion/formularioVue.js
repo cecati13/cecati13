@@ -63,25 +63,28 @@ const app = Vue.createApp({
       this.reactive.curp = curpFormat;
       if (response.error) {
         //preloader(result);
-        console.log("Valores desde API: ", response)
+        console.log("Valores desde API: ", response)        
         //abrir formulario de nuevo registro
         //this.userIsStudent = false;
         this.hideTypeRegister();
         this.isNewRegister();
 
+      } else if (response.message === "internal server error") {
+        //error generalemente al hacer una primera consulta en SpreedSheets
+        alert("Hubo un error en la comunicaión, por favor vuelve a intentarlo. Si el error persiste intentalo mas tarde.")
       } else {
         this.hideTypeRegister();
         //this.userIsStudent = true;
-        this.isStudent();
         const storageResponse = JSON.stringify(response);
         sessionStorage.setItem(this.keyStudentStorage, storageResponse);
+        this.isStudent();        
         // preloader(result);
       }
     },
     
     async send(formData) {
       console.log(formData)
-      const API = `${this.API}`;
+      const API = `${this.API}typeRegister`;
       //backend no preparado aun para recibir formdata
       //enviar mientras tanto como un json Stringify para que lo reciba como application/json
       const jsonSend = {        
@@ -123,6 +126,10 @@ const app = Vue.createApp({
   computed: {
     getCourse(){
       const getItem = sessionStorage.getItem(this.keyCourseStorage);
+      if (!getItem) {        
+        window.location.href = "/cursos"
+        //Si no se ha selecionado un curso redireccionar a /cursos
+      }
       const courseInfo = JSON.parse(getItem);
       console.log(courseInfo)
       this.curso = courseInfo;
@@ -180,7 +187,7 @@ app.component("v-typeRegister", {
     <label for="curp">Para iniciar tu pre-inscripcion, por favor ingresa lo siguiente: </label>
     <tagCurp></tagCurp>
     <button>Enviar</button>
-    </form>      
+    </form>
     <p>Si no conoces tu curp, consultar https://www.gob.mx/curp/ para obtenerla</p>
   </div>
       `
@@ -188,10 +195,14 @@ app.component("v-typeRegister", {
 })
 
 app.component("v-dbRegister", {
+  inject: ["reactive"],
   // props: {
   //   studentDB: Object
   // },
-  inject: ["reactive"],
+  methods : {
+  },
+
+
   template: `  
   <div id="dbRegister" class="result__API register registerHide">
     <h4>Bienvenido a un nuevo curso en CECATI 13, {{ reactive.studentDB.nombre }} {{reactive.studentDB.a_materno}}</h4>
@@ -201,17 +212,13 @@ app.component("v-dbRegister", {
     <p>Correo electrónico registrado: {{ reactive.studentDB.email }}</p>
     <p>Numero telefónico:  {{ reactive.studentDB.telefono }}</p>
     
+    <br>    
+    <v-updateRegister></v-updateRegister>     
+    
     <br>
-    <p>Si deseas actualizar alguna información que registraste en tu ultimo curso con nosotros, indica continuación cual seria:</p>
-      <button>Datos de Contacto</button>
-      <button>Domicilio</button>
-      <button>Grado de estudios</button>
-      
-      <v-updateRegister></v-updateRegister>  
-      
-      <v-course></v-course>
+    <v-course></v-course>
     <p>Si deseas continuar con tu inscripción presiona el siguiente boton</p>
-    <button>Pre-inscribir</button>    
+    <button>Pre-inscribir</button>
   </div>
   `
   // template: `
@@ -230,42 +237,162 @@ app.component("v-dbRegister", {
   // `
 })
 
-app.component("v-updateRegister", {
-  template: `
-  <div id="updateRegister" class="registerHide">
-      <h4>¿Qué tipo de información deseas actualizar?</h4>
-      <p id="updateContact">Presiona aqui si deseas actualizar tus datos de <b>Contacto</b>.</p>
-      <form id="updateContact">
-          <label for="updateEmail">Confirma o actualiza tu correo electrónico</label><span class="required">*</span>
-          <input type="email" name="updateEmail" placeholder="tu correo electrónico...">
-          <label for="updateTelefono">Confirma o actualiza tu número telefónico</label><span class="required">*</span>
-          <input type="tel" name="updateTelefono" placeholder="Número Telefónico....">
-          <p>Recuerda que la mayoria de los docentes crean grupos de WhatsApp para dar instrucciones a sus estudiantes, verifica que tus datos esten actualizados.</p>
-      </form>
-      <form id="updateForm">                
-      <p id="updateAddress">Presiona aqui si deseas actualizar tu <b>Domicilio</b>.</p>
-      <form action="">
-          <label for="updateCalle">Calle y número</label><span class="required">*</span>
-          <input type="text" id="updateCalle" name="updateCalle" placeholder="Calle y número...">
-          <label for="updateColonia">Colonia</label><span class="required">*</span>
-          <input type="text" id="updateColonia" name="updateColonia" placeholder="Colonia...">
-          <label for="updateAlcaldia">Municipio o Alcaldía</label><span class="required">*</span>
-          <input type="text" id=updateAalcaldia" name="updateAlcaldia" placeholder="Municipio o Alcaldía...">                
-          <label for="updateCP">Código Postal</label><span class="required">*</span>
-          <input type="number" id="updateCP" name="updateCP" placeholder="Código Postal...">
-          <label for="updateEstado">Estado</label><span class="required">*</span>
-          <input type="text" id="updateEstado" name="updateEstado" placeholder="Estado...">
+app.component("v-updateContact", {
+  methods: {
+    continueAddress(object){
+      //document.querySelector("#formAddress")      
+      //hacer un emit hacia el padre  
+      this.$emit("updateProperties", object)    
+    },
+  },
 
-          <label for="updateAddressCertificate">Adjuntar Comprobante de Domicilio</label>
-          <input type="file" name="updateAddressCertificate">
-      </form>
-      <p id="updateSchool">Presiona aqui si deseas actualizar tu <b>maximo grado de estudios</b>.</p>
-      <form action="">
-          <label for="updateScholarship">Escolaridad</label>
-          <input type="text" name="updateScholarship" id="updateScholarship" placeholder="Escribe el grado maximo de estudios.">
-          <label for="updateStudiesCertificate">Adjuntar Comprobante de máximo grado de estudios</label>
-          <input type="file" name="updateStudiesCertificate" >
-      </form>
+  template: `
+  <div class="" id="updateContact">
+    <v-legendUpdateData></v-legendUpdateData>
+    <v-contact
+      v-on:continueAddress="contactDetailCompleted">
+    </v-contact>
+    <v-buttonCancel></v-buttonCancel>
+  </div>
+  `
+})
+
+app.component("v-updateAddress", {
+  methods: {
+    updateAddressCompleted(object){
+      console.log("estas llegando hasta aqui boton de actualizar direccion!!!")
+      this.$emit("updateProperties", object)
+    },
+  },
+
+  template: `
+  <div class="" id="updateAddress">
+    <v-legendUpdateData></v-legendUpdateData>
+    <v-address
+      v-on:updateAddressCompleted="addressDetailCompleted">
+    </v-address>
+    <v-buttonCancel></v-buttonCancel>
+  </div>
+  `
+})
+
+app.component("v-updateSchool", {
+  methods: {
+    finishRegistration(object){
+      console.log("estas llegando hasta aqui boton de actualizar direccion!!!")
+      //document.querySelector("#formAddress")      
+      //hacer un emit hacia el padre  
+      this.$emit("updateProperties", object)    
+    },
+  },
+  
+  template: `
+  <div class="" id="updateScholarship">
+    <v-legendUpdateData></v-legendUpdateData>
+    <v-scholarship
+      v-on:finishRegistration="scholarshipDetailCompleted">  
+    </v-scholarship>
+    <v-buttonCancel></v-buttonCancel>  
+  </div>
+  `
+})
+
+app.component("v-updateRegister", {
+  inject: ["reactive"],
+
+  data() {
+    return {
+      buttonUpdateContact: false,
+      valueButtonContact: "Actualizar Datos de Contacto",
+      buttonUpdateAddress: false,
+      valueButtonAddress: "Actualizar Domicilio",
+      buttonUpdateScholarship: false,
+      valueButtonScholarship: "Actualizar Grado de Estudios",
+      valueCancel: "Cancelar Actualización"
+    }
+  },
+  
+  watch: {
+    buttonUpdateContact(value, old){
+      console.log("valor de this.valueButtonContact", this.valueButtonContact)
+        if (this.buttonUpdateContact) {
+          this.valueButtonContact = this.valueCancel;
+        } else {
+          this.valueButtonContact =  "Actualizar Datos de Contacto";
+        }
+      },
+
+      buttonUpdateAddress(value, old){
+        console.log("el valor es true, debe mostrarse form update buttonUpdateAddress. y cambiar valor de boton para cerrar")
+        this.valueButtonAddress = this.buttonUpdateAddress  ?
+          this.valueCancel :
+          "Actualizar Domicilio";
+
+      },
+      buttonUpdateScholarship(value, old){
+        console.log("el valor es true, debe mostrarse form update buttonUpdateScholarship. y cambiar valor de boton para cerrar")
+        this.valueButtonScholarship = this.buttonUpdateScholarship  ?
+        this.valueCancel :
+        "Actualizar Grado de Estudios";
+      }
+  },
+
+  methods: {
+    updateProperties(object) {
+      console.log("valores recibidos en v-updateRegister" , object);
+      console.log("ahora habria que asignarlos a this.reactive.studentdb. Valores actuales: ", this.reactive.studentDB)
+    },
+
+    toggleUpdate(node){
+      node.forEach(element => {
+        const form = document.querySelector(`${element}`)
+        form.classList.toggle("registerHide");
+      });
+    },    
+
+    updateContact() {
+      console.log("click sobre updateContact")
+      //generar variable que recibe indica que contacto se actualzara
+      this.toggleUpdate(["#updateContact", ".formContact"]);
+    },
+
+    updateAddress() {
+      console.log("click sobre updateAddress")
+      this.toggleUpdate(["#updateAddress", ".formAddress"]);
+    },
+
+    updateScholarship(){
+      console.log("click sobre updateScholarship");
+      this.toggleUpdate(["#updateScholarship", ".formScholarship"]);
+    }
+  },
+
+  template: `
+  <div id="updateRegister">
+  <p>Si deseas corregir o actualizar algún que nos hayas proporcionado, selecciona cual sería:</p>
+    <button v-on:click="buttonUpdateContact = !buttonUpdateContact">
+      {{ valueButtonContact }}
+    </button>
+    <v-updateContact
+      v-if="buttonUpdateContact"
+      v-on:updateProperties="updateProperties">
+    </v-updateContact>
+
+    <button v-on:click="buttonUpdateAddress = !buttonUpdateAddress">
+      {{ valueButtonAddress }}
+    </button>
+    <v-updateAddress
+      v-if="buttonUpdateAddress"
+      v-on:updateProperties="updateProperties">
+    </v-updateAddress>
+
+    <button v-on:click="buttonUpdateScholarship = !buttonUpdateScholarship">
+      {{ valueButtonScholarship }}
+    </button>
+    <v-updateSchool
+      v-if="buttonUpdateScholarship"
+      v-on:updateProperties="updateProperties">
+    </v-updateSchool>
   </div>
   `
 })
@@ -326,8 +453,8 @@ app.component("v-newRegister", {
 
     toogle(node){
       node.forEach(element => {
-        const form = document.getElementById(element)
-        form.classList.toggle("registerHide")        
+        const form = document.querySelectorAll(`.${element}`)
+        form[0].classList.toggle("registerHide");
       });
     },
 
@@ -336,21 +463,25 @@ app.component("v-newRegister", {
   template: `
   <div id="newRegister" class="register registerHide">     
     <v-dataGeneral 
-      v-on:continueContact="continueContact">
-    </v-dataGeneral>
+      v-on:continueContact="contactDetailCompleted">
+    </v-dataGeneral>    
     <br>
+
     <v-contact
       v-on:continueAddress="continueAddress">
     </v-contact>
     <br>
+
     <v-address
-      v-on:continueScholarship="continueScholarship">
+      v-on:continueScholarship="addressDetailCompleted">
     </v-address>
     <br>
+
     <v-scholarship
-      v-on:finishRegistration="finishRegistration">
+      v-on:finishRegistration="scholarshipDetailCompleted">
     >
     </v-scholarship>
+    <br>
     <v-inscription-newRegister
       v-bind:showData="showData"
       >
@@ -500,7 +631,7 @@ app.component("v-dataGeneral", {
           // })
           //temporalmente añadir el blob al objeto de acta de nacimiento
           console.log("continuar inscripcion", responseFile)
-          this.$emit("continueContact", responseFile.responseObj)
+          this.$emit("contactDetailCompleted", responseFile.responseObj)
           //VERIFICAR SI USUARIO CAMBIO LA CURP Y VERIFICAR QUE NO ESTE INSCRITO EN EL SISTEMA
         } else if (responseFile.curp == "false") {
           console.log("La CURP no corresponde con los datos enviados. Verifica la información.")
@@ -534,7 +665,7 @@ app.component("v-dataGeneral", {
   },
   
   template: `
-  <form id="dataGeneral" v-on:submit="verifyDataGeneral" name="dataGeneral">
+  <form class="dataGeneral" v-on:submit="verifyDataGeneral" name="dataGeneral">
     <tagCurp></tagCurp>
     <h4>Para Verificar que tú CURP sea correcta por favor proporciona los siguientes datos personales:</h4>      
     <label for="birthday">Fecha de Nacimiento</label><span class="required">*</span>
@@ -592,19 +723,18 @@ app.component("v-dataGeneral", {
 app.component("v-contact", {
 
   methods:{
-    verifyContact(e){
+    contactDetailCompleted(e){
       e.preventDefault()
       const email = e.target.children['email'].value
       const phone = e.target.children['telefono'].value
       const expReg= /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
       const validateEmail = expReg.test(email)
-      if (phone.length >= 10 && validateEmail) {
-        console.log("valores de v-contact", email, phone)
+      if (phone.length >= 10 && validateEmail) {        
         const objContact = {
           email: email,
           telefono: phone
         }
-        this.$emit("continueAddress", objContact)
+        this.$emit("contactDetailCompleted", objContact)
       } else {
         console.log("verificar telefono o email")
         alert("Error. Verifica que tu teléfono y correo electrónico sean correctos.")
@@ -613,7 +743,7 @@ app.component("v-contact", {
   },
 
   template: `
-  <form id="formContact" class="registerHide" v-on:submit="verifyContact">
+  <form class="formContact" v-on:submit="contactDetailCompleted">
     <h4>Datos de contacto:</h4>
     <label for="email">Correo Electrónico</label>
     <input type="email" name="email" placeholder="Escribe un correo electronico válido...">
@@ -666,15 +796,15 @@ app.component("v-address", {
     }
   },
   methods: {
-    continueScholarship(e){
+    addressDetailCompleted(e){
       e.preventDefault()
       const calle = e.target.children['calle'].value;
       const colonia = e.target.children['colonia'].value;
       const cp = e.target.children['cp'].value;
       const nodeEstado = document.querySelector("#estado");
       const estado = nodeEstado.value;
-      const nodeAlcaldia = document.querySelector("#alcaldia");
-      const alcaldia = nodeAlcaldia.value;
+      const nodeMunicipio = document.querySelector("#municipio");
+      const municipio = nodeMunicipio.value;
       //const nodeAddressCertificate = document.getElementById("addressCertificate")
       const addressCertificate = e.target.children["addressCertificate"].files[0]
       const addressCertificateRender = URL.createObjectURL(e.target.children["addressCertificate"].files[0]);
@@ -684,11 +814,11 @@ app.component("v-address", {
         colonia: colonia,
         cp: cp,
         estado: estado,
-        alcaldia: alcaldia,
+        municipio: municipio,
         comprobanteDomicilio: addressCertificate,
         comprobanteDomicilioRender:addressCertificateRender
       }
-      this.$emit("continueScholarship", objAddress)
+      this.$emit("addressDetailCompleted", objAddress)
 
       const dataFORM = new FormData();
       dataFORM.append("domicilio", addressCertificate)
@@ -702,7 +832,7 @@ app.component("v-address", {
     },   
   },
   template: `  
-  <form id="formAddress" class="registerHide" v-on:submit="continueScholarship">
+  <form class="formAddress" v-on:submit="addressDetailCompleted">
     <h4>Por favor indica tu domicilio:</h4>
     <label for="calle">Calle y número</label><span class="required">*</span>
     <input type="text" name="calle" placeholder="Calle y número...">
@@ -725,9 +855,9 @@ app.component("v-address", {
         {{ i }}
       </option>
     </label>      
-    <label for="alcaldia">
+    <label for="municipio">
       <span class="required">Municipio o Alcaldía*</span>      
-      <select name="alcaldia" id="alcaldia">
+      <select name="municipio" id="municipio">
         <option v-for="item in valueEstado[estadoRepublica]" :key="item" @municipio="municipio"> {{ item }}</option>
       </select>
     </label>
@@ -758,7 +888,7 @@ app.component("v-scholarship", {
   },
 
   methods: {
-    finishRegistration(e){
+    scholarshipDetailCompleted(e){
       e.preventDefault()      
       const scholarship = document.getElementById("scholarship").value;
       const studiesCertificate = e.target.children['studiesCertificate'].files[0]
@@ -768,12 +898,12 @@ app.component("v-scholarship", {
         comprobanteEstudios: studiesCertificate,
         comprobanteEstudiosRender: studiesCertificateRender
       }
-      this.$emit("finishRegistration", objScholarship)
+      this.$emit("scholarshipDetailCompleted", objScholarship)
     }
   },
 
   template: `
-  <form  id="formScholarship" class="registerHide" v-on:submit="finishRegistration">
+  <form class="formScholarship" v-on:submit="scholarshipDetailCompleted">
     <h4>Grado Escolar</h4>
     <label for="scholarship">
     <span>Escolaridad</span>
@@ -824,7 +954,7 @@ app.component("v-inscription-newRegister", {
       formData.append("a_materno", this.reactive.newStudent.a_materno)
       formData.append("estado", this.reactive.newStudent.placeOfBirth)
       formData.append("genero", this.reactive.newStudent.gender)
-      formData.append("alcaldia", this.reactive.newStudent.alcaldia)
+      formData.append("municipio", this.reactive.newStudent.municipio)
       formData.append("calle", this.reactive.newStudent.calle)
       formData.append("colonia", this.reactive.newStudent.colonia)
       formData.append("cp", this.reactive.newStudent.cp)
@@ -847,7 +977,7 @@ app.component("v-inscription-newRegister", {
       formData.append("fecha_termino", dataCourse.fecha_termino);
       formData.append("ficha_informacion", dataCourse.ficha_informacion);
       formData.append("hora_inicio", dataCourse.hora_inicio);
-      formData.append("hora_inicio", dataCourse.hora_inicio);
+      formData.append("hora_fin", dataCourse.hora_fin);
       formData.append("horas", dataCourse.horas);
       formData.append("modalidad_curso", dataCourse.modalidad_curso);
       formData.append("profesor", dataCourse.profesor);
@@ -886,7 +1016,7 @@ app.component("v-inscription-newRegister", {
       </figure>
       <br>
       <p>Domicilio: {{ reactive.newStudent.calle}}, {{ reactive.newStudent.colonia }}, en 
-        {{ reactive.newStudent.alcaldia }}, {{ reactive.newStudent.estado  }}, 
+        {{ reactive.newStudent.municipio }}, {{ reactive.newStudent.estado  }}, 
         Código Postal {{ reactive.newStudent.cp }}
       </p>
       <figure>
@@ -902,16 +1032,25 @@ app.component("v-inscription-newRegister", {
         <img v-bind:src=isDocumentUpload("comprobanteEstudiosRender") alt="Comprobante de Estudios">
         <figcaption>Comprobante de Estudios</figcaption>
       </figure>
-      <br>
-      <p>Si deseas corregir alguna inforamción, selecciona una sección usando los alguno de los siguientes botones:</p>
-      <button>Datos de Contacto</button>
-      <button>Domicilio</button>
-      <button>Grado de estudios</button>
+      <br>      
+      <v-updateRegister></v-updateRegister>
     </div>
     <br>
     <br>
     <button v-on:click="inscription">Inscribirme</button>    
   </div>
+  `
+})
+
+app.component("v-legendUpdateData", {
+  template: `
+    <p>Debes llenar todos los campos para poder actualizar este rubro</p>
+  `
+})
+
+app.component("v-buttonCancel", {
+  template: `
+    <button> Cancelar actualización de información</button>
   `
 })
 
