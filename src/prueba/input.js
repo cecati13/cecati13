@@ -3,10 +3,11 @@ const nodeInput = document.getElementById('prueba');
 let file;
 let file2;
 
-async function sendForInscripcion(formData){ 
-    debugger
+async function sendForInscripcion(formData){    
     console.log(formData.get("estudios"))
-    const endpoint = `http://localhost:3000/API/V1/students/newStudent/inscription`;
+    const endpoint = `http://svo-5-191.servidoresvirtuales.mx/files/newRegister`
+    //const endpoint = `http://localhost:3500/files/newRegister`;
+    //const endpoint = `http://localhost:3000/API/V1/students/newStudent/inscription`;
     const response = await fetch( endpoint, {
     method: "post",
     // headers: {
@@ -32,14 +33,14 @@ nodeForm.addEventListener('submit', (e) => {
     const domicilio = e.target.children["domicilio"].files[0]
     const estudios = e.target.children["estudios"].files[0]    
     const formData = new FormData()
+    formData.append("curp", "VAND870419HDF")
     formData.append("actaNacimiento", nacimiento)
     formData.append("comprobanteDomicilio", domicilio)
     formData.append("comprobanteEstudios", estudios)
 
-    formData.append("curp", "VAND870419HDF")
-    formData.append("fechaNacimiento", "19-04-1987")
-    formData.append("nombre", "DAmian")
-    formData.append("a_paterno", "valenzuela")
-    formData.append("a_materno", "negrete")
-    sendForInscripcion(formData)      
+    // formData.append("fechaNacimiento", "19-04-1987")
+    // formData.append("nombre", "DAmian")
+    // formData.append("a_paterno", "valenzuela")
+    // formData.append("a_materno", "negrete")
+    const response = sendForInscripcion(formData)    
 })
