@@ -194,45 +194,46 @@ app.component("v-typeRegister", {
 
 app.component("v-dbRegister", {
   inject: ["reactive"],
-  // props: {
-  //   studentDB: Object
-  // },
+  
+  data(){
+    return {
+      showInscription: true,
+    }
+  },
+
   methods : {
+    showUpdateFieldOnly(){
+      console.log("recibiendo $emit de  v-updateRegister")
+      this.showInscription = !this.showInscription
+    },
   },
 
 
   template: `  
-  <div id="dbRegister" class="result__API register">
-    <h4>Bienvenido a un nuevo curso en CECATI 13, {{ reactive.studentDB.nombre }} {{reactive.studentDB.a_materno}}</h4>
-    <p>Por favor verifica que la siguiente información en nuestro sistema correspondan a tú registro.</p>
-    <p>Por tú seguridad, ocultamos parte de la información que a continuación te pedimos que verifiques</p>
-    <br>
-    <p>Correo electrónico registrado: {{ reactive.studentDB.email }}</p>
-    <p>Numero telefónico:  {{ reactive.studentDB.telefono }}</p>
-    
-    <br>    
-    <v-updateRegister></v-updateRegister>     
-    
-    <br>
-    <v-course></v-course>
-    <p>Si deseas continuar con tu inscripción presiona el siguiente boton</p>
-    <button>Pre-inscribir</button>
-  </div>
-  `
-  // template: `
-  // {{ reactive.studentDB }}
-  // <div id="dbRegister" class="result__API register registerHide">
-    
-  //   <br>
-  //   <p>Correo electrónico registrado: {{ reactive.studentDB.email }}</p>
-  //   <p>Numero telefónico:  {{ reactive.studentDB.telefono }}</p>
+  <div 
+    v-if="showInscription"
+    id="dbRegister" 
+    class="result__API register">
+      <h4>Bienvenido a un nuevo curso en CECATI 13, {{ reactive.studentDB.nombre }} {{reactive.studentDB.a_materno}}</h4>
+      <p>Por favor verifica que la siguiente información en nuestro sistema correspondan a tú registro.</p>
+      <p>Por tú seguridad, ocultamos parte de la información que a continuación te pedimos que verifiques</p>
       
-  //   <br>
-  //   <p>Si deseas actualizar alguna información que registraste en tu ultimo curso con nosotros, indica continuación cual seria:</p>
-  //   <button>Datos de Contacto</button>
-  
-  // </div>
-  // `
+      <br>
+
+      <p>Correo electrónico registrado: {{ reactive.studentDB.email }}</p>
+      <p>Numero telefónico:  {{ reactive.studentDB.telefono }}</p>
+      
+      <br>
+    
+      <v-course></v-course>
+      <p>Si deseas continuar con tu inscripción presiona el siguiente boton</p>
+      <button>Pre-inscribir</button>
+  </div>
+
+  <v-updateRegister
+    v-on:showUpdateFieldOnly="showUpdateFieldOnly"
+  />    
+  ` 
 })
 
 
@@ -789,10 +790,13 @@ app.component("v-updateRegister", {
 
   data() {
     return {
+      showButtonContact: true,
       buttonUpdateContact: false,
       valueButtonContact: "Actualizar Datos de Contacto",
+      showButtonAddress: true,
       buttonUpdateAddress: false,
       valueButtonAddress: "Actualizar Domicilio",
+      showButtonScholarship: true,
       buttonUpdateScholarship: false,
       valueButtonScholarship: "Actualizar Grado de Estudios",
       valueCancel: "Cancelar Actualización"
@@ -801,23 +805,27 @@ app.component("v-updateRegister", {
   
   watch: {
     buttonUpdateContact(value, old){
-      console.log("valor de this.valueButtonContact", this.valueButtonContact)
-        if (this.buttonUpdateContact) {
-          this.valueButtonContact = this.valueCancel;
-        } else {
-          this.valueButtonContact =  "Actualizar Datos de Contacto";
-        }
+      this.showButtonAddress = !this.showButtonAddress;
+      this.showButtonScholarship = !this.showButtonScholarship;
+      this.showUpdateFieldOnly();
+        this.valueButtonContact = this.buttonUpdateContact  ?
+          this.valueCancel : 
+          "Actualizar Datos de Contacto";
       },
 
       buttonUpdateAddress(value, old){
-        console.log("el valor es true, debe mostrarse form update buttonUpdateAddress. y cambiar valor de boton para cerrar")
+        this.showButtonContact = !this.showButtonContact;
+        this.showButtonScholarship = !this.showButtonScholarship;
+        this.showUpdateFieldOnly();        
         this.valueButtonAddress = this.buttonUpdateAddress  ?
           this.valueCancel :
           "Actualizar Domicilio";
-
       },
+
       buttonUpdateScholarship(value, old){
-        console.log("el valor es true, debe mostrarse form update buttonUpdateScholarship. y cambiar valor de boton para cerrar")
+        this.showButtonContact = !this.showButtonContact;
+        this.showButtonAddress = !this.showButtonAddress;
+        this.showUpdateFieldOnly();        
         this.valueButtonScholarship = this.buttonUpdateScholarship  ?
         this.valueCancel :
         "Actualizar Grado de Estudios";
@@ -827,53 +835,40 @@ app.component("v-updateRegister", {
   methods: {
     updateProperties(object) {
       console.log("valores recibidos en v-updateRegister" , object);
-      console.log("ahora habria que asignarlos a this.reactive.studentdb. Valores actuales: ", this.reactive.studentDB)
+      //emitimos los cambios recibidos al padre del componente      
     },
-
-    toggleUpdate(node){
-      node.forEach(element => {
-        const form = document.querySelector(`${element}`)
-        form.classList.toggle("registerHide");
-      });
-    },    
-
-    updateContact() {
-      console.log("click sobre updateContact")
-      //generar variable que recibe indica que contacto se actualzara
-      this.toggleUpdate(["#updateContact", ".formContact"]);
-    },
-
-    updateAddress() {
-      console.log("click sobre updateAddress")
-      this.toggleUpdate(["#updateAddress", ".formAddress"]);
-    },
-
-    updateScholarship(){
-      console.log("click sobre updateScholarship");
-      this.toggleUpdate(["#updateScholarship", ".formScholarship"]);
+    showUpdateFieldOnly(){
+      console.log("emitiendo en v-updateRegister")
+      this.$emit("showUpdateFieldOnly")
     }
   },
 
   template: `
   <div id="updateRegister">
   <p>Si deseas corregir o actualizar algún que nos hayas proporcionado, selecciona cual sería:</p>
-    <button v-on:click="buttonUpdateContact = !buttonUpdateContact">
-      {{ valueButtonContact }}
+    <button 
+      v-if="showButtonContact"
+      v-on:click="buttonUpdateContact = !buttonUpdateContact">
+        {{ valueButtonContact }}
     </button>    
     <v-updateContact
       v-if="buttonUpdateContact"
       v-on:updateProperties="updateProperties"
     />
 
-    <button v-on:click="buttonUpdateAddress = !buttonUpdateAddress">
-      {{ valueButtonAddress }}
+    <button 
+      v-if="showButtonAddress"
+      v-on:click="buttonUpdateAddress = !buttonUpdateAddress">
+        {{ valueButtonAddress }}
     </button>
     <v-updateAddress
       v-if="buttonUpdateAddress"
       v-on:updateProperties="updateProperties"
     />
 
-    <button v-on:click="buttonUpdateScholarship = !buttonUpdateScholarship">
+    <button 
+      v-if="showButtonScholarship"  
+      v-on:click="buttonUpdateScholarship = !buttonUpdateScholarship">
       {{ valueButtonScholarship }}
     </button>
     <v-updateSchool
@@ -961,7 +956,18 @@ app.component("tagCurp", {
 app.component("v-inscription-newRegister", {
   inject: ["API", "keyCourseStorage","reactive"],
 
+  data(){
+    return {
+      showInscription: true,
+    }
+  },
+
   methods: {
+    showUpdateFieldOnly(){
+      console.log("recibiendo $emit de  v-updateRegister")
+      this.showInscription = !this.showInscription
+    },
+
     isDocumentUpload(name){
       if (this.reactive.newStudent[name] == undefined) {
         return ""
@@ -1033,7 +1039,7 @@ app.component("v-inscription-newRegister", {
   },
  
   template: `
-  <div id="v-inscription-newRegister">
+  <section v-if="showInscription" id="v-inscription-newRegister">
     <p>Gracias por proporcionarnos tus datos {{ reactive.newStudent.nombre }} {{ reactive.newStudent.a_paterno }} {{ reactive.newStudent.a_materno }}</p>
     <p>Verificaremos que la información que proporcionaste coincida con los documentos que adjuntaste, y en un plazo de entre 48 y 72 horas hábiles te daremos mas instrucciones</p>
     <br>    
@@ -1066,16 +1072,20 @@ app.component("v-inscription-newRegister", {
       <figure>
         <img v-bind:src=isDocumentUpload("comprobanteEstudiosRender") alt="Comprobante de Estudios">
         <figcaption>Comprobante de Estudios</figcaption>
-      </figure>
-      <br>
-
-      <v-updateRegister/>
-
+      </figure>            
     </div>
-    <br>
-    <br>
-    <button v-on:click="inscription">Inscribirme</button>    
-  </div>
+      <br>      
+    </section>
+
+    <v-updateRegister
+      v-on:showUpdateFieldOnly="showUpdateFieldOnly"
+    />
+
+    <button 
+      v-if="showInscription"
+      v-on:click="inscription">
+      Inscribirme
+    </button>
   `
 })
 
