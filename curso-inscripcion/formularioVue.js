@@ -2,13 +2,16 @@ const app = Vue.createApp({
   data() {
     return {
       //API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1/students",
-      API: "http://localhost:3000/API/V1/students/",
+      API: "http://localhost:3000/API/V1/",
+      API_files: "http://svo-5-191.servidoresvirtuales.mx",
       keyCourseStorage: "CourseCecati13",
       keyStudentStorage: "studentC13",       
       curso:{},
-      MAX_SIZE_FILES: 3000000, // 5MB
+      MAX_SIZE_FILES: 3000000, // 3MB
       reactive: {
-        studentDB: {},
+        studentDB: {
+          update: false
+        },
         newStudent:{},        
         ageRequeriment: true,        
         curp: "",        
@@ -22,6 +25,7 @@ const app = Vue.createApp({
   provide() {
     return {
       API: this.API,
+      API_files: this.API_files,
       keyCourseStorage: this.keyCourseStorage,
       course: this.getCourse,
       reactive: this.reactive,
@@ -57,26 +61,20 @@ const app = Vue.createApp({
   },
 
   methods: {
-    async consult(valueCurp) {
-      const curpFormat = valueCurp.toUpperCase()
-      const formData = new FormData();
-      formData.set("curp", curpFormat)
-      const response = await this.send(formData);
-      console.log("consult reponse desde API",response)
-      this.reactive.curp = curpFormat;
+    async consult(formData) {
+      const endpoint = "students/typeRegister"
+      const response = await this.sendData(formData, endpoint);
+      console.log("consult reponse desde API",response)      
       if (response.error) {
         //preloader(result);
         console.log("Valores desde API: ", response)        
-        //abrir formulario de nuevo registro
-        //this.userIsStudent = false;
         this.isWelcome = false;
         this.isNewStudent = true;
-
       } else if (response.message === "internal server error") {
         //error generalemente al hacer una primera consulta en SpreedSheets
-        alert("Hubo un error en la comunicaión, por favor vuelve a intentarlo. Si el error persiste intentalo mas tarde.")
-      } else {        
-        //this.userIsStudent = true;
+        alert("Hubo un error en la comunicación al servidor, por favor vuelve a intentarlo. Si el error persiste intentalo mas tarde.")
+      } else {
+        //el usuario existe en nuestros registros
         const storageResponse = JSON.stringify(response);
         sessionStorage.setItem(this.keyStudentStorage, storageResponse);
         this.isStudent();        
@@ -84,14 +82,13 @@ const app = Vue.createApp({
       }
     },
     
-    async send(formData) {
+    async sendData(formData, endpoint) {
       console.log(formData)
-      const API = `${this.API}typeRegister`;
-      //backend no preparado aun para recibir formdata
-      //enviar mientras tanto como un json Stringify para que lo reciba como application/json
-      const jsonSend = {        
+      const API = `${this.API}${endpoint}`;
+      //backend: formdata para files(se puede omitir), app/json para data      
+      const jsonSend = {
         curp: formData.get("curp")
-      };         
+      };
       const response = await fetch( API, {
         method: "POST",
         headers: {
@@ -147,34 +144,27 @@ const app = Vue.createApp({
     <v-newRegister
       v-if="isNewStudent"
     />
-    
+
     </section>
     `,
 
 })
 
 app.component("v-typeRegister", {
+  inject: ["reactive"],
   methods:{
     curpVerify(e) {
-      e.preventDefault()
+      e.preventDefault()      
       const nodeCurp = document.querySelector("#valueCurp")
       const curpValue = nodeCurp.value;      
-      if (curpValue.length === 18) {
-        this.$emit("consultCURP", curpValue)        
+      if (curpValue.length === 18) {        
+        const formData = new FormData();
+        formData.set("curp", curpValue)
+        this.reactive.curp = curpValue;
+        this.$emit("consultCURP", formData)        
       } else {
         alert("Revisa que tu CURP este completa. Deben ser 18 posiciones")        
-      }
-      
-      //const values = new FormData(formConsult);
-      // const valueCurp = values.get("curpOnDB");      
-      
-      // if (valueCurp) {                       
-      //         preloader(result);
-      //         //fetch
-      // } else {
-      //   noValues();
-      //   preloader(result);
-      // }
+      }      
     },
   
   },
@@ -183,7 +173,7 @@ app.component("v-typeRegister", {
   <div class="typeRegister">
     <form v-on:submit="curpVerify">
     <label for="curp">Para iniciar tu pre-inscripcion, por favor ingresa lo siguiente: </label>
-    <tagCurp></tagCurp>
+    <v-tagCurp/>
     <button>Enviar</button>
     </form>
     <p>Si no conoces tu curp, consultar https://www.gob.mx/curp/ para obtenerla</p>
@@ -193,7 +183,7 @@ app.component("v-typeRegister", {
 })
 
 app.component("v-dbRegister", {
-  inject: ["reactive"],
+  inject: ["API", "reactive"],
   
   data(){
     return {
@@ -202,17 +192,57 @@ app.component("v-dbRegister", {
   },
 
   methods : {
-    showUpdateFieldOnly(){
-      console.log("recibiendo $emit de  v-updateRegister")
+    showUpdateFieldOnly() {
       this.showInscription = !this.showInscription
     },
+
+    updateProperties(object) {
+      this.reactive.studentDB.update = true;
+      this.saveDataStudentDB(object);
+      console.log("valores en v-dbRegister, this.reactive.studentDB")
+      console.log(this.reactive.studentDB)
+    },
+
+    saveDataStudentDB(object) {
+      for (const key in object) {        
+        const element = object[key];
+        Object.defineProperty(this.reactive.studentDB, key, {
+          value: element
+        })       
+      }
+    },
+    async inscription() {      
+      const endpoint = `${this.API}students/DBStudent`;
+      const formData = new FormData();
+      formData.append("curp", this.reactive.studentDB.curp)
+      formData.append("update", this.reactive.studentDB.update)
+      console.log(formData.get("curp"))
+      //*** probar otra forma de generar el formdata o JSON
+      const sendObj = {...this.reactive.studentDB}
+      console.log("sendObj ", sendObj)
+      //****      
+      const response = await fetch( endpoint, {
+        method: "post",
+        headers: {
+          //"Content-Type": "multipart/form-data"
+          "Content-Type": "application/json"
+      },
+        //si vamos a subir archivos, se debe usar el formData, y no el json y quitar el headers
+        //body: formData
+        body: JSON.stringify(sendObj)
+
+      })
+      console.log(formData)
+      const info = await response.json();
+      return info;
+    }
+
   },
 
 
   template: `  
   <div 
-    v-if="showInscription"
-    id="dbRegister" 
+    v-if="showInscription"    
     class="result__API register">
       <h4>Bienvenido a un nuevo curso en CECATI 13, {{ reactive.studentDB.nombre }} {{reactive.studentDB.a_materno}}</h4>
       <p>Por favor verifica que la siguiente información en nuestro sistema correspondan a tú registro.</p>
@@ -227,11 +257,15 @@ app.component("v-dbRegister", {
     
       <v-course></v-course>
       <p>Si deseas continuar con tu inscripción presiona el siguiente boton</p>
-      <button>Pre-inscribir</button>
+      <button
+        v-on:click="inscription">
+          Pre-inscribir
+      </button>
   </div>
 
   <v-updateRegister
     v-on:showUpdateFieldOnly="showUpdateFieldOnly"
+    v-on:updateProperties="updateProperties"
   />    
   ` 
 })
@@ -251,12 +285,12 @@ app.component("v-newRegister", {
 
   methods: {
     continueFirstRegister(object){
-      this.saveData(object)
+      this.saveDataNewRegister(object)
       this.componentDataGeneral = false;
       this.componentFirstRegister = true;
     },
     firstRegisterCompleted(object){
-      this.saveData(object)
+      this.saveDataNewRegister(object)
       this.componentFirstRegister = false;
       this.registerCompleted = true;
       console.log("scholarshipDetailCompleted. Object:")
@@ -264,13 +298,22 @@ app.component("v-newRegister", {
       console.log("finalizando: firstRegisterCompleted, valor de registerCompleted", this.registerCompleted)
     },
 
-    saveData(object) {
+    saveDataNewRegister(object) {
       for (const key in object) {        
         const element = object[key];
-        Object.defineProperty(this.reactive.newStudent, key, {
-          value: element
-        })       
+        if (this.reactive.newStudent[key] === undefined) {
+          Object.defineProperty(this.reactive.newStudent, key, {
+            value: element,
+            writable: true,
+            configurable: false,
+            enumerable: true
+          });        
+        } else {
+          this.reactive.newStudent[key] = object[key]
+        }
+        
       }
+      console.log("valores de newStudent despues de actualizar", this.reactive.newStudent)
     }
   },
   
@@ -286,11 +329,12 @@ app.component("v-newRegister", {
     <v-firstRegister
       v-if="componentFirstRegister"
       v-on:firstRegisterCompleted="firstRegisterCompleted"
-      v-on:saveData="saveData"
+      v-on:saveData="saveDataNewRegister"
     />    
 
     <v-inscription-newRegister
       v-if="registerCompleted"
+      v-on:saveData="saveDataNewRegister"
     />
   </section>
   `
@@ -299,6 +343,7 @@ app.component("v-newRegister", {
 app.component("v-dataGeneral", {
   data(){
     return {
+      passesAgeRequirement: false,
       estadoNacimiento: {
         AGUASCALIENTES: "AGUASCALIENTES",
         BAJA_CALIFORNIA: "BAJA_CALIFORNIA",
@@ -367,10 +412,11 @@ app.component("v-dataGeneral", {
       }
       
       if (age <= 15) {
-        this.reactive.ageRequeriment = false;      
+        this.reactive.ageRequeriment = false;
       } else {
         this.reactive.ageRequeriment = true;
-      }      
+        this.passesAgeRequirement = true;
+      }
     },
 
     async verifyDataGeneral(e){
@@ -432,7 +478,10 @@ app.component("v-dataGeneral", {
         if (responseFile.responseObj !== undefined ) {
           //temporalmente añadir el blob al objeto de acta de nacimiento
           Object.defineProperty(this.reactive.newStudent, "actaNacimiento", {
-            value: birthCertificate
+            value: birthCertificate,
+            writable: true,
+            configurable: false,
+            enumerable: true
           })
           // })
           //temporalmente añadir el blob al objeto de acta de nacimiento
@@ -451,7 +500,7 @@ app.component("v-dataGeneral", {
     async sendDataGeneralForm(formData){
       //falta trabajar que sea solo uan funcion global para hacer fetch, y solo generar enpoints con su data a enviar
       //console.log(formData.get("birthCertificate"))
-      const endpoint = `${this.API}newStudent/dataGeneral`;      
+      const endpoint = `${this.API}students/newStudent/dataGeneral`;      
       const response = await fetch( endpoint, {
         method: "post",
         headers: {
@@ -459,8 +508,6 @@ app.component("v-dataGeneral", {
           "Content-Type": "application/json"
         },
         body: JSON.stringify(formData)
-
-
         //al subir archivos no usar headers especificando el tipo, y que el navegador determine el boundary adecuado
         //si vamos a subir archivos, se debe usar el formData, y no el json y quitar el headers
         //body: formData
@@ -472,8 +519,8 @@ app.component("v-dataGeneral", {
   
   template: `
   <form class="dataGeneral" v-on:submit="verifyDataGeneral" name="dataGeneral">
-    <tagCurp></tagCurp>
-    <h4>Para Verificar que tú CURP sea correcta por favor proporciona los siguientes datos personales:</h4>      
+    <v-tagCurp/>
+    <h4>Para Verificar que tú CURP sea correcta por favor proporciona los siguientes datos personales:</h4>
     <label for="birthday">Fecha de Nacimiento</label><span class="required">*</span>
     <input
       id="birthdate"
@@ -483,7 +530,7 @@ app.component("v-dataGeneral", {
     >
     <p v-if="!reactive.ageRequeriment">
       Lo sentimos, la edad minima para poder inscribirte a alguno de nuestros cursos es 15 años cumplidos
-    </p>
+    </p>    
     <label for="nombre">Nombre</label><span class="required">*</span>
     <input type="text" name="nombre" placeholder="Escribe tu nombre de pila...">
 
@@ -509,7 +556,7 @@ app.component("v-dataGeneral", {
     <input 
       type="file" 
       name="birthCertificate" 
-      id="birthCertificate" 
+       
       accept=".jpg, .jpeg, .pdf" 
       capture="environment"
     >
@@ -520,8 +567,10 @@ app.component("v-dataGeneral", {
         <option v-for= "disability in discapacidades">{{ disability }}</option>
       </select>
     </label>
+    
+    
 
-    <v-button></v-button>
+    <v-button v-if="passesAgeRequirement"></v-button>
   </form>
   `
 })
@@ -786,25 +835,42 @@ app.component("v-updateSchool", {
 })
 
 app.component("v-updateRegister", {
-  inject: ["reactive"],
-
+  //inject: ["reactive"],
   data() {
-    return {
+    return {      
+      showButtonBirthCertificate: true,
+      buttonUpdateBirthCertificate: false,
+      valueButtonBirthCertificate: "Actualizar Acta de Nacimiento",
+
       showButtonContact: true,
       buttonUpdateContact: false,
       valueButtonContact: "Actualizar Datos de Contacto",
+
       showButtonAddress: true,
       buttonUpdateAddress: false,
       valueButtonAddress: "Actualizar Domicilio",
-      showButtonScholarship: true,
+
+      showButtonScholarship: true,      
       buttonUpdateScholarship: false,
       valueButtonScholarship: "Actualizar Grado de Estudios",
+
       valueCancel: "Cancelar Actualización"
     }
   },
   
   watch: {
+    buttonUpdateBirthCertificate(){
+      this.showButtonContact = !this.showButtonContact;
+      this.showButtonAddress = !this.showButtonAddress;
+      this.showButtonScholarship = !this.showButtonScholarship;
+      this.showUpdateFieldOnly();
+      this.valueButtonBirthCertificate = this.buttonUpdateBirthCertificate  ?
+          this.valueCancel : 
+          "Actualizar Acta de Nacimiento";
+    },
+
     buttonUpdateContact(value, old){
+      this.showButtonBirthCertificate = !this.showButtonBirthCertificate;
       this.showButtonAddress = !this.showButtonAddress;
       this.showButtonScholarship = !this.showButtonScholarship;
       this.showUpdateFieldOnly();
@@ -814,6 +880,7 @@ app.component("v-updateRegister", {
       },
 
       buttonUpdateAddress(value, old){
+        this.showButtonBirthCertificate = !this.showButtonBirthCertificate;
         this.showButtonContact = !this.showButtonContact;
         this.showButtonScholarship = !this.showButtonScholarship;
         this.showUpdateFieldOnly();        
@@ -823,6 +890,7 @@ app.component("v-updateRegister", {
       },
 
       buttonUpdateScholarship(value, old){
+        this.showButtonBirthCertificate = !this.showButtonBirthCertificate;
         this.showButtonContact = !this.showButtonContact;
         this.showButtonAddress = !this.showButtonAddress;
         this.showUpdateFieldOnly();        
@@ -834,11 +902,13 @@ app.component("v-updateRegister", {
 
   methods: {
     updateProperties(object) {
-      console.log("valores recibidos en v-updateRegister" , object);
-      //emitimos los cambios recibidos al padre del componente      
+      this.$emit("updateProperties", object);
+      this.buttonUpdateBirthCertificate =false;
+      this.buttonUpdateContact = false;
+      this.buttonUpdateAddress = false;
+      this.buttonUpdateScholarship = false;
     },
     showUpdateFieldOnly(){
-      console.log("emitiendo en v-updateRegister")
       this.$emit("showUpdateFieldOnly")
     }
   },
@@ -846,6 +916,17 @@ app.component("v-updateRegister", {
   template: `
   <div id="updateRegister">
   <p>Si deseas corregir o actualizar algún que nos hayas proporcionado, selecciona cual sería:</p>
+
+    <button 
+      v-if="showButtonBirthCertificate"
+      v-on:click="buttonUpdateBirthCertificate = !buttonUpdateBirthCertificate">
+        {{ valueButtonBirthCertificate }}
+    </button>
+    <v-updateBirthCertificate
+      v-if="buttonUpdateBirthCertificate"
+      v-on:updateProperties="updateProperties"
+    />
+
     <button 
       v-if="showButtonContact"
       v-on:click="buttonUpdateContact = !buttonUpdateContact">
@@ -945,27 +1026,51 @@ app.component("v-button", {
   `
 })
 
-app.component("tagCurp", {
+app.component("v-tagCurp", {
   inject: ["reactive"],
   template: `
   <label for="curp">CURP</label><span class="required">*</span>
-  <input type="text" id="valueCurp" name="curp" placeholder="CURP..." v-bind:value=reactive.curp>
+  <input 
+      type="text" 
+      id="valueCurp" 
+      name="curp" 
+      placeholder="CURP..." 
+      v-bind:value=reactive.curp
+      onkeyup="javascript:this.value=this.value.toUpperCase();"
+  >
   `
 })
 
 app.component("v-inscription-newRegister", {
-  inject: ["API", "keyCourseStorage","reactive"],
+  inject: ["API", "API_files", "keyCourseStorage","reactive"],
 
   data(){
     return {
-      showInscription: true,
+      showInscription: true,      
     }
   },
 
   methods: {
     showUpdateFieldOnly(){
-      console.log("recibiendo $emit de  v-updateRegister")
+      console.log("recibiendo $emit de v-updateRegister");
       this.showInscription = !this.showInscription
+    },
+
+    updateProperties(object){
+      console.log("recibiendo objeto en updateProperties de v-inscription-newregister", object)
+      this.$emit("saveData", object)
+      // const valuesStudent = {...this.reactive.newStudent, ...object}
+      //pendiente como settear nuevos valores a newStudent
+      // this.reactive.newStudent = Object.assign(valuesStudent)
+      // console.log("quien es valuesStudent", valuesStudent)
+      // const arrayKeys = Object.keys(object)
+      // arrayKeys.forEach( key => {
+      //   //this.$set(this.reactive.newStudent, key, object[key])
+      //   //const newValue = object[key];
+      //   // this.reactive.newStudent[key] = newValue;        
+      //   this.valuesInscription[key] = object[key]        
+      // })
+      // console.log("valores de valuesInscription despues de actualizar", this.valuesInscription)
     },
 
     isDocumentUpload(name){
@@ -1022,7 +1127,7 @@ app.component("v-inscription-newRegister", {
       const responseFiles = await this.sendForInscripcion(formFiles, endpointFiles)
       console.log("Files", responseFiles)
 
-      // const endpoint = `${this.API}newStudent/inscription`;
+      // const endpoint = `${this.API}students/newStudent/inscription`;
       // const responseData = await this.sendForInscripcion(formData, endpoint)
       // console.log("Data", responseData)
     },
@@ -1079,13 +1184,44 @@ app.component("v-inscription-newRegister", {
 
     <v-updateRegister
       v-on:showUpdateFieldOnly="showUpdateFieldOnly"
+      v-on:updateProperties="updateProperties"
     />
+    <v-updateActaNacimiento></v-updateActaNacimiento>
 
     <button 
       v-if="showInscription"
       v-on:click="inscription">
       Inscribirme
     </button>
+  `
+})
+
+app.component("v-updateBirthCertificate", {
+  methods: {
+    updateFile(e){
+      e.preventDefault();
+      const birthCertificate = e.target.children["birthCertificate"].files[0]
+      const birthCertificateBlob = URL.createObjectURL(e.target.children["birthCertificate"].files[0]);
+      const objBirthCertificate = {
+        actaNacimientoRender: birthCertificateBlob,
+        actaNacimiento: birthCertificate
+      }
+      this.$emit("updateProperties", objBirthCertificate)
+    }
+  },
+
+  template:`
+  <form v-on:submit="updateFile">
+    <label for="birthCertificate">Adjuntar Acta de Nacimiento</label>
+    <input 
+      type="file" 
+      name="birthCertificate" 
+      id="birthCertificate" 
+      accept=".jpg, .jpeg, .pdf" 
+      capture="environment"
+    >
+    <button>Actualizar</button>  
+  </form>
   `
 })
 
