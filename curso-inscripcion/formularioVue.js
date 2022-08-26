@@ -33,46 +33,20 @@ const app = Vue.createApp({
     }
   },
 
-  watch:{
-    studentDB(value, old){
-      if (value.curp != undefined) {
-        console.log("Wath Student con datos de estudiante registro. Pruebas para v-if")
-        console.log("getStudent ", this.getStudentDB)
-      } else {
-        console.log(value)
-        console.log(old)
-      }
-    },
-
-    reactive(value, old){
-      if (value.curp != undefined) {
-        console.log("Wath Student con datos de estudiante registro. Pruebas para v-if")
-        console.log("getStudent ", this.reactive.studentDB)
-      } else {
-        console.log(value)
-        console.log(old)
-      }
-    },
-
-    ageRequeriment(value, old){
-      console.log("ageRequeriment value: ",value)
-      console.log("ageRequeriment old: ",old)
-    }
-  },
-
   methods: {
     async consult(formData) {
-      const endpoint = "students/typeRegister"
-      const response = await this.sendData(formData, endpoint);
-      console.log("consult reponse desde API",response)      
+      const API = `${this.API}students/typeRegister`      
+      const response = await this.sendData(formData, API);
+      console.log("consult reponse desde API",response);
       if (response.error) {
-        //preloader(result);
-        console.log("Valores desde API: ", response)        
+        //preloader(result);        
         this.isWelcome = false;
         this.isNewStudent = true;
       } else if (response.message === "internal server error") {
         //error generalemente al hacer una primera consulta en SpreedSheets
         alert("Hubo un error en la comunicación al servidor, por favor vuelve a intentarlo. Si el error persiste intentalo mas tarde.")
+      } else if (response.message === "Wrong Structure") {
+        alert("La Estructura de la CURP es incorrecta, revisa y corrige la información")
       } else {
         //el usuario existe en nuestros registros
         const storageResponse = JSON.stringify(response);
@@ -80,22 +54,71 @@ const app = Vue.createApp({
         this.isStudent();        
         // preloader(result);
       }
+    },   
+
+    async inscription(objInscription) {
+      let objLinksFiles = {}
+      console.log("El inscription esta llegando en el padre mas alto y llegan los valores de:", objInscription);
+      if (objInscription.formFiles) {
+        const formFiles = objInscription.formFiles
+        if (objInscription.files) {
+          //este endpoint apuntara a /newRegister
+          const endpoint = `${this.API_files}/files/newRegister`;
+          const files = await this.sendFiles(formFiles, endpoint);
+          objLinksFiles = {...files};
+        } else {
+          //files = false endpoint indica que es un update y apunta a /updateFile
+          const endpoint = `${this.API_files}/files/updateFile`;
+          const files = await this.sendFiles(formFiles, endpoint)
+          objLinksFiles = {...files};
+        }
+      }
+      //*****Pendiente manejo de respuestas ante errores en Files Server */
+      //************ */
+      const objOfLinksFiles = {...objInscription.data, ...objLinksFiles}
+      console.log(objOfLinksFiles);
+
+      const objDataInscription = this.addCourseData(objOfLinksFiles);
+
+      if (objInscription.db) {
+        const endpoint = `${this.API}students/DBStudent`;
+        const responseData = await this.sendData(objDataInscription, endpoint);
+        console.log(responseData);
+      } else {
+        const endpoint = `${this.API}students/newStudent/inscription`;
+        const responseData = await this.sendData(objDataInscription, endpoint);
+        console.log(responseData);
+      }
     },
-    
-    async sendData(formData, endpoint) {
-      console.log(formData)
-      const API = `${this.API}${endpoint}`;
-      //backend: formdata para files(se puede omitir), app/json para data      
-      const jsonSend = {
-        curp: formData.get("curp")
+
+    addCourseData(objInscription){
+      const dataCourse = JSON.parse(sessionStorage.getItem(this.keyCourseStorage));
+      //sessionStorage
+      const inscriptionMoreCourse = {
+        ...objInscription,
+        ...dataCourse
       };
+      return inscriptionMoreCourse;   
+    },
+
+    async sendFiles(formFiles, API){
+      const response = await fetch( API, {
+        method: "post",        
+        //si vamos a subir archivos, se debe usar el formData, y no el json y quitar el headers
+        body: formFiles
+      })
+      const info = await response.json()
+      return info
+    },
+
+    async sendData(obj, API){
       const response = await fetch( API, {
         method: "POST",
         headers: {
           //"Content-Type": "multipart/form-data"
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(jsonSend)
+        body: JSON.stringify(obj)
       })
       return response.json()
     },
@@ -143,6 +166,7 @@ const app = Vue.createApp({
     
     <v-newRegister
       v-if="isNewStudent"
+      v-on:eventInscription="inscription"
     />
 
     </section>
@@ -158,10 +182,11 @@ app.component("v-typeRegister", {
       const nodeCurp = document.querySelector("#valueCurp")
       const curpValue = nodeCurp.value;      
       if (curpValue.length === 18) {        
-        const formData = new FormData();
-        formData.set("curp", curpValue)
+        const objCurp = {
+          curp: curpValue
+        }
         this.reactive.curp = curpValue;
-        this.$emit("consultCURP", formData)        
+        this.$emit("consultCURP", objCurp);
       } else {
         alert("Revisa que tu CURP este completa. Deben ser 18 posiciones")        
       }      
@@ -314,6 +339,11 @@ app.component("v-newRegister", {
         
       }
       console.log("valores de newStudent despues de actualizar", this.reactive.newStudent)
+    },
+
+    eventInscription(objInscription){
+      console.log("El eventInscription esta en newRegister", objInscription)
+      this.$emit("eventInscription", objInscription)
     }
   },
   
@@ -335,6 +365,7 @@ app.component("v-newRegister", {
     <v-inscription-newRegister
       v-if="registerCompleted"
       v-on:saveData="saveDataNewRegister"
+      v-on:eventInscription="eventInscription"
     />
   </section>
   `
@@ -482,9 +513,7 @@ app.component("v-dataGeneral", {
             writable: true,
             configurable: false,
             enumerable: true
-          })
-          // })
-          //temporalmente añadir el blob al objeto de acta de nacimiento
+          })          
           console.log("continuar inscripcion", responseFile);
           this.$emit("continueFirstRegister", responseFile.responseObj)
           //VERIFICAR SI USUARIO CAMBIO LA CURP Y VERIFICAR QUE NO ESTE INSCRITO EN EL SISTEMA
@@ -498,19 +527,14 @@ app.component("v-dataGeneral", {
     },
 
     async sendDataGeneralForm(formData){
-      //falta trabajar que sea solo uan funcion global para hacer fetch, y solo generar enpoints con su data a enviar
-      //console.log(formData.get("birthCertificate"))
+      //falta trabajar que sea solo uan funcion global para hacer fetch, y solo generar enpoints con su data a enviar      
       const endpoint = `${this.API}students/newStudent/dataGeneral`;      
       const response = await fetch( endpoint, {
         method: "post",
-        headers: {
-          //"Content-Type": "multipart/form-data"
+        headers: {          
           "Content-Type": "application/json"
         },
         body: JSON.stringify(formData)
-        //al subir archivos no usar headers especificando el tipo, y que el navegador determine el boundary adecuado
-        //si vamos a subir archivos, se debe usar el formData, y no el json y quitar el headers
-        //body: formData
       })
       const info = await response.json()      
       return info
@@ -659,8 +683,7 @@ app.component("v-address", {
       const nodeEstado = document.querySelector("#estado");
       const estado = nodeEstado.value;
       const nodeMunicipio = document.querySelector("#municipio");
-      const municipio = nodeMunicipio.value;
-      //const nodeAddressCertificate = document.getElementById("addressCertificate")
+      const municipio = nodeMunicipio.value;      
       const addressCertificate = e.target.children["addressCertificate"].files[0]
       const addressCertificateRender = URL.createObjectURL(e.target.children["addressCertificate"].files[0]);
 
@@ -679,11 +702,8 @@ app.component("v-address", {
       dataFORM.append("domicilio", addressCertificate)
     },
 
-    showMunicipio(e){
-      console.log(e.target)
-      this.estadoRepublica = e.target.value
-      // const listMunicipios = valueEstado[estadoRepublica]
-      // return listMunicipios
+    showMunicipio(e){      
+      this.estadoRepublica = e.target.value;
     },   
   },
   template: `  
@@ -775,9 +795,7 @@ app.component("v-scholarship", {
 
 app.component("v-updateContact", {
   methods: {
-    contactDetailCompleted(object){
-      //document.querySelector("#formAddress")      
-      //hacer un emit hacia el padre  
+    contactDetailCompleted(object){      
       this.$emit("updateProperties", object)    
     },
   },
@@ -796,8 +814,7 @@ app.component("v-updateContact", {
 
 app.component("v-updateAddress", {
   methods: {
-    addressDetailCompleted(object){
-      console.log("estas llegando hasta aqui boton de actualizar direccion!!!")
+    addressDetailCompleted(object){      
       this.$emit("updateProperties", object)
     },
   },
@@ -816,10 +833,7 @@ app.component("v-updateAddress", {
 
 app.component("v-updateSchool", {
   methods: {
-    scholarshipDetailCompleted(object){
-      console.log("estas llegando hasta aqui boton de actualizar direccion!!!")
-      //document.querySelector("#formAddress")      
-      //hacer un emit hacia el padre  
+    scholarshipDetailCompleted(object){      
       this.$emit("updateProperties", object)    
     },
   },
@@ -988,16 +1002,7 @@ app.component("v-firstRegister", {
       console.log(object)
       this.firstRegisterIsCompletedScholarship = false;      
       this.$emit("firstRegisterCompleted", object)
-    },
-
-    // saveData(object) {
-    //   for (const key in object) {        
-    //     const element = object[key];
-    //     Object.defineProperty(this.reactive.newStudent, key, {
-    //       value: element
-    //     })       
-    //   }
-    // }
+    }
   },
 
   template: `
@@ -1058,19 +1063,7 @@ app.component("v-inscription-newRegister", {
 
     updateProperties(object){
       console.log("recibiendo objeto en updateProperties de v-inscription-newregister", object)
-      this.$emit("saveData", object)
-      // const valuesStudent = {...this.reactive.newStudent, ...object}
-      //pendiente como settear nuevos valores a newStudent
-      // this.reactive.newStudent = Object.assign(valuesStudent)
-      // console.log("quien es valuesStudent", valuesStudent)
-      // const arrayKeys = Object.keys(object)
-      // arrayKeys.forEach( key => {
-      //   //this.$set(this.reactive.newStudent, key, object[key])
-      //   //const newValue = object[key];
-      //   // this.reactive.newStudent[key] = newValue;        
-      //   this.valuesInscription[key] = object[key]        
-      // })
-      // console.log("valores de valuesInscription despues de actualizar", this.valuesInscription)
+      this.$emit("saveData", object)      
     },
 
     isDocumentUpload(name){
@@ -1082,65 +1075,39 @@ app.component("v-inscription-newRegister", {
     },
 
     async inscription(e){
-      e.preventDefault()      
-      const formData = new FormData();
-      const formFiles = new FormData();
-      formData.append("curp", this.reactive.newStudent.curp)
-      formData.append("fechaNacimiento", this.reactive.newStudent.birthdate)
-      formData.append("nombre", this.reactive.newStudent.nombre)
-      formData.append("a_paterno", this.reactive.newStudent.a_paterno)
-      formData.append("a_materno", this.reactive.newStudent.a_materno)
-      formData.append("estado", this.reactive.newStudent.placeOfBirth)
-      formData.append("genero", this.reactive.newStudent.gender)
-      formData.append("municipio", this.reactive.newStudent.municipio)
-      formData.append("calle", this.reactive.newStudent.calle)
-      formData.append("colonia", this.reactive.newStudent.colonia)
-      formData.append("cp", this.reactive.newStudent.cp)
-      formData.append("email", this.reactive.newStudent.email)
-      formData.append("escolaridad", this.reactive.newStudent.escolaridad)
-      formData.append("estado", this.reactive.newStudent.estado)      
-      formData.append("telefono", this.reactive.newStudent.telefono)      
-      //sessionStorage
-      const dataCourse = JSON.parse(sessionStorage.getItem(this.keyCourseStorage));
-      formData.append("costo", dataCourse.costo);
-      formData.append("curso", dataCourse.curso);
-      formData.append("dias_de_clases", dataCourse.dias_de_clases);
-      formData.append("especialidad", dataCourse.especialidad);
-      formData.append("fecha_inicio", dataCourse.fecha_inicio);
-      formData.append("fecha_termino", dataCourse.fecha_termino);
-      formData.append("ficha_informacion", dataCourse.ficha_informacion);
-      formData.append("hora_inicio", dataCourse.hora_inicio);
-      formData.append("hora_fin", dataCourse.hora_fin);
-      formData.append("horas", dataCourse.horas);
-      formData.append("modalidad_curso", dataCourse.modalidad_curso);
-      formData.append("profesor", dataCourse.profesor);
-      formData.append("tipo_de_curso", dataCourse.tipo_de_curso);
-
+      e.preventDefault()
+      const data = {
+        curp: this.reactive.newStudent.curp,
+        fechaNacimiento: this.reactive.newStudent.birthdate,
+        nombre: this.reactive.newStudent.nombre,
+        a_paterno: this.reactive.newStudent.a_paterno,
+        a_materno: this.reactive.newStudent.a_materno,
+        estado: this.reactive.newStudent.placeOfBirth,
+        genero: this.reactive.newStudent.gender,
+        municipio: this.reactive.newStudent.municipio,
+        calle: this.reactive.newStudent.calle,
+        colonia: this.reactive.newStudent.colonia,
+        cp: this.reactive.newStudent.cp,
+        email: this.reactive.newStudent.email,
+        escolaridad: this.reactive.newStudent.escolaridad,
+        estado: this.reactive.newStudent.estado,
+        telefono: this.reactive.newStudent.telefono
+      }
       //formFiles
-      formFiles.append("curp", this.reactive.newStudent.curp)
-      formFiles.append("actaNacimiento", this.reactive.newStudent.actaNacimiento)
-      formFiles.append("comprobanteDomicilio", this.reactive.newStudent.comprobanteDomicilio)
-      formFiles.append("comprobanteEstudios", this.reactive.newStudent.comprobanteEstudios)
+      const formFiles = new FormData();
+      formFiles.append("curp", this.reactive.newStudent.curp);
+      formFiles.append("actaNacimiento", this.reactive.newStudent.actaNacimiento);
+      formFiles.append("comprobanteDomicilio", this.reactive.newStudent.comprobanteDomicilio);
+      formFiles.append("comprobanteEstudios", this.reactive.newStudent.comprobanteEstudios);
 
-      const endpointFiles = `http://svo-5-191.servidoresvirtuales.mx/files/newRegister`
-      //const endpointFiles = "http://localhost:3500/files/newRegister";
-      const responseFiles = await this.sendForInscripcion(formFiles, endpointFiles)
-      console.log("Files", responseFiles)
-
-      // const endpoint = `${this.API}students/newStudent/inscription`;
-      // const responseData = await this.sendForInscripcion(formData, endpoint)
-      // console.log("Data", responseData)
-    },
-
-    async sendForInscripcion(formData, endpoint){      
-      const response = await fetch( endpoint, {
-        method: "post",        
-        //si vamos a subir archivos, se debe usar el formData, y no el json y quitar el headers
-        body: formData
-      })
-      const info = await response.json()
-      return info
-    }
+      const objInscription = {        
+        data,
+        formFiles,
+        db: false,
+        files: true
+      }
+      this.$emit("eventInscription", objInscription);      
+    }    
   },
  
   template: `
@@ -1237,10 +1204,7 @@ app.component("v-buttonCancel", {
   `
 })
 
-app.component("v-course", {
-  // props:{
-  //   course: Object
-  // },
+app.component("v-course", { 
   inject: ["course"],
   template: `
   <article class="register">
