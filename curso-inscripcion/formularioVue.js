@@ -2,8 +2,9 @@ const app = Vue.createApp({
   data() {
     return {
       //API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1/students",
-      API: "http://localhost:3000/API/V1/",
+      API: "http://localhost:3000/API/V1",
       API_files: "http://svo-5-191.servidoresvirtuales.mx",
+      //API_files: "http://localhost:3500",
       keyCourseStorage: "CourseCecati13",
       keyStudentStorage: "studentC13",       
       curso:{},
@@ -35,7 +36,7 @@ const app = Vue.createApp({
 
   methods: {
     async consult(formData) {
-      const API = `${this.API}students/typeRegister`      
+      const API = `${this.API}/students/typeRegister`      
       const response = await this.sendData(formData, API);
       console.log("consult reponse desde API",response);
       if (response.error) {
@@ -57,21 +58,12 @@ const app = Vue.createApp({
     },   
 
     async inscription(objInscription) {
-      let objLinksFiles = {}
-      console.log("El inscription esta llegando en el padre mas alto y llegan los valores de:", objInscription);
+      let objLinksFiles = {};
       if (objInscription.formFiles) {
-        const formFiles = objInscription.formFiles
-        if (objInscription.files) {
-          //este endpoint apuntara a /newRegister
-          const endpoint = `${this.API_files}/files/newRegister`;
-          const files = await this.sendFiles(formFiles, endpoint);
-          objLinksFiles = {...files};
-        } else {
-          //files = false endpoint indica que es un update y apunta a /updateFile
-          const endpoint = `${this.API_files}/files/updateFile`;
-          const files = await this.sendFiles(formFiles, endpoint)
-          objLinksFiles = {...files};
-        }
+        const formFiles = objInscription.formFiles;
+        const endpoint = `${this.API_files}/files`;
+        const files = await this.sendFiles(formFiles, endpoint);
+        objLinksFiles = {...files};
       }
       //*****Pendiente manejo de respuestas ante errores en Files Server */
       //************ */
@@ -81,11 +73,11 @@ const app = Vue.createApp({
       const objDataInscription = this.addCourseData(objOfLinksFiles);
 
       if (objInscription.db) {
-        const endpoint = `${this.API}students/DBStudent`;
+        const endpoint = `${this.API}/students/DBStudent`;
         const responseData = await this.sendData(objDataInscription, endpoint);
         console.log(responseData);
       } else {
-        const endpoint = `${this.API}students/newStudent/inscription`;
+        const endpoint = `${this.API}/students/newStudent/inscription`;
         const responseData = await this.sendData(objDataInscription, endpoint);
         console.log(responseData);
       }
@@ -142,8 +134,7 @@ const app = Vue.createApp({
         window.location.href = "/cursos"
         //Si no se ha selecionado un curso redireccionar a /cursos
       }
-      const courseInfo = JSON.parse(getItem);
-      console.log(courseInfo)
+      const courseInfo = JSON.parse(getItem);      
       this.curso = courseInfo;
       return courseInfo;
     },
@@ -162,6 +153,7 @@ const app = Vue.createApp({
 
     <v-dbRegister
       v-if="isUserStudent"
+      v-on:eventInscription="inscription"
     />
     
     <v-newRegister
@@ -212,7 +204,7 @@ app.component("v-dbRegister", {
   
   data(){
     return {
-      showInscription: true,
+      showInscription: true,      
     }
   },
 
@@ -224,42 +216,50 @@ app.component("v-dbRegister", {
     updateProperties(object) {
       this.reactive.studentDB.update = true;
       this.saveDataStudentDB(object);
-      console.log("valores en v-dbRegister, this.reactive.studentDB")
-      console.log(this.reactive.studentDB)
     },
 
     saveDataStudentDB(object) {
-      for (const key in object) {        
+      for (const key in object) {
         const element = object[key];
         Object.defineProperty(this.reactive.studentDB, key, {
-          value: element
-        })       
+          value: element,
+          writable: true,
+          configurable: false,
+          enumerable: true
+        });
       }
     },
-    async inscription() {      
-      const endpoint = `${this.API}students/DBStudent`;
-      const formData = new FormData();
-      formData.append("curp", this.reactive.studentDB.curp)
-      formData.append("update", this.reactive.studentDB.update)
-      console.log(formData.get("curp"))
-      //*** probar otra forma de generar el formdata o JSON
-      const sendObj = {...this.reactive.studentDB}
-      console.log("sendObj ", sendObj)
-      //****      
-      const response = await fetch( endpoint, {
-        method: "post",
-        headers: {
-          //"Content-Type": "multipart/form-data"
-          "Content-Type": "application/json"
-      },
-        //si vamos a subir archivos, se debe usar el formData, y no el json y quitar el headers
-        //body: formData
-        body: JSON.stringify(sendObj)
-
-      })
-      console.log(formData)
-      const info = await response.json();
-      return info;
+    
+    async inscription() {
+      const data ={
+        ...this.reactive.studentDB
+      };
+      const formFiles = new FormData;
+      formFiles.append("curp", this.reactive.studentDB.curp);
+      const objInscription = {
+        data,
+        formFiles,
+        db: true,
+        files: 0
+      }
+      
+      if(objInscription.data.update){
+        for (const key in objInscription.data) {
+          const element = objInscription.data[key];
+          if (typeof(element) === "object") {
+            objInscription.files = + 1;
+            //si es "object" es un archivo (File)
+            formFiles.append(key, objInscription.data[key]);
+            delete objInscription.data[key];
+          }
+        }       
+      }
+      
+      if (objInscription.files === 0) {
+        delete objInscription.formFiles;
+      }
+      delete objInscription.files;
+      this.$emit("eventInscription", objInscription);
     }
 
   },
@@ -294,8 +294,6 @@ app.component("v-dbRegister", {
   />    
   ` 
 })
-
-
 
 app.component("v-newRegister", {
   inject: ["reactive"],
@@ -346,9 +344,7 @@ app.component("v-newRegister", {
       this.$emit("eventInscription", objInscription)
     }
   },
-  
-  // v-bind:showData="showData"
-  // estaba en v-inscription-newRegister
+
   template: `
   <section id="newRegister" class="register">
     <v-dataGeneral
@@ -528,7 +524,7 @@ app.component("v-dataGeneral", {
 
     async sendDataGeneralForm(formData){
       //falta trabajar que sea solo uan funcion global para hacer fetch, y solo generar enpoints con su data a enviar      
-      const endpoint = `${this.API}students/newStudent/dataGeneral`;      
+      const endpoint = `${this.API}/students/newStudent/dataGeneral`;      
       const response = await fetch( endpoint, {
         method: "post",
         headers: {          
@@ -1103,8 +1099,7 @@ app.component("v-inscription-newRegister", {
       const objInscription = {        
         data,
         formFiles,
-        db: false,
-        files: true
+        db: false,        
       }
       this.$emit("eventInscription", objInscription);      
     }    
