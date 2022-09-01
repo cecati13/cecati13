@@ -17,9 +17,12 @@ const app = Vue.createApp({
         ageRequeriment: true,        
         curp: "",        
       },
+      infoCourseShow: true,
       isWelcome: true,
       isUserStudent: false,
       isNewStudent: false,
+      confirmation: false,
+      dataConfirmation: {}
     };
   },
 
@@ -30,7 +33,8 @@ const app = Vue.createApp({
       keyCourseStorage: this.keyCourseStorage,
       course: this.getCourse,
       reactive: this.reactive,
-      MAX_SIZE_FILES: this.MAX_SIZE_FILES
+      MAX_SIZE_FILES: this.MAX_SIZE_FILES,
+      dataConfirmation: this.dataConfirmation
     }
   },
 
@@ -42,6 +46,7 @@ const app = Vue.createApp({
       if (response.error) {
         //preloader(result);        
         this.isWelcome = false;
+        this.infoCourseShow = false;
         this.isNewStudent = true;
       } else if (response.message === "internal server error") {
         //error generalemente al hacer una primera consulta en SpreedSheets
@@ -71,16 +76,20 @@ const app = Vue.createApp({
       console.log(objOfLinksFiles);
 
       const objDataInscription = this.addCourseData(objOfLinksFiles);
+      let endpoint = objInscription.db === true ?
+        `${this.API}/students/DBStudent` :
+        `${this.API}/students/newStudent/inscription`;
 
-      if (objInscription.db) {
-        const endpoint = `${this.API}/students/DBStudent`;
-        const responseData = await this.sendData(objDataInscription, endpoint);
-        console.log(responseData);
-      } else {
-        const endpoint = `${this.API}/students/newStudent/inscription`;
-        const responseData = await this.sendData(objDataInscription, endpoint);
-        console.log(responseData);
-      }
+      const responseData = await this.sendData(objDataInscription, endpoint);
+      console.log(responseData);
+      this.isUserStudent = false;
+      this.isNewStudent = false;
+      if (responseData.status) {
+        this.dataConfirmation.nombre = objDataInscription.nombre,
+        this.dataConfirmation.matricula = responseData.matricula,
+        this.dataConfirmation.fechaRegistro = responseData.fechaRegistro
+      }      
+      this.confirmation = true;
     },
 
     addCourseData(objInscription){
@@ -122,6 +131,7 @@ const app = Vue.createApp({
         ...dataSaveStudent
       }
       this.isWelcome = false;
+      this.infoCourseShow = false;
       this.isUserStudent = true;
       //copiar datos de estudiante en session Storage a variable studentDB
     },        
@@ -144,7 +154,10 @@ const app = Vue.createApp({
   <section>
     <h3>Formulario de inscripción</h3>
 
-    <v-course id="header__course"></v-course>
+    <v-course 
+      id="header__course"
+      v-if="infoCourseShow"
+    />
 
     <v-typeRegister
       v-on:consultCURP="consult"
@@ -159,6 +172,10 @@ const app = Vue.createApp({
     <v-newRegister
       v-if="isNewStudent"
       v-on:eventInscription="inscription"
+    />
+
+    <v-confirmation
+      v-if="confirmation"
     />
 
     </section>
@@ -189,11 +206,11 @@ app.component("v-typeRegister", {
   template: `
   <div class="typeRegister">
     <form v-on:submit="curpVerify">
-    <label for="curp">Para iniciar tu pre-inscripcion, por favor ingresa lo siguiente: </label>
+    <label for="curp">Para continuar por favor ingresa </label>
     <v-tagCurp/>
     <button>Enviar</button>
     </form>
-    <p>Si no conoces tu curp, consultar https://www.gob.mx/curp/ para obtenerla</p>
+    <p>Si no conoces tu curp, consultar <a href="https://www.gob.mx/curp/">https://www.gob.mx/curp/</a> para obtenerla</p>
   </div>
       `
     //<input type="text" id="curp" name="curp" placeholder="CURP...">
@@ -269,7 +286,7 @@ app.component("v-dbRegister", {
   <div 
     v-if="showInscription"    
     class="result__API register">
-      <h4>Bienvenido a un nuevo curso en CECATI 13, {{ reactive.studentDB.nombre }} {{reactive.studentDB.a_materno}}</h4>
+      <h4>Bienvenido a un nuevo curso en CECATI 13, {{ reactive.studentDB.nombre }} {{reactive.studentDB.a_paterno}}</h4>
       <p>Por favor verifica que la siguiente información en nuestro sistema correspondan a tú registro.</p>
       <p>Por tú seguridad, ocultamos parte de la información que a continuación te pedimos que verifiques</p>
       
@@ -368,6 +385,7 @@ app.component("v-newRegister", {
 })
     
 app.component("v-dataGeneral", {
+  inject: ["API", "reactive", "MAX_SIZE_FILES"],
   data(){
     return {
       passesAgeRequirement: false,
@@ -406,15 +424,9 @@ app.component("v-dataGeneral", {
         VERACRUZ: "VERACRUZ",
         YUCATAN: "YUCATAN",
         ZACATECAS: "ZACATECAS",
-      },
-      
-      discapacidades: [
-        "Ninguna", "Visual", "Auditiva", "de Comunicación", "motriz", "Intelectual"
-      ]      
+      }
     }
-  },
-
-  inject: ["API", "reactive", "MAX_SIZE_FILES"],
+  }, 
 
   methods: {
     isAgeOver15(e){
@@ -447,10 +459,7 @@ app.component("v-dataGeneral", {
     },
 
     async verifyDataGeneral(e){
-      e.preventDefault()
-      // const form = document.forms.namedItem("dataGeneral")
-      // const dataFORM = new FormData(form);
-
+      e.preventDefault();
       const curp = e.target.children['curp'].value
       const birthday = e.target.children['birthday'].value      
       const nombre = e.target.children['nombre'].value
@@ -465,26 +474,10 @@ app.component("v-dataGeneral", {
       } else {
         gender = "FEMENINO"
       }
-      const nodeDisability = document.getElementById("disability")
-      const disability = nodeDisability.value;
       
-      //usar FormData cuando se envien archivos
-
-      //const dataFORM = new FormData();
-      //seis campos setteados en español, para validación en el backend con dependencia CURP
-      // dataFORM.append("curp", curp)
-      // dataFORM.append("fechaNacimiento", birthday)
-      // dataFORM.append("nombre", nombre)
-      // dataFORM.append("a_paterno", a_paterno)
-      // dataFORM.append("a_materno", a_materno)
-      // dataFORM.append("estado", placeOfBirth)
-      // dataFORM.append("genero", gender)
-      // dataFORM.append("disability", disability)
-      
-      //Se hara un solo envio de los 3 documentos al final del llenado del formulario
       const birthCertificate = e.target.children["birthCertificate"].files[0]
       const birthCertificateBlob = URL.createObjectURL(e.target.children["birthCertificate"].files[0]);
-      //dataFORM.append("actaNacimiento", birthCertificate)
+      
 
       const dataFORM = {
         curp: curp,
@@ -494,7 +487,6 @@ app.component("v-dataGeneral", {
         a_materno: a_materno,
         estado: placeOfBirth,
         genero: gender,
-        disability: disability,        
         actaNacimientoRender: birthCertificateBlob
       }
       
@@ -550,7 +542,7 @@ app.component("v-dataGeneral", {
     >
     <p v-if="!reactive.ageRequeriment">
       Lo sentimos, la edad minima para poder inscribirte a alguno de nuestros cursos es 15 años cumplidos
-    </p>    
+    </p>
     <label for="nombre">Nombre</label><span class="required">*</span>
     <input type="text" name="nombre" placeholder="Escribe tu nombre de pila...">
 
@@ -569,7 +561,7 @@ app.component("v-dataGeneral", {
     <br>
     <label for="estado">
       <span>Lugar de Nacimiento</span>
-      <select name="estado" id="placeOfBirth">        
+      <select name="estado" id="placeOfBirth">
         <option v-for="item in estadoNacimiento" :key="item">{{ item }}</option>
     </label>
     <label for="birthCertificate">Adjuntar Acta de Nacimiento</label>
@@ -580,15 +572,6 @@ app.component("v-dataGeneral", {
       accept=".jpg, .jpeg, .pdf" 
       capture="environment"
     >
-    <br>
-    <p>¿Presenta alguna discapacidad? <span class="required">*</span></p>
-    <label for="disability">
-      <select name="disability" id="disability">
-        <option v-for= "disability in discapacidades">{{ disability }}</option>
-      </select>
-    </label>
-    
-    
 
     <v-button v-if="passesAgeRequirement"></v-button>
   </form>
@@ -840,8 +823,7 @@ app.component("v-updateSchool", {
     <v-scholarship
       v-on:scholarshipDetailCompleted="scholarshipDetailCompleted"
     />
-  </div>
-  `
+  </div>  `
 })
 
 app.component("v-updateRegister", {
@@ -987,17 +969,26 @@ app.component("v-firstRegister", {
       
     },
     
-    addressDetailCompleted(object){
-      console.log("addressDetailCompleted. Object:")      
+    addressDetailCompleted(object){      
       this.firstRegisterIsCompletedAddress = false;
       this.firstRegisterIsCompletedScholarship = true;
       this.$emit("saveData", object)
     },
 
     scholarshipDetailCompleted(object){
-      console.log(object)
+      //incluir disability
+      const disability = this.nodeDisability();
+      const newObj = { 
+        ...object, 
+        discapacidad: disability }
       this.firstRegisterIsCompletedScholarship = false;      
-      this.$emit("firstRegisterCompleted", object)
+      this.$emit("firstRegisterCompleted", newObj)
+    },
+
+    nodeDisability(){
+     const nodeDisability = document.getElementById("disability")
+     const disability = nodeDisability.value;
+     return disability
     }
   },
 
@@ -1014,10 +1005,15 @@ app.component("v-firstRegister", {
   </v-address>
   <br>
 
+  <v-disability
+      v-if="firstRegisterIsCompletedScholarship">  
+  </v-disability>
+
   <v-scholarship
     v-if="firstRegisterIsCompletedScholarship"
     v-on:scholarshipDetailCompleted="scholarshipDetailCompleted">
   </v-scholarship>
+
   `
 })
 
@@ -1030,7 +1026,7 @@ app.component("v-button", {
 app.component("v-tagCurp", {
   inject: ["reactive"],
   template: `
-  <label for="curp">CURP</label><span class="required">*</span>
+  <label for="curp">CURP</label>
   <input 
       type="text" 
       id="valueCurp" 
@@ -1052,13 +1048,11 @@ app.component("v-inscription-newRegister", {
   },
 
   methods: {
-    showUpdateFieldOnly(){
-      console.log("recibiendo $emit de v-updateRegister");
+    showUpdateFieldOnly(){      
       this.showInscription = !this.showInscription
     },
 
-    updateProperties(object){
-      console.log("recibiendo objeto en updateProperties de v-inscription-newregister", object)
+    updateProperties(object){      
       this.$emit("saveData", object)      
     },
 
@@ -1086,6 +1080,7 @@ app.component("v-inscription-newRegister", {
         cp: this.reactive.newStudent.cp,
         email: this.reactive.newStudent.email,
         escolaridad: this.reactive.newStudent.escolaridad,
+        discapacidad: this.reactive.newStudent.discapacidad,
         estado: this.reactive.newStudent.estado,
         telefono: this.reactive.newStudent.telefono
       }
@@ -1199,17 +1194,71 @@ app.component("v-buttonCancel", {
   `
 })
 
+app.component("v-inputFile", {
+  //input falta implementar en los luagres donde se subiran archivos
+  data(){
+    return {
+      propertie: ""
+    }
+  },
+  template:`
+    <input 
+    type="file" 
+    name="{{ propertie }}"
+    accept=".jpg, .jpeg, .pdf" 
+    capture="environment"
+>
+  `
+})
+
 app.component("v-course", { 
   inject: ["course"],
   template: `
   <article class="register">
     <div v-bind:value="course">
-    Curso: {{ course.curso }},
-    con el profesor {{ course.profesor }}
-    que inicia el {{ course.fecha_inicio }}, de la
-    especialidad {{ course.especialidad }}.
+      <p>Has iniciando el proceso de preinscripción al curso: {{ course.curso }},
+      de la especialidad {{ course.especialidad }}.</p>
+      <p>Impartido por {{ course.profesor }}.</p>
+      <p>El curso inicia el {{ course.fecha_inicio }}.
+      </p>    
     </div>    
   </article>
+  `
+})
+
+app.component("v-disability", {
+  data() {
+    return {
+      discapacidades: [
+        "Ninguna", "Visual", "Auditiva", "de Comunicación", "motriz", "Intelectual"
+      ]
+    }
+  },
+
+  template: `
+  <p>¿Presenta alguna discapacidad? <span class="required">*</span></p>
+    <label for="disability">
+      <select name="disability" id="disability">
+        <option v-for= "disability in discapacidades">{{ disability }}</option>
+      </select>
+    </label>
+  `
+})
+
+app.component("v-confirmation", {
+  inject: ["course", "dataConfirmation"],
+  template: `
+  <div class="register">
+    <p> {{this.dataConfirmation.nombre}}, has sido preinscrito en el curso {{ this.course.curso }} que inicia el {{ this.course.fecha_inicio }}.</p>
+    <p>Revisaremos la información que acabas de enviar y nos pondremos en contacto contigo para indicarte que puedes realizar el pago del curso por $ {{ this.course.costo }}</p>
+    <p>Te contactaremos en el numero telefonico que nos indicaste.</p>
+    <br>
+    
+    <p></p>
+    <p>El numero de matricula que tienes asignado es el siguiente:</p>
+    <p>{{ this.dataConfirmation.matricula }}</p>
+    <p>¡Gracias por tu preferencia!</p>
+  </div>
   `
 })
 
