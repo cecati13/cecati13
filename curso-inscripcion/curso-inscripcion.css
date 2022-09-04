@@ -1,0 +1,40 @@
+section {
+    font-size: 1.6rem;
+}
+
+section > div {
+    padding: 15px;
+    border: solid 2px blue;
+}
+
+section img {
+    width: 300px;
+}
+
+form > input {
+    padding: 10px;
+    display: block;
+}
+
+.register{
+    width: 90vw;    
+}
+
+.registerHide {
+    display: none;
+}
+
+.button_continue {
+    color: var(--mainColor);
+    background-color: var(--contrastColor);
+    padding: 10px;
+}
+
+.button_inscription {
+    color: var(--mainColor);
+    background-color: var(--fontColor2);
+    border: none;
+    border-radius: 2em;
+    padding: 15px;
+    font-size: 1.7rem;
+}

@@ -60,7 +60,31 @@ const app = Vue.createApp({
         this.isStudent();        
         // preloader(result);
       }
-    },   
+    },
+
+    async verifyCURPofData (){
+      //***********Debe traerse desde la funcion verifyDataGeneral() en el componente v-dataGeneral *************/
+      const responseFile = await this.sendDataGeneralForm(dataFORM)        
+        if (responseFile.responseObj !== undefined ) {
+          //temporalmente añadir el blob al objeto de acta de nacimiento
+          Object.defineProperty(this.reactive.newStudent, "actaNacimiento", {
+            value: birthCertificate,
+            writable: true,
+            configurable: false,
+            enumerable: true
+          })          
+          console.log("continuar inscripcion", responseFile);
+          this.$emit("continueFirstRegister", responseFile.responseObj)
+          //VERIFICAR SI USUARIO CAMBIO LA CURP Y VERIFICAR QUE NO ESTE INSCRITO EN EL SISTEMA
+        } else if (responseFile.curp == "false") {
+          console.log("La CURP no corresponde con los datos enviados. Verifica la información.")
+          alert("Error. Verifica la información.")
+        } else {
+          console.log("no se ha obtenido respuesta del servidor");
+          alert("Lo sentimos, estamos teniendo problemas de comunicación con nuestro servidor. Por favor intentalo mas tarde.")
+        }
+      //***********Debe traerse desde la funcion verifyDataGeneral() en el componente v-dataGeneral *************/
+    },
 
     async inscription(objInscription) {
       let objLinksFiles = {};
@@ -124,16 +148,14 @@ const app = Vue.createApp({
       return response.json()
     },
 
-    isStudent(){
-      console.log("Bienvenido, Ya tenemos tus datos registrados de un curso anterior")
+    isStudent(){      
       const dataSaveStudent = JSON.parse(sessionStorage.getItem(this.keyStudentStorage));
       this.reactive.studentDB = {
         ...dataSaveStudent
       }
       this.isWelcome = false;
       this.infoCourseShow = false;
-      this.isUserStudent = true;
-      //copiar datos de estudiante en session Storage a variable studentDB
+      this.isUserStudent = true;      
     },        
   },
 
@@ -178,7 +200,7 @@ const app = Vue.createApp({
       v-if="confirmation"
     />
 
-    </section>
+  </section>
     `,
 
 })
@@ -208,12 +230,11 @@ app.component("v-typeRegister", {
     <form v-on:submit="curpVerify">
     <label for="curp">Para continuar por favor ingresa </label>
     <v-tagCurp/>
-    <button>Enviar</button>
+    <v-button></v-button>
     </form>
     <p>Si no conoces tu curp, consultar <a href="https://www.gob.mx/curp/">https://www.gob.mx/curp/</a> para obtenerla</p>
   </div>
-      `
-    //<input type="text" id="curp" name="curp" placeholder="CURP...">
+      `    
 })
 
 app.component("v-dbRegister", {
@@ -264,8 +285,8 @@ app.component("v-dbRegister", {
         for (const key in objInscription.data) {
           const element = objInscription.data[key];
           if (typeof(element) === "object") {
-            objInscription.files = + 1;
             //si es "object" es un archivo (File)
+            objInscription.files = + 1;
             formFiles.append(key, objInscription.data[key]);
             delete objInscription.data[key];
           }
@@ -278,17 +299,15 @@ app.component("v-dbRegister", {
       delete objInscription.files;
       this.$emit("eventInscription", objInscription);
     }
-
   },
-
 
   template: `  
   <div 
     v-if="showInscription"    
-    class="result__API register">
+      class="register">
       <h4>Bienvenido a un nuevo curso en CECATI 13, {{ reactive.studentDB.nombre }} {{reactive.studentDB.a_paterno}}</h4>
       <p>Por favor verifica que la siguiente información en nuestro sistema correspondan a tú registro.</p>
-      <p>Por tú seguridad, ocultamos parte de la información que a continuación te pedimos que verifiques</p>
+      <p>Usaremos la información de contacto que tenemos registrada para contactarte y dar seguimiento a tú solicitud de inscripción. Si la información que nos proporcionaste en una pasado ha cambiado, por favor actualizala antes de inscribirte</p>
       
       <br>
 
@@ -298,17 +317,24 @@ app.component("v-dbRegister", {
       <br>
     
       <v-course></v-course>
-      <p>Si deseas continuar con tu inscripción presiona el siguiente boton</p>
-      <button
-        v-on:click="inscription">
-          Pre-inscribir
-      </button>
   </div>
-
+  
   <v-updateRegister
     v-on:showUpdateFieldOnly="showUpdateFieldOnly"
     v-on:updateProperties="updateProperties"
-  />    
+    class="register"
+  />
+  
+  <div
+    v-if="showInscription" 
+    class="register">
+    <p>Si la información que cambio no puede actualizarse con los botones, continua con la inscripción y cuando te contactemos indicanos lo que ha cambiado.</p>
+
+    <p>Si todo es correcto INSCRIBETE ahora:</p>
+    <v-buttonInscription
+      v-on:click="inscription">        
+    </-button>
+  </div>    
   ` 
 })
 
@@ -332,10 +358,7 @@ app.component("v-newRegister", {
     firstRegisterCompleted(object){
       this.saveDataNewRegister(object)
       this.componentFirstRegister = false;
-      this.registerCompleted = true;
-      console.log("scholarshipDetailCompleted. Object:")
-      console.log("Valor de new.student: ", this.reactive.newStudent)
-      console.log("finalizando: firstRegisterCompleted, valor de registerCompleted", this.registerCompleted)
+      this.registerCompleted = true;      
     },
 
     saveDataNewRegister(object) {
@@ -347,23 +370,20 @@ app.component("v-newRegister", {
             writable: true,
             configurable: false,
             enumerable: true
-          });        
+          });
         } else {
           this.reactive.newStudent[key] = object[key]
-        }
-        
+        }        
       }
-      console.log("valores de newStudent despues de actualizar", this.reactive.newStudent)
     },
 
-    eventInscription(objInscription){
-      console.log("El eventInscription esta en newRegister", objInscription)
+    eventInscription(objInscription){      
       this.$emit("eventInscription", objInscription)
     }
   },
 
   template: `
-  <section id="newRegister" class="register">
+  <section class="register">
     <v-dataGeneral
     v-if="componentDataGeneral"
       v-on:continueFirstRegister="continueFirstRegister"
@@ -388,7 +408,7 @@ app.component("v-dataGeneral", {
   inject: ["API", "reactive", "MAX_SIZE_FILES"],
   data(){
     return {
-      passesAgeRequirement: false,
+      meetsAgeRequirement: true,
       estadoNacimiento: {
         AGUASCALIENTES: "AGUASCALIENTES",
         BAJA_CALIFORNIA: "BAJA_CALIFORNIA",
@@ -452,9 +472,10 @@ app.component("v-dataGeneral", {
       
       if (age <= 15) {
         this.reactive.ageRequeriment = false;
+        this.meetsAgeRequirement = false;
       } else {
         this.reactive.ageRequeriment = true;
-        this.passesAgeRequirement = true;
+        this.meetsAgeRequirement = true;
       }
     },
 
@@ -491,8 +512,9 @@ app.component("v-dataGeneral", {
       }
       
       if (birthCertificate.size > `${this.MAX_SIZE_FILES}`) {
-        alert("El archivo tiene que ser menor a 3MB")
+        alert("El archivo tiene que ser menor a 3 MegaBytes. Por favor intenta nuevamente.")
       } else {
+        //***********PARTE TRABAJANDO EN  verifyCURPofData() en el padre de todos*************/
         const responseFile = await this.sendDataGeneralForm(dataFORM)        
         if (responseFile.responseObj !== undefined ) {
           //temporalmente añadir el blob al objeto de acta de nacimiento
@@ -509,9 +531,11 @@ app.component("v-dataGeneral", {
           console.log("La CURP no corresponde con los datos enviados. Verifica la información.")
           alert("Error. Verifica la información.")
         } else {
-          console.log("no se ha obtenido respuesta del servidor")
+          console.log("no se ha obtenido respuesta del servidor");
+          alert("Lo sentimos, estamos teniendo problemas de comunicación con nuestro servidor. Por favor intentalo mas tarde.")
         }
       }
+      //***********PARTE TRABAJANDO EN  verifyCURPofData() en el padre de todos*************/
     },
 
     async sendDataGeneralForm(formData){
@@ -526,13 +550,14 @@ app.component("v-dataGeneral", {
       })
       const info = await response.json()      
       return info
-    }   
+    }
+    //****Eliminar funcion sendDataGeneralForm() cuando se migre verifyCURPofData() al componente padre y se mantenga la funcionalidad*/
   },
   
   template: `
   <form class="dataGeneral" v-on:submit="verifyDataGeneral" name="dataGeneral">
     <v-tagCurp/>
-    <h4>Para Verificar que tú CURP sea correcta por favor proporciona los siguientes datos personales:</h4>
+    <h4>Para Verificar que tú CURP sea correcta y continuar con la inscripción, por favor proporcionanos los siguientes datos personales:</h4>
     <label for="birthday">Fecha de Nacimiento</label><span class="required">*</span>
     <input
       id="birthdate"
@@ -543,37 +568,70 @@ app.component("v-dataGeneral", {
     <p v-if="!reactive.ageRequeriment">
       Lo sentimos, la edad minima para poder inscribirte a alguno de nuestros cursos es 15 años cumplidos
     </p>
-    <label for="nombre">Nombre</label><span class="required">*</span>
-    <input type="text" name="nombre" placeholder="Escribe tu nombre de pila...">
 
-    <label for="a_paterno">Apellido Paterno</label><span class="required">*</span>
-    <input type="text" name="a_paterno" placeholder="Tu apellido paterno...">
+    <label for="nombre" v-if="meetsAgeRequirement">Nombre</label>
+    <input 
+      v-if="meetsAgeRequirement"
+      type="text" 
+      name="nombre" 
+      placeholder="Escribe tu nombre de pila..."
+    >
 
-    <label for="a_materno">Apellido Materno</label><span class="required">*</span>
-    <input type="text" name="a_materno" placeholder="Tu apellido materno...">
+    <label for="a_paterno" v-if="meetsAgeRequirement">Apellido Paterno</label>
+    <input 
+      v-if="meetsAgeRequirement"
+      type="text" 
+      name="a_paterno" 
+      placeholder="Tu apellido paterno..."
+    >
+
+    <label for="a_materno" v-if="meetsAgeRequirement">Apellido Materno</label>
+    <input 
+      v-if="meetsAgeRequirement"
+      type="text"
+      name="a_materno" 
+      placeholder="Tu apellido materno..."
+    >
     
-    <label for="genero" name="MASCULINO">Hombre 
-        <input type="radio" value="MASCULINO" name="genero" id="genero">
+    <label for="genero" name="MASCULINO" v-if="meetsAgeRequirement">Hombre 
+        <input 
+          v-if="meetsAgeRequirement"
+          type="radio" 
+          value="MASCULINO" 
+          name="genero" 
+          id="genero"
+        >
     </label>
-    <label for="genero" name="FEMENINO">Mujer
-        <input type="radio" value="FEMENINO" name="genero">
+    <label for="genero" name="FEMENINO" v-if="meetsAgeRequirement">Mujer
+        <input 
+          v-if="meetsAgeRequirement"
+          type="radio" 
+          value="FEMENINO" name="genero"
+        >
     </label>
+
     <br>
-    <label for="estado">
+
+    <label for="estado" v-if="meetsAgeRequirement">
       <span>Lugar de Nacimiento</span>
       <select name="estado" id="placeOfBirth">
         <option v-for="item in estadoNacimiento" :key="item">{{ item }}</option>
     </label>
-    <label for="birthCertificate">Adjuntar Acta de Nacimiento</label>
+    <label 
+      for="birthCertificate"
+      v-if="meetsAgeRequirement"
+    >
+      Adjuntar Acta de Nacimiento
+    </label>
     <input 
+      v-if="meetsAgeRequirement"       
       type="file" 
-      name="birthCertificate" 
-       
+      name="birthCertificate"
       accept=".jpg, .jpeg, .pdf" 
       capture="environment"
     >
 
-    <v-button v-if="passesAgeRequirement"></v-button>
+    <v-button v-if="meetsAgeRequirement"></v-button>
   </form>
   `
 })
@@ -614,6 +672,7 @@ app.component("v-contact", {
 })
 
 app.component("v-address", {
+  inject: ["MAX_SIZE_FILES"],
   data(){
     return {
       estadoRepublica: "Aguascalientes",
@@ -665,7 +724,7 @@ app.component("v-address", {
       const municipio = nodeMunicipio.value;      
       const addressCertificate = e.target.children["addressCertificate"].files[0]
       const addressCertificateRender = URL.createObjectURL(e.target.children["addressCertificate"].files[0]);
-
+      
       const objAddress = {
         calle: calle,
         colonia: colonia,
@@ -675,10 +734,21 @@ app.component("v-address", {
         comprobanteDomicilio: addressCertificate,
         comprobanteDomicilioRender:addressCertificateRender
       }
-      this.$emit("addressDetailCompleted", objAddress)
-
-      const dataFORM = new FormData();
-      dataFORM.append("domicilio", addressCertificate)
+      let empty = false;
+      for (const key in objAddress) {
+        const element = objAddress[key];
+        if (element === "") {
+          empty = true;
+          break;
+        }
+      }
+      if (empty) {
+        alert("Por favor proporciona la información completa. Revisa todos los campos")
+      } else if (addressCertificate.size > `${this.MAX_SIZE_FILES}`) {
+        alert("El archivo tiene que ser menor a 3 MegaBytes. Por favor intenta nuevamente.")
+      } else {
+        this.$emit("addressDetailCompleted", objAddress)
+      }
     },
 
     showMunicipio(e){      
@@ -688,12 +758,14 @@ app.component("v-address", {
   template: `  
   <form v-on:submit="addressDetailCompleted">
     <h4>Por favor indica tu domicilio:</h4>
-    <label for="calle">Calle y número</label><span class="required">*</span>
+    <label for="calle">Calle y número</label>
     <input type="text" name="calle" placeholder="Calle y número...">
-    <label for="colonia">Colonia</label><span class="required">*</span>
+    
+    <label for="colonia">Colonia</label>
     <input type="text" name="colonia" placeholder="Colonia...">
     <!-- https://copomex.com/#pricing-section por 330 para agilizar este tramite -->
-    <label for="cp"> <span>Código Postal</span><span class="required">*</span>
+
+    <label for="cp"> <span>Código Postal</span>
     </label>
     <input 
       type="number" 
@@ -710,20 +782,27 @@ app.component("v-address", {
       </option>
     </label>      
     <label for="municipio">
-      <span class="required">Municipio o Alcaldía*</span>      
+      <span>Municipio o Alcaldía</span>
       <select name="municipio" id="municipio">
         <option v-for="item in valueEstado[estadoRepublica]" :key="item" @municipio="municipio"> {{ item }}</option>
       </select>
     </label>
 
     <label for="addressCertificate">Adjuntar Comprobante de Domicilio</label>
-    <input type="file" name="addressCertificate" id="addressCertificate">
+    <input 
+      type="file" 
+      name="addressCertificate" 
+      id="addressCertificate"
+      accept=".jpg, .jpeg, .pdf" 
+      capture="environment"
+    >
     <v-button></v-button>
   </form>
   `
 })
 
 app.component("v-scholarship", {
+  inject: ["MAX_SIZE_FILES"],
   data(){
     return {
       listaEscolaridades:[      
@@ -743,22 +822,28 @@ app.component("v-scholarship", {
 
   methods: {
     scholarshipDetailCompleted(e){
-      e.preventDefault()      
+      e.preventDefault();
       const scholarship = document.getElementById("scholarship").value;
-      const studiesCertificate = e.target.children['studiesCertificate'].files[0]
+      const studiesCertificate = e.target.children['studiesCertificate'].files[0];
       const studiesCertificateRender = URL.createObjectURL(e.target.children['studiesCertificate'].files[0]);
       const objScholarship = {
         escolaridad: scholarship,
         comprobanteEstudios: studiesCertificate,
         comprobanteEstudiosRender: studiesCertificateRender
-      }
+      };
+
+      if (studiesCertificate.size > `${this.MAX_SIZE_FILES}`) {
+        alert("El archivo tiene que ser menor a 3 MegaBytes. Por favor intenta nuevamente.")
+      } else {
       this.$emit("scholarshipDetailCompleted", objScholarship)
+      }
     }
   },
 
   template: `
   <form v-on:submit="scholarshipDetailCompleted">
     <h4>Grado Escolar</h4>
+    
     <label for="scholarship">
     <span>Escolaridad</span>
     <select name="scholarship" id="scholarship">            
@@ -766,7 +851,13 @@ app.component("v-scholarship", {
     </label>  
 
     <label for="studiesCertificate">Adjuntar Comprobante de máximo grado de estudios</label>
-    <input type="file" name="studiesCertificate">
+    <input 
+      type="file" 
+      name="studiesCertificate"
+      accept=".jpg, .jpeg, .pdf" 
+      capture="environment"
+    >
+
     <v-button></v-button>
   </form>
   `
@@ -780,7 +871,7 @@ app.component("v-updateContact", {
   },
 
   template: `
-  <div class="" id="updateContact">
+  <div class="">
     <v-legendUpdateData></v-legendUpdateData>
 
     <v-contact
@@ -799,7 +890,7 @@ app.component("v-updateAddress", {
   },
 
   template: `
-  <div id="updateAddress">
+  <div>
     <v-legendUpdateData></v-legendUpdateData>
 
     <v-address
@@ -818,7 +909,7 @@ app.component("v-updateSchool", {
   },
   
   template: `
-  <div class="" id="updateScholarship">
+  <div>
     <v-legendUpdateData/>
     <v-scholarship
       v-on:scholarshipDetailCompleted="scholarshipDetailCompleted"
@@ -826,8 +917,7 @@ app.component("v-updateSchool", {
   </div>  `
 })
 
-app.component("v-updateRegister", {
-  //inject: ["reactive"],
+app.component("v-updateRegister", {  
   data() {
     return {      
       showButtonBirthCertificate: true,
@@ -907,7 +997,7 @@ app.component("v-updateRegister", {
 
   template: `
   <div id="updateRegister">
-  <p>Si deseas corregir o actualizar algún que nos hayas proporcionado, selecciona cual sería:</p>
+  <p>Actualzación de información:</p>
 
     <button 
       v-if="showButtonBirthCertificate"
@@ -965,14 +1055,14 @@ app.component("v-firstRegister", {
     contactDetailCompleted(object){      
       this.firstRegisterIsCompletedContact = false;
       this.firstRegisterIsCompletedAddress = true;
-      this.$emit("saveData", object)
+      this.$emit("saveData", object);
       
     },
     
     addressDetailCompleted(object){      
       this.firstRegisterIsCompletedAddress = false;
       this.firstRegisterIsCompletedScholarship = true;
-      this.$emit("saveData", object)
+      this.$emit("saveData", object);
     },
 
     scholarshipDetailCompleted(object){
@@ -980,15 +1070,15 @@ app.component("v-firstRegister", {
       const disability = this.nodeDisability();
       const newObj = { 
         ...object, 
-        discapacidad: disability }
+        discapacidad: disability };
       this.firstRegisterIsCompletedScholarship = false;      
-      this.$emit("firstRegisterCompleted", newObj)
+      this.$emit("firstRegisterCompleted", newObj);
     },
 
     nodeDisability(){
-     const nodeDisability = document.getElementById("disability")
+     const nodeDisability = document.getElementById("disability");
      const disability = nodeDisability.value;
-     return disability
+     return disability;
     }
   },
 
@@ -1019,7 +1109,9 @@ app.component("v-firstRegister", {
 
 app.component("v-button", {
   template: `
-  <button>Continuar</button>
+  <button class="button_continue">
+    Continuar
+  </button>
   `
 })
 
@@ -1039,12 +1131,29 @@ app.component("v-tagCurp", {
 })
 
 app.component("v-inscription-newRegister", {
-  inject: ["API", "API_files", "keyCourseStorage","reactive"],
+  inject: ["reactive"],
 
   data(){
     return {
-      showInscription: true,      
+      renderPDF: {
+        actaNacimiento: false,
+        comprobanteDomicilio: false,
+        comprobanteEstudios: false
+      },
+      nameFilePDF: {
+        actaNacimiento: "",
+        comprobanteDomicilio: "",
+        comprobanteEstudios: ""
+      },
+      //temporal hasta mostrar render pdf
+      showInscription: true,
+      arrayActa : ["actaNacimientoRender", "actaNacimiento"],
+      arrayDomicilio : ["comprobanteDomicilioRender", "comprobanteDomicilio"],
+      arrayEstudios : ["comprobanteEstudiosRender", "comprobanteEstudios"],
     }
+  },
+  watch:{
+    
   },
 
   methods: {
@@ -1052,15 +1161,33 @@ app.component("v-inscription-newRegister", {
       this.showInscription = !this.showInscription
     },
 
-    updateProperties(object){      
-      this.$emit("saveData", object)      
+    updateTypeFile(){
+      this.isDocumentUpload(this.arrayActa);
+      this.isDocumentUpload(this.arrayDomicilio);
+      this.isDocumentUpload(this.arrayEstudios);
     },
 
-    isDocumentUpload(name){
-      if (this.reactive.newStudent[name] == undefined) {
+    updateProperties(object){      
+      this.$emit("saveData", object)
+      this.updateTypeFile();
+    },
+
+    isDocumentUpload(array){
+      const fileRender = this.reactive.newStudent[array[0]];
+      const file = this.reactive.newStudent[array[1]];
+      if (file.type === 'application/pdf') {
+        this.renderPDF[array[1]] = true;
+        //temporal hasta mostrar render pdf en el DOM        
+        this.nameFilePDF[array[1]] = file.name;
+        //temporal hasta mostrar render pdf en el DOM
+      } else {
+        this.renderPDF[array[1]] = false;
+      }
+
+      if (fileRender == undefined) {
         return ""
       } else {
-        return this.reactive.newStudent[name]
+        return fileRender
       }
     },
 
@@ -1097,7 +1224,7 @@ app.component("v-inscription-newRegister", {
         db: false,        
       }
       this.$emit("eventInscription", objInscription);      
-    }    
+    }
   },
  
   template: `
@@ -1111,30 +1238,42 @@ app.component("v-inscription-newRegister", {
     
     <br>
     <div>
-      <p>Esta es la información que proporcionaste: </p>
+    <p>Esta es la información que nos proporcionaste y con la cual completaras la primera parte del proceso de inscripción:</p>
+    <p>Por favor verifica que todo sea correcto.</p>
+    <p>Nombre: {{ reactive.newStudent.nombre }} {{ reactive.newStudent.a_paterno }} {{ reactive.newStudent.a_materno }}.</p>
       <p>CURP: {{ reactive.newStudent.curp }}</p>
-      <figure>
-        <img v-bind:src=isDocumentUpload("actaNacimientoRender") alt="Acta de nacimiento">
+      
+      <figure v-if="!renderPDF.actaNacimiento">
+        <img v-bind:src=isDocumentUpload(arrayActa) alt="Acta de nacimiento">
         <figcaption>Acta de nacimiento</figcaption>
       </figure>
+      <p v-else>Tú acta de nacimiento es el archivo con el nombre: {{ nameFilePDF.actaNacimiento }}</p>
+      
       <br>
+      <p>Teléfono de contacto: {{ reactive.newStudent.telefono }}</p>
+      <p>Correo electrónico: {{ reactive.newStudent.email }}</p>
+
+      <br>
+
       <p>Domicilio: {{ reactive.newStudent.calle}}, {{ reactive.newStudent.colonia }}, en 
         {{ reactive.newStudent.municipio }}, {{ reactive.newStudent.estado  }}, 
         Código Postal {{ reactive.newStudent.cp }}
       </p>
-      <figure>
-        <img v-bind:src=isDocumentUpload("comprobanteDomicilioRender") alt="Comprobante de Domicilio">
+      <figure  v-if="!renderPDF.comprobanteDomicilio">
+        <img v-bind:src=isDocumentUpload(arrayDomicilio) alt="Comprobante de Domicilio">
         <figcaption>Comprobante de Domicilio</figcaption>
       </figure>
+      <p v-else>Tu comprobante de domicilio es el archivo en formato PDF con el nombre: {{ nameFilePDF.comprobanteDomicilio }}</p>
+      
       <br>
-      <p>Teléfono de contacto: {{ reactive.newStudent.telefono }}</p>
-      <p>Correo electrónico: {{ reactive.newStudent.email }}</p>
-      <br>
+
       <p>Grado escolar: {{ this.reactive.newStudent.escolaridad}}</p>
-      <figure>
-        <img v-bind:src=isDocumentUpload("comprobanteEstudiosRender") alt="Comprobante de Estudios">
+      <figure v-if="!renderPDF.comprobanteEstudios">
+        <img v-bind:src=isDocumentUpload(arrayEstudios) alt="Comprobante de Estudios">
         <figcaption>Comprobante de Estudios</figcaption>
-      </figure>            
+      </figure>
+      <p v-else>Tu comprobante de estudios es el archivo en formato PDF con el nombre: {{ nameFilePDF.comprobanteEstudios }}</p>
+
     </div>
       <br>      
     </section>
@@ -1142,15 +1281,19 @@ app.component("v-inscription-newRegister", {
     <v-updateRegister
       v-on:showUpdateFieldOnly="showUpdateFieldOnly"
       v-on:updateProperties="updateProperties"
-    />
-    <v-updateActaNacimiento></v-updateActaNacimiento>
+    />    
 
-    <button 
+    <v-buttonInscription
       v-if="showInscription"
-      v-on:click="inscription">
-      Inscribirme
-    </button>
+      v-on:click="inscription">      
+    </v-buttonInscription>
   `
+  // <iframe 
+  //       v-else
+  //       v-bind:src=isDocumentUpload(arrayActa)
+  //       type="application/pdf"
+  //       width="50%" height="50%>
+  //     </iframe>
 })
 
 app.component("v-updateBirthCertificate", {
@@ -1242,6 +1385,14 @@ app.component("v-disability", {
         <option v-for= "disability in discapacidades">{{ disability }}</option>
       </select>
     </label>
+  `
+})
+
+app.component("v-buttonInscription", {
+  template: `
+  <button class="button_inscription">
+    PRE-INSCRIBIR
+  </button>
   `
 })
 
