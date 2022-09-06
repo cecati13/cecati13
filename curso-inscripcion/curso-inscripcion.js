@@ -40,13 +40,14 @@ const app = Vue.createApp({
 
   methods: {
     async consult(formData) {
+      this.isWelcome = false;
+      this.infoCourseShow = false;
+      this.preloader();
       const API = `${this.API}/students/typeRegister`      
       const response = await this.sendData(formData, API);
       console.log("consult reponse desde API",response);
       if (response.error) {
-        //preloader(result);        
-        this.isWelcome = false;
-        this.infoCourseShow = false;
+        this.preloader();
         this.isNewStudent = true;
       } else if (response.message === "internal server error") {
         //error generalemente al hacer una primera consulta en SpreedSheets
@@ -57,9 +58,14 @@ const app = Vue.createApp({
         //el usuario existe en nuestros registros
         const storageResponse = JSON.stringify(response);
         sessionStorage.setItem(this.keyStudentStorage, storageResponse);
+        this.preloader();
         this.isStudent();        
-        // preloader(result);
       }
+    },
+
+    preloader() {
+      const nodeAPP = document.getElementById("preloader");
+      nodeAPP.classList.toggle("preloader");
     },
 
     async verifyCURPofData (){
@@ -74,8 +80,7 @@ const app = Vue.createApp({
             enumerable: true
           })          
           console.log("continuar inscripcion", responseFile);
-          this.$emit("continueFirstRegister", responseFile.responseObj)
-          //VERIFICAR SI USUARIO CAMBIO LA CURP Y VERIFICAR QUE NO ESTE INSCRITO EN EL SISTEMA
+          this.$emit("continueFirstRegister", responseFile.responseObj)          
         } else if (responseFile.curp == "false") {
           console.log("La CURP no corresponde con los datos enviados. Verifica la información.")
           alert("Error. Verifica la información.")
@@ -87,6 +92,9 @@ const app = Vue.createApp({
     },
 
     async inscription(objInscription) {
+      this.isUserStudent = false;
+      this.isNewStudent = false;
+      this.preloader();
       let objLinksFiles = {};
       if (objInscription.formFiles) {
         const formFiles = objInscription.formFiles;
@@ -106,13 +114,12 @@ const app = Vue.createApp({
 
       const responseData = await this.sendData(objDataInscription, endpoint);
       console.log(responseData);
-      this.isUserStudent = false;
-      this.isNewStudent = false;
       if (responseData.status) {
         this.dataConfirmation.nombre = objDataInscription.nombre,
         this.dataConfirmation.matricula = responseData.matricula,
         this.dataConfirmation.fechaRegistro = responseData.fechaRegistro
-      }      
+      }
+      this.preloader();
       this.confirmation = true;
     },
 
@@ -152,9 +159,7 @@ const app = Vue.createApp({
       const dataSaveStudent = JSON.parse(sessionStorage.getItem(this.keyStudentStorage));
       this.reactive.studentDB = {
         ...dataSaveStudent
-      }
-      this.isWelcome = false;
-      this.infoCourseShow = false;
+      }    
       this.isUserStudent = true;      
     },        
   },
@@ -173,11 +178,15 @@ const app = Vue.createApp({
   },
 
   template: `
-  <section>
-    <h3>Formulario de inscripción</h3>
+  <section class="seccion__inscription">
+    <h3>Inscripción</h3>
 
-    <v-course 
+    <div id="preloader"></div>
+
+    <p v-if="infoCourseShow">Proceso de inscripción:</p>
+    <v-course
       id="header__course"
+      class="seccion__inscription__course"
       v-if="infoCourseShow"
     />
 
@@ -226,13 +235,13 @@ app.component("v-typeRegister", {
   },
 
   template: `
-  <div class="typeRegister">
+  <div class="register">
     <form v-on:submit="curpVerify">
     <label for="curp">Para continuar por favor ingresa </label>
     <v-tagCurp/>
     <v-button></v-button>
     </form>
-    <p>Si no conoces tu curp, consultar <a href="https://www.gob.mx/curp/">https://www.gob.mx/curp/</a> para obtenerla</p>
+    <p>Si no conoces tu curp, consultar <a href="https://www.gob.mx/curp/" class ="incription__link">https://www.gob.mx/curp/</a> para obtenerla</p>
   </div>
       `    
 })
@@ -249,7 +258,7 @@ app.component("v-dbRegister", {
   methods : {
     showUpdateFieldOnly() {
       this.showInscription = !this.showInscription
-    },
+    },   
 
     updateProperties(object) {
       this.reactive.studentDB.update = true;
@@ -306,13 +315,16 @@ app.component("v-dbRegister", {
     v-if="showInscription"    
       class="register">
       <h4>Bienvenido a un nuevo curso en CECATI 13, {{ reactive.studentDB.nombre }} {{reactive.studentDB.a_paterno}}</h4>
-      <p>Por favor verifica que la siguiente información en nuestro sistema correspondan a tú registro.</p>
-      <p>Usaremos la información de contacto que tenemos registrada para contactarte y dar seguimiento a tú solicitud de inscripción. Si la información que nos proporcionaste en una pasado ha cambiado, por favor actualizala antes de inscribirte</p>
+      <p>Usaremos la información personal del último curso que tomaste. Si esa información ha cambiado, actualizala por favor.</p>      
       
       <br>
+      
+      <p>Usaremos esta información para contactarte:</p>
 
-      <p>Correo electrónico registrado: {{ reactive.studentDB.email }}</p>
-      <p>Numero telefónico:  {{ reactive.studentDB.telefono }}</p>
+      <p>Correo electrónico:</p>
+      <p>{{ reactive.studentDB.email }}</p>
+      <p>Teléfono:</p>
+      <p>{{ reactive.studentDB.telefono }}</p>
       
       <br>
     
@@ -328,9 +340,9 @@ app.component("v-dbRegister", {
   <div
     v-if="showInscription" 
     class="register">
-    <p>Si la información que cambio no puede actualizarse con los botones, continua con la inscripción y cuando te contactemos indicanos lo que ha cambiado.</p>
+    <p class="note">El nombre y fecha de nacimiento no pueden actualizarse desde este sitio, si estos datos en nuestro sistema son incorrectos por favor <a href="../contacto">CONTACTANOS</a>.</p>
 
-    <p>Si todo es correcto INSCRIBETE ahora:</p>
+    
     <v-buttonInscription
       v-on:click="inscription">        
     </-button>
@@ -555,18 +567,22 @@ app.component("v-dataGeneral", {
   },
   
   template: `
-  <form class="dataGeneral" v-on:submit="verifyDataGeneral" name="dataGeneral">
-    <v-tagCurp/>
+  <form v-on:submit="verifyDataGeneral" name="dataGeneral">
+    <input v-bind:value="reactive.curp" name="curp" readonly></input>
     <h4>Para Verificar que tú CURP sea correcta y continuar con la inscripción, por favor proporcionanos los siguientes datos personales:</h4>
-    <label for="birthday">Fecha de Nacimiento</label><span class="required">*</span>
+    <label for="birthday">Fecha de Nacimiento</label>
     <input
       id="birthdate"
       type="date" name="birthday" 
       placeholder="Fecha de nacimiento..."
       v-on:input="isAgeOver15"
+      required
     >
-    <p v-if="!reactive.ageRequeriment">
-      Lo sentimos, la edad minima para poder inscribirte a alguno de nuestros cursos es 15 años cumplidos
+    <p v-if="!reactive.ageRequeriment" class="inscription__message">
+      Lo sentimos no podemos continuar con tu proceso de inscripción
+    </p>
+    <p v-if="!reactive.ageRequeriment" class="inscription__message">
+    La edad minima para inscribirte a nuestros cursos es 15 años cumplidos.
     </p>
 
     <label for="nombre" v-if="meetsAgeRequirement">Nombre</label>
@@ -575,6 +591,7 @@ app.component("v-dataGeneral", {
       type="text" 
       name="nombre" 
       placeholder="Escribe tu nombre de pila..."
+      required
     >
 
     <label for="a_paterno" v-if="meetsAgeRequirement">Apellido Paterno</label>
@@ -583,6 +600,7 @@ app.component("v-dataGeneral", {
       type="text" 
       name="a_paterno" 
       placeholder="Tu apellido paterno..."
+      required
     >
 
     <label for="a_materno" v-if="meetsAgeRequirement">Apellido Materno</label>
@@ -591,29 +609,31 @@ app.component("v-dataGeneral", {
       type="text"
       name="a_materno" 
       placeholder="Tu apellido materno..."
+      required
     >
+
+    <div class="label__gender" v-if="meetsAgeRequirement">
+      <label for="genero" name="MASCULINO" class="label__gender">Hombre 
+          <input
+            type="radio" 
+            value="MASCULINO" 
+            name="genero" 
+            id="genero"
+          >
+      </label>
+      <label for="genero" name="FEMENINO" class="label__gender">Mujer
+          <input
+            type="radio" 
+            value="FEMENINO" name="genero"
+          >
+      </label>    
+    </div>
     
-    <label for="genero" name="MASCULINO" v-if="meetsAgeRequirement">Hombre 
-        <input 
-          v-if="meetsAgeRequirement"
-          type="radio" 
-          value="MASCULINO" 
-          name="genero" 
-          id="genero"
-        >
-    </label>
-    <label for="genero" name="FEMENINO" v-if="meetsAgeRequirement">Mujer
-        <input 
-          v-if="meetsAgeRequirement"
-          type="radio" 
-          value="FEMENINO" name="genero"
-        >
-    </label>
 
     <br>
 
+    <p v-if="meetsAgeRequirement">Lugar de Nacimiento</p>
     <label for="estado" v-if="meetsAgeRequirement">
-      <span>Lugar de Nacimiento</span>
       <select name="estado" id="placeOfBirth">
         <option v-for="item in estadoNacimiento" :key="item">{{ item }}</option>
     </label>
@@ -662,10 +682,10 @@ app.component("v-contact", {
   <form v-on:submit="contactDetailCompleted">
     <h4>Datos de contacto:</h4>
     <label for="email">Correo Electrónico</label>
-    <input type="email" name="email" placeholder="Escribe un correo electronico válido...">
-    <label for="telefono">Teléfono</label><span class="required">*</span>
-    <input type="tel" name="telefono" placeholder="Número Telefónico donde podamos contactarte...">
-    <p>La mayoría de los docentes crean grupos de WhatsApp para dar instrucciones a sus estudiantes, por verifica que sea correcto.</p>
+    <input type="email" name="email" placeholder="email válido..." required>
+    <label for="telefono">Teléfono</label>
+    <input type="tel" name="telefono" placeholder="Teléfono a 10 dígitos" required>
+    <p>Generalmente los docentes crean grupos de WhatsApp para dar instrucciones a los estudiantes.</p>
     <v-button></v-button>
   </form>
   `
@@ -759,10 +779,10 @@ app.component("v-address", {
   <form v-on:submit="addressDetailCompleted">
     <h4>Por favor indica tu domicilio:</h4>
     <label for="calle">Calle y número</label>
-    <input type="text" name="calle" placeholder="Calle y número...">
+    <input type="text" name="calle" placeholder="Calle y número..." required>
     
     <label for="colonia">Colonia</label>
-    <input type="text" name="colonia" placeholder="Colonia...">
+    <input type="text" name="colonia" placeholder="Colonia..." required>
     <!-- https://copomex.com/#pricing-section por 330 para agilizar este tramite -->
 
     <label for="cp"> <span>Código Postal</span>
@@ -771,18 +791,19 @@ app.component("v-address", {
       type="number" 
       name="cp" 
       placeholder="Código Postal..."
+      required
       min="01000"
       max="99999"
     />      
+    <p>Estado</p>
     <label for="estado">
-    <span>Estado</span>
     <select name="estado" id="estado" v-on:change="showMunicipio">
       <option v-for="(item, i) in valueEstado" v-bind:value="i">
         {{ i }}
       </option>
     </label>      
+    <p>Municipio o Alcaldía</p>
     <label for="municipio">
-      <span>Municipio o Alcaldía</span>
       <select name="municipio" id="municipio">
         <option v-for="item in valueEstado[estadoRepublica]" :key="item" @municipio="municipio"> {{ item }}</option>
       </select>
@@ -805,6 +826,7 @@ app.component("v-scholarship", {
   inject: ["MAX_SIZE_FILES"],
   data(){
     return {
+      // escolaridadDefaul: this.listaEscolaridades[1],
       listaEscolaridades:[      
         "Solo sabe leer y escribir",
         "Primaria inconclusa",
@@ -844,10 +866,15 @@ app.component("v-scholarship", {
   <form v-on:submit="scholarshipDetailCompleted">
     <h4>Grado Escolar</h4>
     
+    <p>Escolaridad</p>
     <label for="scholarship">
-    <span>Escolaridad</span>
     <select name="scholarship" id="scholarship">            
-      <option v-for="item in listaEscolaridades" :key="item">{{ item }}</option>
+      <option 
+        v-for="item in listaEscolaridades" 
+        selected="listaEscolaridades[0]"
+        :key="item">
+          {{ item }}
+      </option>
     </label>  
 
     <label for="studiesCertificate">Adjuntar Comprobante de máximo grado de estudios</label>
@@ -996,49 +1023,52 @@ app.component("v-updateRegister", {
   },
 
   template: `
-  <div id="updateRegister">
-  <p>Actualzación de información:</p>
+  <section class="register">  
+    <h4>Actualzación de información:</h4>
+    <br>
+    <div class="updateRegister">
 
-    <button 
-      v-if="showButtonBirthCertificate"
-      v-on:click="buttonUpdateBirthCertificate = !buttonUpdateBirthCertificate">
-        {{ valueButtonBirthCertificate }}
-    </button>
-    <v-updateBirthCertificate
-      v-if="buttonUpdateBirthCertificate"
-      v-on:updateProperties="updateProperties"
-    />
+      <v-buttonUpdate
+        v-if="showButtonBirthCertificate"
+        v-on:click="buttonUpdateBirthCertificate = !buttonUpdateBirthCertificate">
+          {{ valueButtonBirthCertificate }}
+      </v-buttonUpdate>
+      <v-updateBirthCertificate
+        v-if="buttonUpdateBirthCertificate"
+        v-on:updateProperties="updateProperties"
+      />
 
-    <button 
-      v-if="showButtonContact"
-      v-on:click="buttonUpdateContact = !buttonUpdateContact">
-        {{ valueButtonContact }}
-    </button>    
-    <v-updateContact
-      v-if="buttonUpdateContact"
-      v-on:updateProperties="updateProperties"
-    />
+      <v-buttonUpdate 
+        v-if="showButtonContact"
+        v-on:click="buttonUpdateContact = !buttonUpdateContact">
+          {{ valueButtonContact }}
+      </v-buttonUpdate>    
+      <v-updateContact
+        v-if="buttonUpdateContact"
+        v-on:updateProperties="updateProperties"
+      />
 
-    <button 
-      v-if="showButtonAddress"
-      v-on:click="buttonUpdateAddress = !buttonUpdateAddress">
-        {{ valueButtonAddress }}
-    </button>
-    <v-updateAddress
-      v-if="buttonUpdateAddress"
-      v-on:updateProperties="updateProperties"
-    />
+      <v-buttonUpdate 
+        v-if="showButtonAddress"
+        v-on:click="buttonUpdateAddress = !buttonUpdateAddress">
+          {{ valueButtonAddress }}
+      </v-buttonUpdate>
+      <v-updateAddress
+        v-if="buttonUpdateAddress"
+        v-on:updateProperties="updateProperties"
+      />
 
-    <button 
-      v-if="showButtonScholarship"  
-      v-on:click="buttonUpdateScholarship = !buttonUpdateScholarship">
-      {{ valueButtonScholarship }}
-    </button>
-    <v-updateSchool
-      v-if="buttonUpdateScholarship"
-      v-on:updateProperties="updateProperties"
-    />
-  </div>
+      <v-buttonUpdate 
+        v-if="showButtonScholarship"  
+        v-on:click="buttonUpdateScholarship = !buttonUpdateScholarship">
+        {{ valueButtonScholarship }}
+      </v-buttonUpdate>
+      <v-updateSchool
+        v-if="buttonUpdateScholarship"
+        v-on:updateProperties="updateProperties"
+      />
+    </div>
+  </section>
   `
 })
 
@@ -1109,7 +1139,7 @@ app.component("v-firstRegister", {
 
 app.component("v-button", {
   template: `
-  <button class="button_continue">
+  <button class="button__continue">
     Continuar
   </button>
   `
@@ -1123,7 +1153,8 @@ app.component("v-tagCurp", {
       type="text" 
       id="valueCurp" 
       name="curp" 
-      placeholder="CURP..." 
+      placeholder="CURP..."
+      required
       v-bind:value=reactive.curp
       onkeyup="javascript:this.value=this.value.toUpperCase();"
   >
@@ -1229,17 +1260,16 @@ app.component("v-inscription-newRegister", {
  
   template: `
   <section v-if="showInscription" id="v-inscription-newRegister">
-    <p>Gracias por proporcionarnos tus datos {{ reactive.newStudent.nombre }} {{ reactive.newStudent.a_paterno }} {{ reactive.newStudent.a_materno }}</p>
-    <p>Verificaremos que la información que proporcionaste coincida con los documentos que adjuntaste, y en un plazo de entre 48 y 72 horas hábiles te daremos mas instrucciones</p>
+    <p>Gracias por proporcionarnos tus datos {{ reactive.newStudent.nombre }} {{ reactive.newStudent.a_paterno }} {{ reactive.newStudent.a_materno }}</p>    
     <br>    
-    <p>Te recordamos que te estas inscribiendo al curso:</p>
+    <p>Te inscribiremos a:</p>
     
     <v-course/>
     
     <br>
     <div>
-    <p>Esta es la información que nos proporcionaste y con la cual completaras la primera parte del proceso de inscripción:</p>
-    <p>Por favor verifica que todo sea correcto.</p>
+    <p>Esta es la información que nos proporcionaste. Revisa nuevamente y si  todo es correcto presiona sobre PRE-INSCRIBIR.</p>
+    
     <p>Nombre: {{ reactive.newStudent.nombre }} {{ reactive.newStudent.a_paterno }} {{ reactive.newStudent.a_materno }}.</p>
       <p>CURP: {{ reactive.newStudent.curp }}</p>
       
@@ -1247,7 +1277,7 @@ app.component("v-inscription-newRegister", {
         <img v-bind:src=isDocumentUpload(arrayActa) alt="Acta de nacimiento">
         <figcaption>Acta de nacimiento</figcaption>
       </figure>
-      <p v-else>Tú acta de nacimiento es el archivo con el nombre: {{ nameFilePDF.actaNacimiento }}</p>
+      <p v-else>Como acta de nacimiento ingresaste el archivo: {{ nameFilePDF.actaNacimiento }}</p>
       
       <br>
       <p>Teléfono de contacto: {{ reactive.newStudent.telefono }}</p>
@@ -1263,7 +1293,7 @@ app.component("v-inscription-newRegister", {
         <img v-bind:src=isDocumentUpload(arrayDomicilio) alt="Comprobante de Domicilio">
         <figcaption>Comprobante de Domicilio</figcaption>
       </figure>
-      <p v-else>Tu comprobante de domicilio es el archivo en formato PDF con el nombre: {{ nameFilePDF.comprobanteDomicilio }}</p>
+      <p v-else>Tu comprobante de domicilio es el archivo PDF con el nombre: {{ nameFilePDF.comprobanteDomicilio }}</p>
       
       <br>
 
@@ -1272,7 +1302,7 @@ app.component("v-inscription-newRegister", {
         <img v-bind:src=isDocumentUpload(arrayEstudios) alt="Comprobante de Estudios">
         <figcaption>Comprobante de Estudios</figcaption>
       </figure>
-      <p v-else>Tu comprobante de estudios es el archivo en formato PDF con el nombre: {{ nameFilePDF.comprobanteEstudios }}</p>
+      <p v-else>Tu comprobante de estudios es el archivo PDF con el nombre: {{ nameFilePDF.comprobanteEstudios }}</p>
 
     </div>
       <br>      
@@ -1320,7 +1350,7 @@ app.component("v-updateBirthCertificate", {
       accept=".jpg, .jpeg, .pdf" 
       capture="environment"
     >
-    <button>Actualizar</button>  
+    <v-button>Actualizar</v-button>  
   </form>
   `
 })
@@ -1357,10 +1387,10 @@ app.component("v-inputFile", {
 app.component("v-course", { 
   inject: ["course"],
   template: `
-  <article class="register">
+  <article>
     <div v-bind:value="course">
-      <p>Has iniciando el proceso de preinscripción al curso: {{ course.curso }},
-      de la especialidad {{ course.especialidad }}.</p>
+      <p>Curso: {{ course.curso }}.</p>
+      <p>Especialidad: {{ course.especialidad }}.</p>
       <p>Impartido por {{ course.profesor }}.</p>
       <p>El curso inicia el {{ course.fecha_inicio }}.
       </p>    
@@ -1379,7 +1409,7 @@ app.component("v-disability", {
   },
 
   template: `
-  <p>¿Presenta alguna discapacidad? <span class="required">*</span></p>
+  <p>¿Presenta alguna discapacidad?</p>
     <label for="disability">
       <select name="disability" id="disability">
         <option v-for= "disability in discapacidades">{{ disability }}</option>
@@ -1390,24 +1420,36 @@ app.component("v-disability", {
 
 app.component("v-buttonInscription", {
   template: `
-  <button class="button_inscription">
+  <button class="button__inscription">
     PRE-INSCRIBIR
   </button>
   `
+})
+
+app.component("v-buttonUpdate",
+{
+template:  `
+<button class="button__update">
+  <slot></slot>
+</button>
+` 
 })
 
 app.component("v-confirmation", {
   inject: ["course", "dataConfirmation"],
   template: `
   <div class="register">
-    <p> {{this.dataConfirmation.nombre}}, has sido preinscrito en el curso {{ this.course.curso }} que inicia el {{ this.course.fecha_inicio }}.</p>
-    <p>Revisaremos la información que acabas de enviar y nos pondremos en contacto contigo para indicarte que puedes realizar el pago del curso por $ {{ this.course.costo }}</p>
-    <p>Te contactaremos en el numero telefonico que nos indicaste.</p>
-    <br>
+    <p>Inscripción recibida. {{ this.dataConfirmation.fechaRegistro }}</p>
+    <p> {{this.dataConfirmation.nombre}}, has sido preinscrito en el curso {{ this.course.curso }}, que inicia el {{ this.course.fecha_inicio }}.</p>
     
-    <p></p>
-    <p>El numero de matricula que tienes asignado es el siguiente:</p>
+    <br>
+    <p>El numero de matricula que tienes asignado es:</p>
     <p>{{ this.dataConfirmation.matricula }}</p>
+
+    <br>
+    <p>Revisaremos tu información, y en un plazo de entre 24 y 72 horas hábiles te diremos si puedes realizar el pago  del curso por $ {{ this.course.costo }}</p>  
+    
+    <br>    
     <p>¡Gracias por tu preferencia!</p>
   </div>
   `
