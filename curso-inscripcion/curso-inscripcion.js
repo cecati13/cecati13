@@ -50,7 +50,7 @@ const app = Vue.createApp({
         this.preloader();
         this.isNewStudent = true;
       } else if (response.message === "internal server error") {
-        //error generalemente al hacer una primera consulta en SpreedSheets
+        //error generalemente al hacer una primera consulta en SpreedSheets en version 16 nodejs
         alert("Hubo un error en la comunicación al servidor, por favor vuelve a intentarlo. Si el error persiste intentalo mas tarde.")
       } else if (response.message === "Wrong Structure") {
         alert("La Estructura de la CURP es incorrecta, revisa y corrige la información")
@@ -114,12 +114,15 @@ const app = Vue.createApp({
 
       const responseData = await this.sendData(objDataInscription, endpoint);
       console.log(responseData);
+
+      //falta manejo de errores que responda el servidor
       if (responseData.status) {
         this.dataConfirmation.nombre = objDataInscription.nombre,
         this.dataConfirmation.matricula = responseData.matricula,
         this.dataConfirmation.fechaRegistro = responseData.fechaRegistro
       }
       this.preloader();
+      //si la inscripcion se registro, borrar sessionStorage. Pendiente.      
       this.confirmation = true;
     },
 
@@ -177,16 +180,18 @@ const app = Vue.createApp({
     },
   },
 
+  // en v-course:
+  // id="header__course"
   template: `
   <section class="seccion__inscription">
     <h3>Inscripción</h3>
 
     <div id="preloader"></div>
 
-    <p v-if="infoCourseShow">Proceso de inscripción:</p>
-    <v-course
-      id="header__course"
-      class="seccion__inscription__course"
+    <h4 v-if="infoCourseShow" class="article__course">
+      Bienvenido al proceso de inscripción al curso:
+    </h4>
+    <v-course            
       v-if="infoCourseShow"
     />
 
@@ -237,7 +242,7 @@ app.component("v-typeRegister", {
   template: `
   <div class="register">
     <form v-on:submit="curpVerify">
-    <label for="curp">Para continuar por favor ingresa </label>
+    <label for="curp">Para continuar por favor ingresa  tú</label>
     <v-tagCurp/>
     <v-button></v-button>
     </form>
@@ -313,22 +318,23 @@ app.component("v-dbRegister", {
   template: `  
   <div 
     v-if="showInscription"    
-      class="register">
-      <h4>Bienvenido a un nuevo curso en CECATI 13, {{ reactive.studentDB.nombre }} {{reactive.studentDB.a_paterno}}</h4>
-      <p>Usaremos la información personal del último curso que tomaste. Si esa información ha cambiado, actualizala por favor.</p>      
+    class="register__preSend--db">
       
-      <br>
+    <h4>Bienvenido a un nuevo curso en CECATI 13.</h4>
+    <p><span class="register__preSend--data">{{ reactive.studentDB.nombre }} {{ reactive.studentDB.a_paterno }} {{ reactive.studentDB.a_materno }}</span> usaremos la información personal del último curso al que te inscribiste.</p>
       
-      <p>Usaremos esta información para contactarte:</p>
+    <br>
+      
+    <h5>Datos de contacto.</h5>    
+    <br>
+    <p>Correo electrónico:</p>
+    <p class="register__preSend--data">{{ reactive.studentDB.email }}</p>
+    <p>Teléfono:</p>
+    <p class="register__preSend--data">{{ reactive.studentDB.telefono }}</p>
+    <br>
 
-      <p>Correo electrónico:</p>
-      <p>{{ reactive.studentDB.email }}</p>
-      <p>Teléfono:</p>
-      <p>{{ reactive.studentDB.telefono }}</p>
-      
-      <br>
-    
-      <v-course></v-course>
+    <p>Si es necesario puedes actualizar la información personal que registraste en tu último curso.</p>
+    <p class="note">NOTA: Algunos datos no pueden actualizarse desde este sitio. Si necesitas realizar una correción por favor <a href="../contacto">CONTACTANOS</a> antes de inscribirte.</p>
   </div>
   
   <v-updateRegister
@@ -336,11 +342,12 @@ app.component("v-dbRegister", {
     v-on:updateProperties="updateProperties"
     class="register"
   />
+    
+  <v-course v-if="showInscription"/>
   
   <div
     v-if="showInscription" 
-    class="register">
-    <p class="note">El nombre y fecha de nacimiento no pueden actualizarse desde este sitio, si estos datos en nuestro sistema son incorrectos por favor <a href="../contacto">CONTACTANOS</a>.</p>
+    class="register">    
 
     
     <v-buttonInscription
@@ -582,7 +589,7 @@ app.component("v-dataGeneral", {
       Lo sentimos no podemos continuar con tu proceso de inscripción
     </p>
     <p v-if="!reactive.ageRequeriment" class="inscription__message">
-    La edad minima para inscribirte a nuestros cursos es 15 años cumplidos.
+    La edad minima para inscribirte son 15 años cumplidos.
     </p>
 
     <label for="nombre" v-if="meetsAgeRequirement">Nombre</label>
@@ -643,7 +650,8 @@ app.component("v-dataGeneral", {
     >
       Adjuntar Acta de Nacimiento
     </label>
-    <input 
+    <v-legendFiles v-if="meetsAgeRequirement"/>
+    <input
       v-if="meetsAgeRequirement"       
       type="file" 
       name="birthCertificate"
@@ -762,13 +770,23 @@ app.component("v-address", {
           break;
         }
       }
+      const validateFile = this.validateTypeFile(addressCertificate);
       if (empty) {
         alert("Por favor proporciona la información completa. Revisa todos los campos")
       } else if (addressCertificate.size > `${this.MAX_SIZE_FILES}`) {
         alert("El archivo tiene que ser menor a 3 MegaBytes. Por favor intenta nuevamente.")
+      } else if (!validateFile){
+        alert("El tipo de archivono es valido. Solo puedes subir archivos en formato .pdf .jpeg .jpg. Por favor intenta nuevamente.")
       } else {
         this.$emit("addressDetailCompleted", objAddress)
       }
+    },
+
+    validateTypeFile(file){
+      const format = file.type;
+      const arrayFormats = ["application/pdf", "image/jpg", "image/jpeg", "image/png"];
+      const validateFormat = arrayFormats.some( type => type === format);
+      return validateFormat;
     },
 
     showMunicipio(e){      
@@ -810,6 +828,7 @@ app.component("v-address", {
     </label>
 
     <label for="addressCertificate">Adjuntar Comprobante de Domicilio</label>
+    <v-legendFiles/>
     <input 
       type="file" 
       name="addressCertificate" 
@@ -853,12 +872,21 @@ app.component("v-scholarship", {
         comprobanteEstudios: studiesCertificate,
         comprobanteEstudiosRender: studiesCertificateRender
       };
-
+      const validateFile = this.validateTypeFile(studiesCertificate);
       if (studiesCertificate.size > `${this.MAX_SIZE_FILES}`) {
-        alert("El archivo tiene que ser menor a 3 MegaBytes. Por favor intenta nuevamente.")
-      } else {
-      this.$emit("scholarshipDetailCompleted", objScholarship)
+        alert("El archivo tiene que ser menor a 3 MegaBytes. Por favor intenta nuevamente.");
+      } else if(!validateFile){
+        alert("El tipo de archivono es valido. Solo puedes subir archivos en formato .pdf .jpeg .jpg. Por favor intenta nuevamente.");
+      } else{
+        this.$emit("scholarshipDetailCompleted", objScholarship)
       }
+    },
+
+    validateTypeFile(file){
+      const format = file.type;
+      const arrayFormats = ["application/pdf", "image/jpg", "image/jpeg", "image/png"];
+      const validateFormat = arrayFormats.some( type => type === format);
+      return validateFormat;
     }
   },
 
@@ -866,7 +894,7 @@ app.component("v-scholarship", {
   <form v-on:submit="scholarshipDetailCompleted">
     <h4>Grado Escolar</h4>
     
-    <p>Escolaridad</p>
+    <p>¿Cual es el máximo grado de estudios que alcanzaste? Selecciona una opción.</p>
     <label for="scholarship">
     <select name="scholarship" id="scholarship">            
       <option 
@@ -877,7 +905,8 @@ app.component("v-scholarship", {
       </option>
     </label>  
 
-    <label for="studiesCertificate">Adjuntar Comprobante de máximo grado de estudios</label>
+    <label for="studiesCertificate">Adjunta un comprobante del máximo grado de estudios alcanzados.</label>
+    <v-legendFiles/>
     <input 
       type="file" 
       name="studiesCertificate"
@@ -961,7 +990,7 @@ app.component("v-updateRegister", {
 
       showButtonScholarship: true,      
       buttonUpdateScholarship: false,
-      valueButtonScholarship: "Actualizar Grado de Estudios",
+      valueButtonScholarship: "Actualizar Escolaridad",
 
       valueCancel: "Cancelar Actualización"
     }
@@ -1005,7 +1034,7 @@ app.component("v-updateRegister", {
         this.showUpdateFieldOnly();        
         this.valueButtonScholarship = this.buttonUpdateScholarship  ?
         this.valueCancel :
-        "Actualizar Grado de Estudios";
+        "Actualizar Escolaridad";
       }
   },
 
@@ -1023,9 +1052,8 @@ app.component("v-updateRegister", {
   },
 
   template: `
-  <section class="register">  
-    <h4>Actualzación de información:</h4>
-    <br>
+  <section class="container--updateRegister">  
+    <h5>Actualización de información</h5>    
     <div class="updateRegister">
 
       <v-buttonUpdate
@@ -1037,6 +1065,26 @@ app.component("v-updateRegister", {
         v-if="buttonUpdateBirthCertificate"
         v-on:updateProperties="updateProperties"
       />
+      
+      <v-buttonUpdate 
+      v-if="showButtonAddress"
+      v-on:click="buttonUpdateAddress = !buttonUpdateAddress">
+      {{ valueButtonAddress }}
+      </v-buttonUpdate>
+      <v-updateAddress
+      v-if="buttonUpdateAddress"
+      v-on:updateProperties="updateProperties"
+      />
+      
+      <v-buttonUpdate 
+      v-if="showButtonScholarship"  
+      v-on:click="buttonUpdateScholarship = !buttonUpdateScholarship">
+      {{ valueButtonScholarship }}
+      </v-buttonUpdate>
+      <v-updateSchool
+      v-if="buttonUpdateScholarship"
+      v-on:updateProperties="updateProperties"
+      />
 
       <v-buttonUpdate 
         v-if="showButtonContact"
@@ -1045,26 +1093,6 @@ app.component("v-updateRegister", {
       </v-buttonUpdate>    
       <v-updateContact
         v-if="buttonUpdateContact"
-        v-on:updateProperties="updateProperties"
-      />
-
-      <v-buttonUpdate 
-        v-if="showButtonAddress"
-        v-on:click="buttonUpdateAddress = !buttonUpdateAddress">
-          {{ valueButtonAddress }}
-      </v-buttonUpdate>
-      <v-updateAddress
-        v-if="buttonUpdateAddress"
-        v-on:updateProperties="updateProperties"
-      />
-
-      <v-buttonUpdate 
-        v-if="showButtonScholarship"  
-        v-on:click="buttonUpdateScholarship = !buttonUpdateScholarship">
-        {{ valueButtonScholarship }}
-      </v-buttonUpdate>
-      <v-updateSchool
-        v-if="buttonUpdateScholarship"
         v-on:updateProperties="updateProperties"
       />
     </div>
@@ -1259,64 +1287,62 @@ app.component("v-inscription-newRegister", {
   },
  
   template: `
-  <section v-if="showInscription" id="v-inscription-newRegister">
-    <p>Gracias por proporcionarnos tus datos {{ reactive.newStudent.nombre }} {{ reactive.newStudent.a_paterno }} {{ reactive.newStudent.a_materno }}</p>    
-    <br>    
-    <p>Te inscribiremos a:</p>
+  <p>Por favor revisa tú información una vez más antes de inscribirte.</p>
+  <section v-if="showInscription" id="v-inscription-newRegister" class="container__register__preSend">
     
-    <v-course/>
-    
-    <br>
-    <div>
-    <p>Esta es la información que nos proporcionaste. Revisa nuevamente y si  todo es correcto presiona sobre PRE-INSCRIBIR.</p>
-    
-    <p>Nombre: {{ reactive.newStudent.nombre }} {{ reactive.newStudent.a_paterno }} {{ reactive.newStudent.a_materno }}.</p>
-      <p>CURP: {{ reactive.newStudent.curp }}</p>
-      
+    <div class="register__preSend">
+      <h5>Datos personales.</h5>      
+      <p>Nombre: <span class="register__preSend--data">{{ reactive.newStudent.nombre }} {{ reactive.newStudent.a_paterno }} {{ reactive.newStudent.a_materno }}</span>.</p>
+      <p>CURP: <span class="register__preSend--data">{{ reactive.newStudent.curp }}</span></p>
+      <p v-if="!renderPDF.actaNacimiento">Acta de nacimiento:</p>
       <figure v-if="!renderPDF.actaNacimiento">
-        <img v-bind:src=isDocumentUpload(arrayActa) alt="Acta de nacimiento">
-        <figcaption>Acta de nacimiento</figcaption>
+      <img v-bind:src=isDocumentUpload(arrayActa) alt="Acta de nacimiento">
       </figure>
-      <p v-else>Como acta de nacimiento ingresaste el archivo: {{ nameFilePDF.actaNacimiento }}</p>
-      
-      <br>
-      <p>Teléfono de contacto: {{ reactive.newStudent.telefono }}</p>
-      <p>Correo electrónico: {{ reactive.newStudent.email }}</p>
+      <p v-else>Como acta de nacimiento ingresaste el archivo: <span class="register__preSend--data">{{ nameFilePDF.actaNacimiento }}</span></p>
+    </div>    
 
-      <br>
-
-      <p>Domicilio: {{ reactive.newStudent.calle}}, {{ reactive.newStudent.colonia }}, en 
-        {{ reactive.newStudent.municipio }}, {{ reactive.newStudent.estado  }}, 
-        Código Postal {{ reactive.newStudent.cp }}
-      </p>
-      <figure  v-if="!renderPDF.comprobanteDomicilio">
-        <img v-bind:src=isDocumentUpload(arrayDomicilio) alt="Comprobante de Domicilio">
-        <figcaption>Comprobante de Domicilio</figcaption>
+    <div class="register__preSend">
+      <h5>Domicilio.</h5>
+      <p>{{ reactive.newStudent.calle}}, {{ reactive.newStudent.colonia }}, en {{ reactive.newStudent.municipio }}, {{ reactive.newStudent.estado  }}, Código Postal {{ reactive.newStudent.cp }}</p>
+      <p v-if="!renderPDF.comprobanteDomicilio">Comprobante de Domicilio:</p>
+      <figure v-if="!renderPDF.comprobanteDomicilio">
+        <img v-bind:src=isDocumentUpload(arrayDomicilio) alt="Comprobante de Domicilio">        
       </figure>
-      <p v-else>Tu comprobante de domicilio es el archivo PDF con el nombre: {{ nameFilePDF.comprobanteDomicilio }}</p>
-      
-      <br>
-
-      <p>Grado escolar: {{ this.reactive.newStudent.escolaridad}}</p>
-      <figure v-if="!renderPDF.comprobanteEstudios">
-        <img v-bind:src=isDocumentUpload(arrayEstudios) alt="Comprobante de Estudios">
-        <figcaption>Comprobante de Estudios</figcaption>
-      </figure>
-      <p v-else>Tu comprobante de estudios es el archivo PDF con el nombre: {{ nameFilePDF.comprobanteEstudios }}</p>
-
+      <p v-else>Tu comprobante de domicilio es el archivo PDF con el nombre: <span class="register__preSend--data">{{ nameFilePDF.comprobanteDomicilio }}</span></p>
     </div>
-      <br>      
-    </section>
+        
+      
+    <div class="register__preSend">
+      <h5>Escolaridad.</h5>
+      <p>Máximo grado de estudios alcanzados: <span class="register__preSend--data">{{ this.reactive.newStudent.escolaridad}}</span></p>
+      <p v-if="!renderPDF.comprobanteEstudios">Comprobante de Estudios:</p>
+      <figure v-if="!renderPDF.comprobanteEstudios">
+        <img v-bind:src=isDocumentUpload(arrayEstudios) alt="Comprobante de Estudios">        
+      </figure>
+      <p v-else>Tu comprobante de estudios es el archivo PDF con el nombre: <span class="register__preSend--data">{{ nameFilePDF.comprobanteEstudios }}</span></p>
+    </div>
 
-    <v-updateRegister
-      v-on:showUpdateFieldOnly="showUpdateFieldOnly"
-      v-on:updateProperties="updateProperties"
-    />    
+    <div class="register__preSend">
+      <h5>Datos de Contacto.</h5>
+      <p>Correo electrónico: </p>
+      <p class="register__preSend--data">{{ reactive.newStudent.email }}</p>
+      <p>Teléfono de contacto: </p>
+      <p class="register__preSend--data">{{ reactive.newStudent.telefono }}</p>
+    </div>
+    
+  </section>
 
-    <v-buttonInscription
-      v-if="showInscription"
-      v-on:click="inscription">      
-    </v-buttonInscription>
+  <v-updateRegister
+    v-on:showUpdateFieldOnly="showUpdateFieldOnly"
+    v-on:updateProperties="updateProperties"
+  />
+       
+  <v-course  v-if="showInscription"/>
+
+  <v-buttonInscription
+    v-if="showInscription"
+    v-on:click="inscription">      
+  </v-buttonInscription>
   `
   // <iframe 
   //       v-else
@@ -1327,22 +1353,38 @@ app.component("v-inscription-newRegister", {
 })
 
 app.component("v-updateBirthCertificate", {
+  inject: ["MAX_SIZE_FILES"],
   methods: {
     updateFile(e){
       e.preventDefault();
-      const birthCertificate = e.target.children["birthCertificate"].files[0]
+      const birthCertificate = e.target.children["birthCertificate"].files[0];
       const birthCertificateBlob = URL.createObjectURL(e.target.children["birthCertificate"].files[0]);
       const objBirthCertificate = {
         actaNacimientoRender: birthCertificateBlob,
         actaNacimiento: birthCertificate
+      };
+      const validateFile = this.validateTypeFile(birthCertificate);
+      if (birthCertificate.size > `${this.MAX_SIZE_FILES}`) {
+        alert("El archivo tiene que ser menor a 3 MegaBytes. Por favor intenta nuevamente.");
+      } else if (!validateFile){
+        alert("El tipo de archivono es valido. Solo puedes subir archivos en formato .pdf .jpeg .jpg. Por favor intenta nuevamente.");
+      } else {
+        this.$emit("updateProperties", objBirthCertificate);
       }
-      this.$emit("updateProperties", objBirthCertificate)
+    },
+
+    validateTypeFile(file){
+      const format = file.type;
+      const arrayFormats = ["application/pdf", "image/jpg", "image/jpeg", "image/png"];
+      const validateFormat = arrayFormats.some( type => type === format);
+      return validateFormat;
     }
   },
 
   template:`
   <form v-on:submit="updateFile">
     <label for="birthCertificate">Adjuntar Acta de Nacimiento</label>
+    <v-legendFiles/>
     <input 
       type="file" 
       name="birthCertificate" 
@@ -1357,7 +1399,7 @@ app.component("v-updateBirthCertificate", {
 
 app.component("v-legendUpdateData", {
   template: `
-    <p>Debes llenar todos los campos para poder actualizar este rubro</p>
+    <p class="legendUpdateData">Todos los campos deben llenarse nuevamente para actualizar esta información.</p>
   `
 })
 
@@ -1387,14 +1429,11 @@ app.component("v-inputFile", {
 app.component("v-course", { 
   inject: ["course"],
   template: `
-  <article>
-    <div v-bind:value="course">
-      <p>Curso: {{ course.curso }}.</p>
+  <article v-bind:value="course" class="article__course">    
+      <p class="register__preSend--data">{{ course.curso }}.</p>
       <p>Especialidad: {{ course.especialidad }}.</p>
       <p>Impartido por {{ course.profesor }}.</p>
-      <p>El curso inicia el {{ course.fecha_inicio }}.
-      </p>    
-    </div>    
+      <p>El curso inicia el {{ course.fecha_inicio }}.</p>        
   </article>
   `
 })
@@ -1409,7 +1448,7 @@ app.component("v-disability", {
   },
 
   template: `
-  <p>¿Presenta alguna discapacidad?</p>
+  <p>¿Presentas alguna discapacidad?</p>
     <label for="disability">
       <select name="disability" id="disability">
         <option v-for= "disability in discapacidades">{{ disability }}</option>
@@ -1438,20 +1477,40 @@ template:  `
 app.component("v-confirmation", {
   inject: ["course", "dataConfirmation"],
   template: `
-  <div class="register">
+  <div class="confirmation">
     <p>Inscripción recibida. {{ this.dataConfirmation.fechaRegistro }}</p>
-    <p> {{this.dataConfirmation.nombre}}, has sido preinscrito en el curso {{ this.course.curso }}, que inicia el {{ this.course.fecha_inicio }}.</p>
+    <br>
+    <p>{{ this.dataConfirmation.nombre }}, has sido preinscrito en el curso <span class="confirmation--data">{{ this.course.curso }}</span>, que inicia el {{ this.course.fecha_inicio }}.</p>
     
     <br>
-    <p>El numero de matricula que tienes asignado es:</p>
-    <p>{{ this.dataConfirmation.matricula }}</p>
+    <p>Tú número de matrícula: <span class="confirmation--data">{{ this.dataConfirmation.matricula }}</span></p>
 
     <br>
-    <p>Revisaremos tu información, y en un plazo de entre 24 y 72 horas hábiles te diremos si puedes realizar el pago  del curso por $ {{ this.course.costo }}</p>  
+    <p>Revisaremos tu información, y en un plazo de entre <span class="confirmation--data">24 y 72 horas hábiles</span> te contactaremos para darte instrucciones respecto al pago del curso por <span class="confirmation--data">$ {{ this.course.costo }}</span></p>
     
-    <br>    
+    <br>
     <p>¡Gracias por tu preferencia!</p>
+    
+    <br>
+
+    <a href="../cursos"><v-buttonUpdate>Buscar otro curso</v-buttonUpdate></a>
   </div>
+  `
+})
+
+app.component("v-legendFiles", {
+  inject: ["MAX_SIZE_FILES"],
+  data(){
+    return {
+      size: this.MAX_SIZE_FILES / 1000000
+    }
+  },
+  
+  template: `
+    <p class="legendFiles" v-bind=size>
+      Tamaño maximo de archivos: {{ size }} MB
+    </p>
+    <p class="legendFiles">Formatos aceptados: .pdf, .jpeg y .jpg</p>
   `
 })
 
