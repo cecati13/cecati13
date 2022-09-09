@@ -3,8 +3,8 @@ const app = Vue.createApp({
     return {
       //API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1/students",
       API: "http://localhost:3000/API/V1",
-      API_files: "http://svo-5-191.servidoresvirtuales.mx",
-      //API_files: "http://localhost:3500",
+      //API_files: "http://svo-5-191.servidoresvirtuales.mx",
+      API_files: "http://localhost:3500",
       keyCourseStorage: "CourseCecati13",
       keyStudentStorage: "studentC13",       
       curso:{},
@@ -21,8 +21,10 @@ const app = Vue.createApp({
       isWelcome: true,
       isUserStudent: false,
       isNewStudent: false,
+      firstRegisterCompleted: false,
       confirmation: false,
-      dataConfirmation: {}
+      dataConfirmation: {},
+      statusAPIs: false
     };
   },
 
@@ -44,16 +46,22 @@ const app = Vue.createApp({
       this.infoCourseShow = false;
       this.preloader();
       const API = `${this.API}/students/typeRegister`      
-      const response = await this.sendData(formData, API);
+      const response = await this.sendData(API, formData);
       console.log("consult reponse desde API",response);
       if (response.error) {
         this.preloader();
         this.isNewStudent = true;
       } else if (response.message === "internal server error") {
         //error generalemente al hacer una primera consulta en SpreedSheets en version 16 nodejs
+        this.preloader();
+        this.isWelcome = true;
+        this.infoCourseShow = true;
         alert("Hubo un error en la comunicación al servidor, por favor vuelve a intentarlo. Si el error persiste intentalo mas tarde.")
       } else if (response.message === "Wrong Structure") {
-        alert("La Estructura de la CURP es incorrecta, revisa y corrige la información")
+        this.preloader();
+        this.isWelcome = true;
+        this.infoCourseShow = true;
+        alert("La Estructura de la CURP es incorrecta, revisa y corrige la información");
       } else {
         //el usuario existe en nuestros registros
         const storageResponse = JSON.stringify(response);
@@ -71,7 +79,7 @@ const app = Vue.createApp({
     async verifyCURPofData (){
       //***********Debe traerse desde la funcion verifyDataGeneral() en el componente v-dataGeneral *************/
       const responseFile = await this.sendDataGeneralForm(dataFORM)        
-        if (responseFile.responseObj !== undefined ) {
+        if (responseFile.curp === undefined ) {
           //temporalmente añadir el blob al objeto de acta de nacimiento
           Object.defineProperty(this.reactive.newStudent, "actaNacimiento", {
             value: birthCertificate,
@@ -80,7 +88,7 @@ const app = Vue.createApp({
             enumerable: true
           })          
           console.log("continuar inscripcion", responseFile);
-          this.$emit("continueFirstRegister", responseFile.responseObj)          
+          this.$emit("continueFirstRegister", responseFile)          
         } else if (responseFile.curp == "false") {
           console.log("La CURP no corresponde con los datos enviados. Verifica la información.")
           alert("Error. Verifica la información.")
@@ -92,38 +100,61 @@ const app = Vue.createApp({
     },
 
     async inscription(objInscription) {
+      this.preloader();
+      this.statusAPIs = false;
       this.isUserStudent = false;
-      this.isNewStudent = false;
-      this.preloader();
-      let objLinksFiles = {};
-      if (objInscription.formFiles) {
-        const formFiles = objInscription.formFiles;
-        const endpoint = `${this.API_files}/files`;
-        const files = await this.sendFiles(formFiles, endpoint);
-        objLinksFiles = {...files};
+      this.firstRegisterCompleted = false;
+      try {
+        const backendData = await this.checkConnection(this.API);
+        const backendFiles = await this.checkConnection(this.API_files);
+        console.log("servidores: ", backendData, "files: ", backendFiles)
+        if (backendData || backendFiles) {
+          let objLinksFiles = {};
+          if (objInscription.formFiles) {
+            const formFiles = objInscription.formFiles;
+            const endpoint = `${this.API_files}/files`;
+            const files = await this.sendFiles(formFiles, endpoint);            
+            objLinksFiles = {...files};
+            //errores en server files
+            if (objOfLinksFiles.error.code === "LIMIT_FILE_SIZE") {
+              console.log("Archivos de mas de 3 MB");
+            }
+            if (objOfLinksFiles.error.storageErrors["length"] === 0){
+              console.log("1 archivo con formato incorrecto");
+            }
+            //errores en server files
+          }       
+          const objOfLinksFiles = {...objInscription.data, ...objLinksFiles}
+          console.log(objOfLinksFiles);
+
+          const objDataInscription = this.addCourseData(objOfLinksFiles);
+          let endpoint = objInscription.db === true ?
+            `${this.API}/students/DBStudent` :
+            `${this.API}/students/newStudent/inscription`;
+    
+          const responseData = await this.sendData(endpoint, objDataInscription);
+          console.log(responseData);
+    
+          //falta manejo de errores que responda el servidor
+          if (responseData.status) {
+            this.dataConfirmation.nombre = objDataInscription.nombre,
+            this.dataConfirmation.matricula = responseData.matricula,
+            this.dataConfirmation.fechaRegistro = responseData.fechaRegistro
+          }
+          this.preloader();
+          this.confirmation = true;
+          //si la inscripcion se registro, borrar sessionStorage. Pendiente.      
+          sessionStorage.removeItem(this.keyCourseStorage)
+        }  
+      } catch (error) {
+        this.preloader();
+        this.statusAPIs = true;
+        objInscription.db === true ? this.isUserStudent = true : this.firstRegisterCompleted = true;
+        const saveInscription = objInscription.db === true ? {...this.reactive.studentDB } : {...this.reactive.newStudent}
+        this.saveInformationForError(saveInscription)
+        alert("Lo sentimos estamos teniendo problemas con nuestro servidor de inscripciones. En este momento no podemos procesar tu solicitud de inscripción, por favor intenta mas tarde.")
+        console.log(error)
       }
-      //*****Pendiente manejo de respuestas ante errores en Files Server */
-      //************ */
-      const objOfLinksFiles = {...objInscription.data, ...objLinksFiles}
-      console.log(objOfLinksFiles);
-
-      const objDataInscription = this.addCourseData(objOfLinksFiles);
-      let endpoint = objInscription.db === true ?
-        `${this.API}/students/DBStudent` :
-        `${this.API}/students/newStudent/inscription`;
-
-      const responseData = await this.sendData(objDataInscription, endpoint);
-      console.log(responseData);
-
-      //falta manejo de errores que responda el servidor
-      if (responseData.status) {
-        this.dataConfirmation.nombre = objDataInscription.nombre,
-        this.dataConfirmation.matricula = responseData.matricula,
-        this.dataConfirmation.fechaRegistro = responseData.fechaRegistro
-      }
-      this.preloader();
-      //si la inscripcion se registro, borrar sessionStorage. Pendiente.      
-      this.confirmation = true;
     },
 
     addCourseData(objInscription){
@@ -142,11 +173,12 @@ const app = Vue.createApp({
         //si vamos a subir archivos, se debe usar el formData, y no el json y quitar el headers
         body: formFiles
       })
-      const info = await response.json()
+      const info = await response.json();
+      console.log("regresando de files: ", info)
       return info
     },
 
-    async sendData(obj, API){
+    async sendData(API, obj = {}){      
       const response = await fetch( API, {
         method: "POST",
         headers: {
@@ -164,7 +196,42 @@ const app = Vue.createApp({
         ...dataSaveStudent
       }    
       this.isUserStudent = true;      
-    },        
+    },
+
+    saveDataNewRegister(object) {      
+      for (const key in object) {        
+        const element = object[key];
+        if (this.reactive.newStudent[key] === undefined) {
+          Object.defineProperty(this.reactive.newStudent, key, {
+            value: element,
+            writable: true,
+            configurable: false,
+            enumerable: true
+          });
+        } else {
+          this.reactive.newStudent[key] = object[key]
+        }
+      }      
+    },
+
+    checkInformation(object){
+      this.saveDataNewRegister(object);
+      this.isNewStudent = false;
+      this.firstRegisterCompleted = true;
+    },
+
+    async checkConnection(API){
+      const conexionInfo = await fetch(API);
+      let status = false;
+      if (conexionInfo.status) {
+        status = true;
+      }
+      return status;
+    },
+
+    saveInformationForError(object){
+      console.log("funcion que guardara en Storage si llega a fallar alguna conexión", object)
+    }
   },
 
   computed: {
@@ -180,8 +247,6 @@ const app = Vue.createApp({
     },
   },
 
-  // en v-course:
-  // id="header__course"
   template: `
   <section class="seccion__inscription">
     <h3>Inscripción</h3>
@@ -193,6 +258,10 @@ const app = Vue.createApp({
     </h4>
     <v-course            
       v-if="infoCourseShow"
+    />
+
+    <v-conexionFailBack
+      v-if="statusAPIs"
     />
 
     <v-typeRegister
@@ -207,11 +276,22 @@ const app = Vue.createApp({
     
     <v-newRegister
       v-if="isNewStudent"
-      v-on:eventInscription="inscription"
+      v-on:saveDataNewRegister="saveDataNewRegister"
+      v-on:completedNewInscription="checkInformation"
     />
 
+    <v-viewInscriptionNew
+      v-if="firstRegisterCompleted"
+      v-on:saveDataUpdate="saveDataNewRegister"
+      v-on:completedNewInscription="inscription"
+    />
+
+    <v-conexionFailBack
+      v-if="statusAPIs"
+    />
+    
     <v-confirmation
-      v-if="confirmation"
+    v-if="confirmation"
     />
 
   </section>
@@ -236,7 +316,7 @@ app.component("v-typeRegister", {
         alert("Revisa que tu CURP este completa. Deben ser 18 posiciones")        
       }      
     },
-  
+  //evaluar forma de colocar la CURP en campo si aparece en sessionStorage, para agilizar inscripcion a 2do curso
   },
 
   template: `
@@ -340,16 +420,11 @@ app.component("v-dbRegister", {
   <v-updateRegister
     v-on:showUpdateFieldOnly="showUpdateFieldOnly"
     v-on:updateProperties="updateProperties"
-    class="register"
   />
     
   <v-course v-if="showInscription"/>
   
-  <div
-    v-if="showInscription" 
-    class="register">    
-
-    
+  <div v-if="showInscription">    
     <v-buttonInscription
       v-on:click="inscription">        
     </-button>
@@ -363,42 +438,25 @@ app.component("v-newRegister", {
     return {
       showData: {},
       componentDataGeneral: true,
-      componentFirstRegister: false,
-      registerCompleted: false,
+      componentFirstRegister: false,      
     }
   },
 
   methods: {
     continueFirstRegister(object){
-      this.saveDataNewRegister(object)
       this.componentDataGeneral = false;
-      this.componentFirstRegister = true;
-    },
-    firstRegisterCompleted(object){
-      this.saveDataNewRegister(object)
-      this.componentFirstRegister = false;
-      this.registerCompleted = true;      
+      this.componentFirstRegister = true;      
+      this.$emit("saveDataNewRegister", object);
     },
 
-    saveDataNewRegister(object) {
-      for (const key in object) {        
-        const element = object[key];
-        if (this.reactive.newStudent[key] === undefined) {
-          Object.defineProperty(this.reactive.newStudent, key, {
-            value: element,
-            writable: true,
-            configurable: false,
-            enumerable: true
-          });
-        } else {
-          this.reactive.newStudent[key] = object[key]
-        }        
-      }
+    firstRegisterCompleted(object){      
+      this.componentFirstRegister = false;      
+      this.$emit("completedNewInscription", object);
     },
 
-    eventInscription(objInscription){      
-      this.$emit("eventInscription", objInscription)
-    }
+    saveData(object){
+      this.$emit("saveDataNewRegister", object);
+    },
   },
 
   template: `
@@ -411,16 +469,11 @@ app.component("v-newRegister", {
     <v-firstRegister
       v-if="componentFirstRegister"
       v-on:firstRegisterCompleted="firstRegisterCompleted"
-      v-on:saveData="saveDataNewRegister"
+      v-on:saveData="saveData"
     />    
 
-    <v-inscription-newRegister
-      v-if="registerCompleted"
-      v-on:saveData="saveDataNewRegister"
-      v-on:eventInscription="eventInscription"
-    />
-  </section>
-  `
+    </section>
+    `
 })
     
 app.component("v-dataGeneral", {
@@ -534,8 +587,8 @@ app.component("v-dataGeneral", {
         alert("El archivo tiene que ser menor a 3 MegaBytes. Por favor intenta nuevamente.")
       } else {
         //***********PARTE TRABAJANDO EN  verifyCURPofData() en el padre de todos*************/
-        const responseFile = await this.sendDataGeneralForm(dataFORM)        
-        if (responseFile.responseObj !== undefined ) {
+        const responseFile = await this.sendDataGeneralForm(dataFORM);        
+        if (responseFile.curp === this.reactive.curp ) {
           //temporalmente añadir el blob al objeto de acta de nacimiento
           Object.defineProperty(this.reactive.newStudent, "actaNacimiento", {
             value: birthCertificate,
@@ -544,15 +597,12 @@ app.component("v-dataGeneral", {
             enumerable: true
           })          
           console.log("continuar inscripcion", responseFile);
-          this.$emit("continueFirstRegister", responseFile.responseObj)
+          this.$emit("continueFirstRegister", responseFile)
           //VERIFICAR SI USUARIO CAMBIO LA CURP Y VERIFICAR QUE NO ESTE INSCRITO EN EL SISTEMA
-        } else if (responseFile.curp == "false") {
-          console.log("La CURP no corresponde con los datos enviados. Verifica la información.")
-          alert("Error. Verifica la información.")
-        } else {
-          console.log("no se ha obtenido respuesta del servidor");
-          alert("Lo sentimos, estamos teniendo problemas de comunicación con nuestro servidor. Por favor intentalo mas tarde.")
-        }
+          } else if (responseFile.curp == "false") {
+            console.log("La CURP no corresponde con los datos enviados. Verifica la información.")
+            alert("Error. Verifica la información.")
+          }         
       }
       //***********PARTE TRABAJANDO EN  verifyCURPofData() en el padre de todos*************/
     },
@@ -1052,7 +1102,7 @@ app.component("v-updateRegister", {
   },
 
   template: `
-  <section class="container--updateRegister">  
+  <section class="register container--updateRegister">  
     <h5>Actualización de información</h5>    
     <div class="updateRegister">
 
@@ -1189,7 +1239,7 @@ app.component("v-tagCurp", {
   `
 })
 
-app.component("v-inscription-newRegister", {
+app.component("v-viewInscriptionNew", {
   inject: ["reactive"],
 
   data(){
@@ -1227,13 +1277,15 @@ app.component("v-inscription-newRegister", {
     },
 
     updateProperties(object){      
-      this.$emit("saveData", object)
+      this.$emit("saveDataUpdate", object)
       this.updateTypeFile();
     },
 
     isDocumentUpload(array){
       const fileRender = this.reactive.newStudent[array[0]];
+      console.log("fileRender", fileRender)
       const file = this.reactive.newStudent[array[1]];
+      console.log("file", file)
       if (file.type === 'application/pdf') {
         this.renderPDF[array[1]] = true;
         //temporal hasta mostrar render pdf en el DOM        
@@ -1282,13 +1334,13 @@ app.component("v-inscription-newRegister", {
         formFiles,
         db: false,        
       }
-      this.$emit("eventInscription", objInscription);      
+      this.$emit("completedNewInscription", objInscription);      
     }
   },
  
   template: `
   <p>Por favor revisa tú información una vez más antes de inscribirte.</p>
-  <section v-if="showInscription" id="v-inscription-newRegister" class="container__register__preSend">
+  <section v-if="showInscription" class="container__register__preSend">
     
     <div class="register__preSend">
       <h5>Datos personales.</h5>      
@@ -1306,7 +1358,7 @@ app.component("v-inscription-newRegister", {
       <p>{{ reactive.newStudent.calle}}, {{ reactive.newStudent.colonia }}, en {{ reactive.newStudent.municipio }}, {{ reactive.newStudent.estado  }}, Código Postal {{ reactive.newStudent.cp }}</p>
       <p v-if="!renderPDF.comprobanteDomicilio">Comprobante de Domicilio:</p>
       <figure v-if="!renderPDF.comprobanteDomicilio">
-        <img v-bind:src=isDocumentUpload(arrayDomicilio) alt="Comprobante de Domicilio">        
+        <img v-bind:src=isDocumentUpload(arrayDomicilio) alt="Comprobante de Domicilio">
       </figure>
       <p v-else>Tu comprobante de domicilio es el archivo PDF con el nombre: <span class="register__preSend--data">{{ nameFilePDF.comprobanteDomicilio }}</span></p>
     </div>
@@ -1337,11 +1389,11 @@ app.component("v-inscription-newRegister", {
     v-on:updateProperties="updateProperties"
   />
        
-  <v-course  v-if="showInscription"/>
+  <v-course v-if="showInscription"/>
 
   <v-buttonInscription
     v-if="showInscription"
-    v-on:click="inscription">      
+    v-on:click="inscription">
   </v-buttonInscription>
   `
   // <iframe 
@@ -1511,6 +1563,15 @@ app.component("v-legendFiles", {
       Tamaño maximo de archivos: {{ size }} MB
     </p>
     <p class="legendFiles">Formatos aceptados: .pdf, .jpeg y .jpg</p>
+  `
+})
+
+app.component("v-conexionFailBack", {
+  template: `
+    <div class="conexionFailBack">
+      <p>Tenemos dificultades técnicas con nuestro servidor de inscripciones, y por el momento no podemos procesar tú solicitud de inscripción.</p>
+      <p>Lamentamos los inconvenientes. Por favor intenta más tarde.</p>
+    </div>  
   `
 })
 

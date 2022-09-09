@@ -5,6 +5,7 @@
     align-items: center;
     font-size: 1.6rem;
     padding: 15px;
+    width: 100vw;
 }
 
 .seccion__inscription > h3 {
@@ -20,7 +21,7 @@
 
 .article__course {
     align-self: center;
-    color: var(--fontColor2);
+    color: var(--contrastColor);
     text-align: center;
 }
 
@@ -237,6 +238,18 @@ input[type=radio] {
     font-weight: 600;
     font-family: monospace;
     color: var(--fontColor);
+}
+
+.conexionFailBack {
+    font-size: 2rem;
+    font-weight: 600;
+    padding: 10px;
+    margin-bottom: 20px;    
+    background-color: var(--fontColor);
+    color: var(--mainColor);
+    border-radius: 10px;    
+    max-width: 950px;
+    text-align: center;
 }
 
 @media (min-width: 768px){
