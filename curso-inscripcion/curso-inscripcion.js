@@ -1,21 +1,21 @@
 const app = Vue.createApp({
   data() {
     return {
-      //API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1/students",
-      API: "http://localhost:3000/API/V1",
-      //API_files: "http://svo-5-191.servidoresvirtuales.mx",
-      API_files: "http://localhost:3500",
+      API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1",
+      //API: "http://localhost:3000/API/V1",
+      API_files: "http://svo-5-191.servidoresvirtuales.mx",
+      //API_files: "http://localhost:3500",
       keyCourseStorage: "CourseCecati13",
-      keyStudentStorage: "studentC13",       
+      keyStudentStorage: "studentC13",
       curso:{},
       MAX_SIZE_FILES: 3000000, // 3MB
       reactive: {
         studentDB: {
           update: false
         },
-        newStudent:{},        
-        ageRequeriment: true,        
-        curp: "",        
+        newStudent:{},
+        ageRequeriment: true,
+        curp: "",
       },
       infoCourseShow: true,
       isWelcome: true,
@@ -113,14 +113,19 @@ const app = Vue.createApp({
           if (objInscription.formFiles) {
             const formFiles = objInscription.formFiles;
             const endpoint = `${this.API_files}/files`;
-            const files = await this.sendFiles(formFiles, endpoint);            
+            const files = await this.sendFiles(formFiles, endpoint);
             objLinksFiles = {...files};
             //errores en server files
-            if (objOfLinksFiles.error.code === "LIMIT_FILE_SIZE") {
-              console.log("Archivos de mas de 3 MB");
-            }
-            if (objOfLinksFiles.error.storageErrors["length"] === 0){
-              console.log("1 archivo con formato incorrecto");
+            console.log(objLinksFiles);
+            if (objLinksFiles.error) {
+              if (objLinksFiles.error.code === "LIMIT_FILE_SIZE") {
+                console.log("Archivos de mas de 3 MB");
+                new Error("LIMIT_FILE_SIZE")
+              }
+              if (objLinksFiles.error.storageErrors["length"] === 0){
+                console.log("1 archivo con formato incorrecto");
+                new Error("FILES_TYPE_ERROR")
+              }              
             }
             //errores en server files
           }       
@@ -140,11 +145,12 @@ const app = Vue.createApp({
             this.dataConfirmation.nombre = objDataInscription.nombre,
             this.dataConfirmation.matricula = responseData.matricula,
             this.dataConfirmation.fechaRegistro = responseData.fechaRegistro
+            sessionStorage.removeItem(this.keyCourseStorage)
+          } else {
+            new Error("Falla al inscribir en BD")
           }
           this.preloader();
-          this.confirmation = true;
-          //si la inscripcion se registro, borrar sessionStorage. Pendiente.      
-          sessionStorage.removeItem(this.keyCourseStorage)
+          this.confirmation = true;          
         }  
       } catch (error) {
         this.preloader();
@@ -1028,19 +1034,19 @@ app.component("v-updateRegister", {
     return {      
       showButtonBirthCertificate: true,
       buttonUpdateBirthCertificate: false,
-      valueButtonBirthCertificate: "Actualizar Acta de Nacimiento",
+      valueButtonBirthCertificate: "Acta de Nacimiento",
 
       showButtonContact: true,
       buttonUpdateContact: false,
-      valueButtonContact: "Actualizar Datos de Contacto",
+      valueButtonContact: "Datos de Contacto",
 
       showButtonAddress: true,
       buttonUpdateAddress: false,
-      valueButtonAddress: "Actualizar Domicilio",
+      valueButtonAddress: "Domicilio",
 
       showButtonScholarship: true,      
       buttonUpdateScholarship: false,
-      valueButtonScholarship: "Actualizar Escolaridad",
+      valueButtonScholarship: "Escolaridad",
 
       valueCancel: "Cancelar Actualización"
     }
@@ -1054,7 +1060,7 @@ app.component("v-updateRegister", {
       this.showUpdateFieldOnly();
       this.valueButtonBirthCertificate = this.buttonUpdateBirthCertificate  ?
           this.valueCancel : 
-          "Actualizar Acta de Nacimiento";
+          "Acta de Nacimiento";
     },
 
     buttonUpdateContact(value, old){
@@ -1064,7 +1070,7 @@ app.component("v-updateRegister", {
       this.showUpdateFieldOnly();
         this.valueButtonContact = this.buttonUpdateContact  ?
           this.valueCancel : 
-          "Actualizar Datos de Contacto";
+          "Datos de Contacto";
       },
 
       buttonUpdateAddress(value, old){
@@ -1074,7 +1080,7 @@ app.component("v-updateRegister", {
         this.showUpdateFieldOnly();        
         this.valueButtonAddress = this.buttonUpdateAddress  ?
           this.valueCancel :
-          "Actualizar Domicilio";
+          "Domicilio";
       },
 
       buttonUpdateScholarship(value, old){
@@ -1084,7 +1090,7 @@ app.component("v-updateRegister", {
         this.showUpdateFieldOnly();        
         this.valueButtonScholarship = this.buttonUpdateScholarship  ?
         this.valueCancel :
-        "Actualizar Escolaridad";
+        "Escolaridad";
       }
   },
 
@@ -1283,9 +1289,7 @@ app.component("v-viewInscriptionNew", {
 
     isDocumentUpload(array){
       const fileRender = this.reactive.newStudent[array[0]];
-      console.log("fileRender", fileRender)
       const file = this.reactive.newStudent[array[1]];
-      console.log("file", file)
       if (file.type === 'application/pdf') {
         this.renderPDF[array[1]] = true;
         //temporal hasta mostrar render pdf en el DOM        
@@ -1485,7 +1489,8 @@ app.component("v-course", {
       <p class="register__preSend--data">{{ course.curso }}.</p>
       <p>Especialidad: {{ course.especialidad }}.</p>
       <p>Impartido por {{ course.profesor }}.</p>
-      <p>El curso inicia el {{ course.fecha_inicio }}.</p>        
+      <p>El curso inicia el {{ course.fecha_inicio }}.</p>
+      <p>Costo: $ {{course.costo}}</p>
   </article>
   `
 })
@@ -1545,7 +1550,7 @@ app.component("v-confirmation", {
     
     <br>
 
-    <a href="../cursos"><v-buttonUpdate>Buscar otro curso</v-buttonUpdate></a>
+    <a href="../cursos"><v-buttonUpdate>Inscribirme a otro curso</v-buttonUpdate></a>
   </div>
   `
 })
