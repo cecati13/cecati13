@@ -81,7 +81,7 @@ class AvailableCourses {
         const containerAnchor = document.createElement("a");
         containerAnchor.className = "course--img-button button-inscription";
         containerAnchor.dataset.numberCourse = `pre-${course.number}`;
-        containerAnchor.href = "/curso-inscripcion"
+        containerAnchor.href = "../curso-inscripcion"
         containerAnchor.innerHTML = `
             <img src="${URL_BASE_ASSETS}inscripcion.svg"
             alt="Inscripción" class="button__link" id="buttonFloatingReg"
