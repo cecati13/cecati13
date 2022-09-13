@@ -108,15 +108,17 @@ const app = Vue.createApp({
       this.firstRegisterCompleted = false;
       try {
         const backendData = await this.checkConnection(this.API);
-        const backendFiles = await this.checkConnection(this.API_files);
+        //const backendFiles = await this.checkConnection(this.API_files);
         console.log("servidores: ", backendData, "files: ", backendFiles)
-        if (backendData || backendFiles) {
+        if (backendData
+           //|| backendFiles
+           ) {
           let objLinksFiles = {};
           if (objInscription.formFiles) {
             const formFiles = objInscription.formFiles;
-            const endpoint = `${this.API_files}/files`;
-            const files = await this.sendFiles(formFiles, endpoint);
-            objLinksFiles = {...files};
+            //const endpoint = `${this.API_files}/files`;
+            //const files = await this.sendFiles(formFiles, endpoint);
+            //objLinksFiles = {...files};
             //errores en server files
             console.log(objLinksFiles);
             if (objLinksFiles.error) {
