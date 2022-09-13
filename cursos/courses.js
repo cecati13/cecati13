@@ -261,9 +261,7 @@ class Specialties {
 
     createButtoBack(){        
         const buttonBack = document.createElement("div");        
-        buttonBack.className = "container__buttons";
-        const inscripcion = document.querySelector("#inscription");
-        const buttonHref = inscripcion.href;
+        buttonBack.className = "container__buttons";      
         buttonBack.innerHTML = `
         <div class="buttonBack buttonBack--HIDE" id="buttonBack">
             <img src="${URL_BASE_ASSETS}arrowBack.svg" alt="Retroceder">

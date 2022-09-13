@@ -13,10 +13,7 @@ class Base {
         </li>
         <li>
             <a id="courses" href="${ub}/cursos" class="nav__show--ul__link">Cursos Disponibles</a>
-        </li>
-        <li>
-            <a id="inscription" href="${ub}/inscripcion" class="nav__show--ul__link">Inscripción</a>
-        </li>
+        </li>        
         <li>
             <a id="question" href="${ub}/preguntas" class="nav__show--ul__link">Preguntas Frecuentes</a>
         </li>

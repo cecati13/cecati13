@@ -8,7 +8,8 @@ const app = Vue.createApp({
       keyCourseStorage: "CourseCecati13",
       keyStudentStorage: "studentC13",
       curso:{},
-      MAX_SIZE_FILES: 3000000, // 3MB
+      MAX_SIZE_FILES: 5000000, // 5MB
+      sizeFile: "5",
       reactive: {
         studentDB: {
           update: false
@@ -36,6 +37,7 @@ const app = Vue.createApp({
       course: this.getCourse,
       reactive: this.reactive,
       MAX_SIZE_FILES: this.MAX_SIZE_FILES,
+      sizeFile: this.sizeFile,
       dataConfirmation: this.dataConfirmation
     }
   },
@@ -119,7 +121,7 @@ const app = Vue.createApp({
             console.log(objLinksFiles);
             if (objLinksFiles.error) {
               if (objLinksFiles.error.code === "LIMIT_FILE_SIZE") {
-                console.log("Archivos de mas de 3 MB");
+                console.log(`Archivos de mas de ${this.sizeFile} MB`);
                 new Error("LIMIT_FILE_SIZE")
               }
               if (objLinksFiles.error.storageErrors["length"] === 0){
@@ -244,7 +246,7 @@ const app = Vue.createApp({
     getCourse(){
       const getItem = sessionStorage.getItem(this.keyCourseStorage);
       if (!getItem) {        
-        window.location.href = "/cursos"
+        window.location.href = "../cursos"
         //Si no se ha selecionado un curso redireccionar a /cursos
       }
       const courseInfo = JSON.parse(getItem);      
@@ -483,7 +485,7 @@ app.component("v-newRegister", {
 })
     
 app.component("v-dataGeneral", {
-  inject: ["API", "reactive", "MAX_SIZE_FILES"],
+  inject: ["API", "reactive", "MAX_SIZE_FILES", "sizeFile"],
   data(){
     return {
       meetsAgeRequirement: true,
@@ -590,7 +592,7 @@ app.component("v-dataGeneral", {
       }
       
       if (birthCertificate.size > `${this.MAX_SIZE_FILES}`) {
-        alert("El archivo tiene que ser menor a 3 MegaBytes. Por favor intenta nuevamente.")
+        alert(`El archivo tiene que ser menor a ${this.sizeFile} MB. Por favor intenta nuevamente.`);
       } else {
         //***********PARTE TRABAJANDO EN  verifyCURPofData() en el padre de todos*************/
         const responseFile = await this.sendDataGeneralForm(dataFORM);        
@@ -605,10 +607,12 @@ app.component("v-dataGeneral", {
           console.log("continuar inscripcion", responseFile);
           this.$emit("continueFirstRegister", responseFile)
           //VERIFICAR SI USUARIO CAMBIO LA CURP Y VERIFICAR QUE NO ESTE INSCRITO EN EL SISTEMA
-          } else if (responseFile.curp == "false") {
+          } else if (responseFile.curp == false) {
             console.log("La CURP no corresponde con los datos enviados. Verifica la información.")
             alert("Error. Verifica la información.")
-          }         
+          } else {
+            console.log("comunicacion con servidor exitosa, pero se genero otro error al procesar la respuesta aqui en el Front")
+          }
       }
       //***********PARTE TRABAJANDO EN  verifyCURPofData() en el padre de todos*************/
     },
@@ -756,7 +760,7 @@ app.component("v-contact", {
 })
 
 app.component("v-address", {
-  inject: ["MAX_SIZE_FILES"],
+  inject: ["MAX_SIZE_FILES", "sizeFile"],
   data(){
     return {
       estadoRepublica: "Aguascalientes",
@@ -830,7 +834,7 @@ app.component("v-address", {
       if (empty) {
         alert("Por favor proporciona la información completa. Revisa todos los campos")
       } else if (addressCertificate.size > `${this.MAX_SIZE_FILES}`) {
-        alert("El archivo tiene que ser menor a 3 MegaBytes. Por favor intenta nuevamente.")
+        alert(`El archivo tiene que ser menor a ${this.sizeFile} MB. Por favor intenta nuevamente.`);
       } else if (!validateFile){
         alert("El tipo de archivono es valido. Solo puedes subir archivos en formato .pdf .jpeg .jpg. Por favor intenta nuevamente.")
       } else {
@@ -898,7 +902,7 @@ app.component("v-address", {
 })
 
 app.component("v-scholarship", {
-  inject: ["MAX_SIZE_FILES"],
+  inject: ["MAX_SIZE_FILES", "sizeFile"],
   data(){
     return {
       // escolaridadDefaul: this.listaEscolaridades[1],
@@ -930,7 +934,7 @@ app.component("v-scholarship", {
       };
       const validateFile = this.validateTypeFile(studiesCertificate);
       if (studiesCertificate.size > `${this.MAX_SIZE_FILES}`) {
-        alert("El archivo tiene que ser menor a 3 MegaBytes. Por favor intenta nuevamente.");
+        alert(`El archivo tiene que ser menor a ${this.sizeFile} MB. Por favor intenta nuevamente.`);
       } else if(!validateFile){
         alert("El tipo de archivono es valido. Solo puedes subir archivos en formato .pdf .jpeg .jpg. Por favor intenta nuevamente.");
       } else{
@@ -1409,7 +1413,7 @@ app.component("v-viewInscriptionNew", {
 })
 
 app.component("v-updateBirthCertificate", {
-  inject: ["MAX_SIZE_FILES"],
+  inject: ["MAX_SIZE_FILES", "sizeFile"],
   methods: {
     updateFile(e){
       e.preventDefault();
@@ -1421,7 +1425,7 @@ app.component("v-updateBirthCertificate", {
       };
       const validateFile = this.validateTypeFile(birthCertificate);
       if (birthCertificate.size > `${this.MAX_SIZE_FILES}`) {
-        alert("El archivo tiene que ser menor a 3 MegaBytes. Por favor intenta nuevamente.");
+        alert(`El archivo tiene que ser menor a ${this.sizeFile} MB. Por favor intenta nuevamente.`);
       } else if (!validateFile){
         alert("El tipo de archivono es valido. Solo puedes subir archivos en formato .pdf .jpeg .jpg. Por favor intenta nuevamente.");
       } else {
@@ -1556,16 +1560,16 @@ app.component("v-confirmation", {
 })
 
 app.component("v-legendFiles", {
-  inject: ["MAX_SIZE_FILES"],
-  data(){
-    return {
-      size: this.MAX_SIZE_FILES / 1000000
-    }
-  },
+  inject: ["MAX_SIZE_FILES", "sizeFile"],
+  // data(){
+  //   return {
+  //     sizeFile: this.MAX_SIZE_FILES / 1000000
+  //   }
+  // },
   
   template: `
     <p class="legendFiles" v-bind=size>
-      Tamaño maximo de archivos: {{ size }} MB
+      Tamaño maximo de archivos: {{ this.sizeFile }} MB
     </p>
     <p class="legendFiles">Formatos aceptados: .pdf, .jpeg y .jpg</p>
   `
