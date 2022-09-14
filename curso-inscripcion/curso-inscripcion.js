@@ -109,7 +109,7 @@ const app = Vue.createApp({
       try {
         const backendData = await this.checkConnection(this.API);
         //const backendFiles = await this.checkConnection(this.API_files);
-        console.log("servidores: ", backendData, "files: ", backendFiles)
+        //console.log("servidores: ", backendData, "files: ", backendFiles)
         if (backendData
            //|| backendFiles
            ) {
