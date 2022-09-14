@@ -718,12 +718,12 @@ app.component("v-dataGeneral", {
       type="file" 
       name="birthCertificate"
       accept=".jpg, .jpeg, .pdf" 
-      capture="environment"
     >
 
     <v-button v-if="meetsAgeRequirement"></v-button>
-  </form>
-  `
+    </form>
+    `
+//en input file      capture="environment"
 })
 
 app.component("v-contact", {
@@ -895,8 +895,7 @@ app.component("v-address", {
       type="file" 
       name="addressCertificate" 
       id="addressCertificate"
-      accept=".jpg, .jpeg, .pdf" 
-      capture="environment"
+      accept=".jpg, .jpeg, .pdf"
     >
     <v-button></v-button>
   </form>
@@ -972,8 +971,7 @@ app.component("v-scholarship", {
     <input 
       type="file" 
       name="studiesCertificate"
-      accept=".jpg, .jpeg, .pdf" 
-      capture="environment"
+      accept=".jpg, .jpeg, .pdf"
     >
 
     <v-button></v-button>
@@ -1451,8 +1449,7 @@ app.component("v-updateBirthCertificate", {
       type="file" 
       name="birthCertificate" 
       id="birthCertificate" 
-      accept=".jpg, .jpeg, .pdf" 
-      capture="environment"
+      accept=".jpg, .jpeg, .pdf"       
     >
     <v-button>Actualizar</v-button>  
   </form>
@@ -1482,8 +1479,7 @@ app.component("v-inputFile", {
     <input 
     type="file" 
     name="{{ propertie }}"
-    accept=".jpg, .jpeg, .pdf" 
-    capture="environment"
+    accept=".jpg, .jpeg, .pdf"     
 >
   `
 })
