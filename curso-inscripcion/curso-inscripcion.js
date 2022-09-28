@@ -58,12 +58,24 @@ const app = Vue.createApp({
         this.preloader();
         this.isWelcome = true;
         this.infoCourseShow = true;
-        alert("Hubo un error en la comunicación al servidor, por favor vuelve a intentarlo. Si el error persiste intentalo mas tarde.")
+        Swal.fire({
+          title: "Error",
+          text: "Hubo un error en la comunicación al servidor", 
+          icon: "error",
+          confirmButtonText: "Cerrar"
+        })
+        //alert("Hubo un error en la comunicación al servidor, por favor vuelve a intentarlo. Si el error persiste intentalo mas tarde.")
       } else if (response.message === "Wrong Structure") {
         this.preloader();
         this.isWelcome = true;
         this.infoCourseShow = true;
-        alert("La Estructura de la CURP es incorrecta, revisa y corrige la información");
+        Swal.fire({
+          title: "Incorrecto!",
+          text: "La Estructura de la CURP es incorrecta, revisa y corrige la información", 
+          icon: "info",
+          confirmButtonText: "Cerrar"
+        })
+        //alert("La Estructura de la CURP es incorrecta, revisa y corrige la información");
       } else {
         //el usuario existe en nuestros registros
         const storageResponse = JSON.stringify(response);
@@ -92,11 +104,23 @@ const app = Vue.createApp({
           console.log("continuar inscripcion", responseFile);
           this.$emit("continueFirstRegister", responseFile)          
         } else if (responseFile.curp == "false") {
-          console.log("La CURP no corresponde con los datos enviados. Verifica la información.")
-          alert("Error. Verifica la información.")
+          console.log("La CURP no corresponde con los datos enviados. Verifica la información.");
+          Swal.fire({
+            title: "Incorrecto",
+            text: "Verifica la información nuevamente.",
+            icon: "warning",
+            confirmButtonText: "Cerrar"
+          });
+          //alert("Error. Verifica la información.")
         } else {
           console.log("no se ha obtenido respuesta del servidor");
-          alert("Lo sentimos, estamos teniendo problemas de comunicación con nuestro servidor. Por favor intentalo mas tarde.")
+          Swal.fire({
+            title: "Error",
+            text: "Lo sentimos, estamos teniendo problemas de comunicación con nuestro servidor. Por favor intentalo mas tarde.",
+            icon: "error",
+            confirmButtonText: "Cerrar"
+          });
+          //alert("Lo sentimos, estamos teniendo problemas de comunicación con nuestro servidor. Por favor intentalo mas tarde.")
         }
       //***********Debe traerse desde la funcion verifyDataGeneral() en el componente v-dataGeneral *************/
     },
@@ -161,8 +185,14 @@ const app = Vue.createApp({
         this.statusAPIs = true;
         objInscription.db === true ? this.isUserStudent = true : this.firstRegisterCompleted = true;
         const saveInscription = objInscription.db === true ? {...this.reactive.studentDB } : {...this.reactive.newStudent}
-        this.saveInformationForError(saveInscription)
-        alert("Lo sentimos estamos teniendo problemas con nuestro servidor de inscripciones. En este momento no podemos procesar tu solicitud de inscripción, por favor intenta mas tarde.")
+        this.saveInformationForError(saveInscription);
+        Swal.fire({
+          title: "Error",
+          text: "Lo sentimos estamos teniendo problemas con nuestro servidor de inscripciones. En este momento no podemos procesar tu solicitud de inscripción, por favor intenta mas tarde.",
+          icon: "error",
+          confirmButtonText: "Cerrar"
+        });
+        //alert("Lo sentimos estamos teniendo problemas con nuestro servidor de inscripciones. En este momento no podemos procesar tu solicitud de inscripción, por favor intenta mas tarde.")
         console.log(error)
       }
     },
@@ -323,7 +353,13 @@ app.component("v-typeRegister", {
         this.reactive.curp = curpValue;
         this.$emit("consultCURP", objCurp);
       } else {
-        alert("Revisa que tu CURP este completa. Deben ser 18 posiciones")        
+        Swal.fire({
+          title: "Revisa nuevamente.",
+          text: "La CURP no es correcta",
+          icon: "error",
+          confirmButtonText: "Cerrar"
+        });
+        //alert("Revisa que tu CURP este completa. Deben ser 18 posiciones");
       }      
     },
   //evaluar forma de colocar la CURP en campo si aparece en sessionStorage, para agilizar inscripcion a 2do curso
@@ -594,7 +630,13 @@ app.component("v-dataGeneral", {
       }
       
       if (birthCertificate.size > `${this.MAX_SIZE_FILES}`) {
-        alert(`El archivo tiene que ser menor a ${this.sizeFile} MB. Por favor intenta nuevamente.`);
+        Swal.fire({
+          title: "Archivo muy grande.",
+          text: `El archivo tiene que ser menor a ${this.sizeFile} MB. Por favor intenta nuevamente.`,
+          icon: "warning",
+          confirmButtonText: "Aceptar"
+        });
+        //alert(`El archivo tiene que ser menor a ${this.sizeFile} MB. Por favor intenta nuevamente.`);
       } else {
         //***********PARTE TRABAJANDO EN  verifyCURPofData() en el padre de todos*************/
         const responseFile = await this.sendDataGeneralForm(dataFORM);        
@@ -611,7 +653,13 @@ app.component("v-dataGeneral", {
           //VERIFICAR SI USUARIO CAMBIO LA CURP Y VERIFICAR QUE NO ESTE INSCRITO EN EL SISTEMA
           } else if (responseFile.curp == false) {
             console.log("La CURP no corresponde con los datos enviados. Verifica la información.")
-            alert("Error. Verifica la información.")
+            Swal.fire({
+              title: "Error",
+              text: "Verifica la información.",
+              icon: "error",
+              confirmButtonText: "Aceptar"
+            });
+            //alert("Error. Verifica la información.")
           } else {
             console.log("comunicacion con servidor exitosa, pero se genero otro error al procesar la respuesta aqui en el Front")
           }
@@ -742,8 +790,14 @@ app.component("v-contact", {
         }
         this.$emit("contactDetailCompleted", objContact)
       } else {
-        console.log("verificar telefono o email")
-        alert("Error. Verifica que tu teléfono y correo electrónico sean correctos.")
+        console.log("verificar telefono o email");
+        Swal.fire({
+          title: "Error",
+          text: "Verifica que tu teléfono y correo electrónico sean correctos.",
+          icon: "error",
+          confirmButtonText: "Aceptar"
+        });
+        //alert("Error. Verifica que tu teléfono y correo electrónico sean correctos.")
       }
     }
   },
@@ -834,11 +888,29 @@ app.component("v-address", {
       }
       const validateFile = this.validateTypeFile(addressCertificate);
       if (empty) {
-        alert("Por favor proporciona la información completa. Revisa todos los campos")
+        Swal.fire({
+          title: "Información incompleta",
+          text: "Por favor captura toda la inforamción.",
+          icon: "warning",
+          confirmButtonText: "Aceptar"
+        });
+        //alert("Por favor proporciona la información completa. Revisa todos los campos")
       } else if (addressCertificate.size > `${this.MAX_SIZE_FILES}`) {
-        alert(`El archivo tiene que ser menor a ${this.sizeFile} MB. Por favor intenta nuevamente.`);
+        Swal.fire({
+          title: "Archivo muy grande.",
+          text: `El archivo tiene que ser menor a ${this.sizeFile} MB. Por favor intenta nuevamente.`,
+          icon: "warning",
+          confirmButtonText: "Aceptar"
+        });
+        //alert(`El archivo tiene que ser menor a ${this.sizeFile} MB. Por favor intenta nuevamente.`);
       } else if (!validateFile){
-        alert("El tipo de archivono es valido. Solo puedes subir archivos en formato .pdf .jpeg .jpg. Por favor intenta nuevamente.")
+        Swal.fire({
+          title: "Formato de archivo invalido.",
+          text: `Solo puedes subir archivos en formato .pdf .jpeg .jpg. Por favor intenta nuevamente.`,
+          icon: "error",
+          confirmButtonText: "Aceptar"
+        });
+        // alert("El tipo de archivono es valido. Solo puedes subir archivos en formato .pdf .jpeg .jpg. Por favor intenta nuevamente.")
       } else {
         this.$emit("addressDetailCompleted", objAddress)
       }
@@ -935,9 +1007,21 @@ app.component("v-scholarship", {
       };
       const validateFile = this.validateTypeFile(studiesCertificate);
       if (studiesCertificate.size > `${this.MAX_SIZE_FILES}`) {
-        alert(`El archivo tiene que ser menor a ${this.sizeFile} MB. Por favor intenta nuevamente.`);
+        Swal.fire({
+          title: "Archivo muy grande.",
+          text: `El archivo tiene que ser menor a ${this.sizeFile} MB. Por favor intenta nuevamente.`,
+          icon: "warning",
+          confirmButtonText: "Aceptar"
+        });
+        //alert(`El archivo tiene que ser menor a ${this.sizeFile} MB. Por favor intenta nuevamente.`);
       } else if(!validateFile){
-        alert("El tipo de archivono es valido. Solo puedes subir archivos en formato .pdf .jpeg .jpg. Por favor intenta nuevamente.");
+        Swal.fire({
+          title: "Formato de archivo invalido.",
+          text: `Solo puedes subir archivos en formato .pdf .jpeg .jpg. Por favor intenta nuevamente.`,
+          icon: "error",
+          confirmButtonText: "Aceptar"
+        });
+        //alert("El tipo de archivono es valido. Solo puedes subir archivos en formato .pdf .jpeg .jpg. Por favor intenta nuevamente.");
       } else{
         this.$emit("scholarshipDetailCompleted", objScholarship)
       }
@@ -1425,9 +1509,21 @@ app.component("v-updateBirthCertificate", {
       };
       const validateFile = this.validateTypeFile(birthCertificate);
       if (birthCertificate.size > `${this.MAX_SIZE_FILES}`) {
-        alert(`El archivo tiene que ser menor a ${this.sizeFile} MB. Por favor intenta nuevamente.`);
-      } else if (!validateFile){
-        alert("El tipo de archivono es valido. Solo puedes subir archivos en formato .pdf .jpeg .jpg. Por favor intenta nuevamente.");
+        Swal.fire({
+          title: "Archivo muy grande.",
+          text: `El archivo tiene que ser menor a ${this.sizeFile} MB. Por favor intenta nuevamente.`,
+          icon: "warning",
+          confirmButtonText: "Aceptar"
+        });
+        //alert(`El archivo tiene que ser menor a ${this.sizeFile} MB. Por favor intenta nuevamente.`);
+      } else if (!validateFile) {
+        Swal.fire({
+          title: "Formato de archivo invalido.",
+          text: `Solo puedes subir archivos en formato .pdf .jpeg .jpg. Por favor intenta nuevamente.`,
+          icon: "error",
+          confirmButtonText: "Aceptar"
+        });
+        //alert("El tipo de archivono es valido. Solo puedes subir archivos en formato .pdf .jpeg .jpg. Por favor intenta nuevamente.");
       } else {
         this.$emit("updateProperties", objBirthCertificate);
       }
@@ -1581,5 +1677,7 @@ app.component("v-conexionFailBack", {
     </div>  
   `
 })
+
+
 
 const vm = app.mount('#app');

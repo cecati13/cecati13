@@ -153,19 +153,19 @@ input::-webkit-file-upload-button,
 .button__inscription:hover,
 .button__update:hover {
     cursor: pointer;
-    animation-name: standOutBorder;
+    /* animation-name: standOutBorder;
     animation-duration: 2000ms;
     animation-iteration-count: infinite;
-    animation-timing-function: linear;
+    animation-timing-function: linear; */
 } 
 
 
-.animationButton {
-    /* width: 70px;
+/* .animationButton {
+    width: 70px;
     height: 70px;
     border: 10px solid #eee;
     border-top: 8px solid #666;
-    border-radius: 50%; */
+    border-radius: 50%;
     animation-name: standOutBorder;
     animation-duration: 900ms;
     animation-iteration-count: infinite;
@@ -173,14 +173,14 @@ input::-webkit-file-upload-button,
   }
   @keyframes standOutBorder {
     from {
-      /* transform: scale(1); */
+      transform: scale(1);
       background: radial-gradient(var(--fontColor), var(--contrastColor));
     }
     to {
-      /* transform: scale(0.9); */
+      transform: scale(0.9);
       background: radial-gradient(var(--contrastColor), var(--fontColor));
     }
-  }
+  } */
 
 .container__register__preSend {
     display: flex; 
