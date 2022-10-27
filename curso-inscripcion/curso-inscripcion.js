@@ -710,6 +710,7 @@ app.component("v-dataGeneral", {
       name="nombre" 
       placeholder="Escribe tu nombre de pila..."
       required
+      onkeyup="javascript:this.value=this.value.toUpperCase();"
     >
 
     <label for="a_paterno" v-if="meetsAgeRequirement">Apellido Paterno</label>
@@ -719,6 +720,7 @@ app.component("v-dataGeneral", {
       name="a_paterno" 
       placeholder="Tu apellido paterno..."
       required
+      onkeyup="javascript:this.value=this.value.toUpperCase();"
     >
 
     <label for="a_materno" v-if="meetsAgeRequirement">Apellido Materno</label>
@@ -728,6 +730,7 @@ app.component("v-dataGeneral", {
       name="a_materno" 
       placeholder="Tu apellido materno..."
       required
+      onkeyup="javascript:this.value=this.value.toUpperCase();"
     >
 
     <div class="label__gender" v-if="meetsAgeRequirement">
@@ -860,13 +863,13 @@ app.component("v-address", {
   methods: {
     addressDetailCompleted(e){
       e.preventDefault()
-      const calle = e.target.children['calle'].value;
-      const colonia = e.target.children['colonia'].value;
+      const calle = e.target.children['calle'].value.toUpperCase();
+      const colonia = e.target.children['colonia'].value.toUpperCase();
       const cp = e.target.children['cp'].value;
       const nodeEstado = document.querySelector("#estado");
-      const estado = nodeEstado.value;
+      const estado = nodeEstado.value.toUpperCase();
       const nodeMunicipio = document.querySelector("#municipio");
-      const municipio = nodeMunicipio.value;      
+      const municipio = nodeMunicipio.value.toUpperCase();
       const addressCertificate = e.target.children["addressCertificate"].files[0]
       const addressCertificateRender = URL.createObjectURL(e.target.children["addressCertificate"].files[0]);
       
@@ -932,10 +935,22 @@ app.component("v-address", {
   <form v-on:submit="addressDetailCompleted">
     <h4>Por favor indica tu domicilio:</h4>
     <label for="calle">Calle y número</label>
-    <input type="text" name="calle" placeholder="Calle y número..." required>
+    <input 
+      type="text" 
+      name="calle" 
+      placeholder="Calle y número..." 
+      required
+      onkeyup="javascript:this.value=this.value.toUpperCase();"
+    >
     
     <label for="colonia">Colonia</label>
-    <input type="text" name="colonia" placeholder="Colonia..." required>
+    <input 
+      type="text" 
+      name="colonia" 
+      placeholder="Colonia..." 
+      required
+      onkeyup="javascript:this.value=this.value.toUpperCase();"
+    >
     <!-- https://copomex.com/#pricing-section por 330 para agilizar este tramite -->
 
     <label for="cp"> <span>Código Postal</span>
@@ -998,7 +1013,7 @@ app.component("v-scholarship", {
   methods: {
     scholarshipDetailCompleted(e){
       e.preventDefault();
-      const scholarship = document.getElementById("scholarship").value;
+      const scholarship = document.getElementById("scholarship").value.toUpperCase();
       const studiesCertificate = e.target.children['studiesCertificate'].files[0];
       const studiesCertificateRender = URL.createObjectURL(e.target.children['studiesCertificate'].files[0]);
       const objScholarship = {
@@ -1271,17 +1286,26 @@ app.component("v-firstRegister", {
     scholarshipDetailCompleted(object){
       //incluir disability
       const disability = this.nodeDisability();
+      const suffering = this.nodeSuffering();
       const newObj = { 
         ...object, 
-        discapacidad: disability };
-      this.firstRegisterIsCompletedScholarship = false;      
+        discapacidad: disability,
+        padecimiento: suffering 
+      };
+      this.firstRegisterIsCompletedScholarship = false;
       this.$emit("firstRegisterCompleted", newObj);
     },
 
     nodeDisability(){
      const nodeDisability = document.getElementById("disability");
-     const disability = nodeDisability.value;
+     const disability = nodeDisability.value.toUpperCase();
      return disability;
+    },
+    
+    nodeSuffering(){
+      const node = document.getElementById("suffering");
+      const suffering = node.value.toUpperCase();
+      return suffering;
     }
   },
 
@@ -1412,6 +1436,7 @@ app.component("v-viewInscriptionNew", {
         email: this.reactive.newStudent.email,
         escolaridad: this.reactive.newStudent.escolaridad,
         discapacidad: this.reactive.newStudent.discapacidad,
+        padecimiento: this.reactive.newStudent.padecimiento,
         estado: this.reactive.newStudent.estado,
         telefono: this.reactive.newStudent.telefono
       }
@@ -1610,6 +1635,16 @@ app.component("v-disability", {
         <option v-for= "disability in discapacidades">{{ disability }}</option>
       </select>
     </label>
+  <label for="padecimiento">¿Tienes algún padecimiento de salud? Diabetes, Asma, Epilepsia, etc.</label>
+    
+  <input list="list-suffering" id="suffering" name="padecimiento">
+  <datalist id="list-suffering">
+      <option value="Diabetes">
+      <option value="Hipertensión">
+      <option value="Asma">
+      <option value="Epilepsia">
+      <option value="VIH">
+  </datalist>
   `
 })
 
