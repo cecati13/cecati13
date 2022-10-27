@@ -79,7 +79,7 @@ class AvailableCourses {
     createContainerButton(course){        
         console.log("course number: ",course.number)
         const containerAnchor = document.createElement("a");
-        containerAnchor.className = "course--img-button button-inscription";
+        containerAnchor.className = "course--img-button button-inscription buttonAnimate";
         containerAnchor.dataset.numberCourse = `pre-${course.number}`;
         containerAnchor.href = "../curso-inscripcion"
         containerAnchor.innerHTML = `

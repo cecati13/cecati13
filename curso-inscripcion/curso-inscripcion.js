@@ -1,10 +1,10 @@
 const app = Vue.createApp({
   data() {
     return {
-      API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1",
-      //API: "http://localhost:3000/API/V1",
-      API_files: "http://svo-5-191.servidoresvirtuales.mx",
-      //API_files: "http://localhost:3500",
+      //API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1",
+      API: "http://localhost:3000/API/V1",
+      //API_files: "http://svo-5-191.servidoresvirtuales.mx",
+      API_files:"http://localhost:3000/API/V1",
       keyCourseStorage: "CourseCecati13",
       keyStudentStorage: "studentC13",
       curso:{},
@@ -140,23 +140,24 @@ const app = Vue.createApp({
           let objLinksFiles = {};
           if (objInscription.formFiles) {
             const formFiles = objInscription.formFiles;
-            //const endpoint = `${this.API_files}/files`;
-            //const files = await this.sendFiles(formFiles, endpoint);
-            //objLinksFiles = {...files};
+            //const endpoint = `${this.API_files}/files`;   endpoint anterior a servidores virtuales
+            const endpoint = `${this.API_files}/students/files`;
+            const files = await this.sendFiles(formFiles, endpoint);
+            objLinksFiles = {...files};
             //errores en server files
             console.log(objLinksFiles);
             if (objLinksFiles.error) {
               if (objLinksFiles.error.code === "LIMIT_FILE_SIZE") {
                 console.log(`Archivos de mas de ${this.sizeFile} MB`);
-                new Error("LIMIT_FILE_SIZE")
+                new Error("LIMIT_FILE_SIZE");
               }
               if (objLinksFiles.error.storageErrors["length"] === 0){
                 console.log("1 archivo con formato incorrecto");
-                new Error("FILES_TYPE_ERROR")
-              }              
+                new Error("FILES_TYPE_ERROR");
+              }
             }
             //errores en server files
-          }       
+          }
           const objOfLinksFiles = {...objInscription.data, ...objLinksFiles}
           console.log(objOfLinksFiles);
 
@@ -170,10 +171,10 @@ const app = Vue.createApp({
     
           //falta manejo de errores que responda el servidor
           if (responseData.status) {
-            this.dataConfirmation.nombre = objDataInscription.nombre,
-            this.dataConfirmation.matricula = responseData.matricula,
-            this.dataConfirmation.fechaRegistro = responseData.fechaRegistro
-            sessionStorage.removeItem(this.keyCourseStorage)
+            // this.dataConfirmation.nombre = objDataInscription.nombre,
+            // this.dataConfirmation.matricula = responseData.matricula,
+            // this.dataConfirmation.fechaRegistro = responseData.fechaRegistro
+            // sessionStorage.removeItem(this.keyCourseStorage)
           } else {
             new Error("Falla al inscribir en BD")
           }
@@ -182,16 +183,16 @@ const app = Vue.createApp({
         }  
       } catch (error) {
         this.preloader();
-        this.statusAPIs = true;
-        objInscription.db === true ? this.isUserStudent = true : this.firstRegisterCompleted = true;
-        const saveInscription = objInscription.db === true ? {...this.reactive.studentDB } : {...this.reactive.newStudent}
-        this.saveInformationForError(saveInscription);
-        Swal.fire({
-          title: "Error",
-          text: "Lo sentimos estamos teniendo problemas con nuestro servidor de inscripciones. En este momento no podemos procesar tu solicitud de inscripción, por favor intenta mas tarde.",
-          icon: "error",
-          confirmButtonText: "Cerrar"
-        });
+        // this.statusAPIs = true;
+        // objInscription.db === true ? this.isUserStudent = true : this.firstRegisterCompleted = true;
+        // const saveInscription = objInscription.db === true ? {...this.reactive.studentDB } : {...this.reactive.newStudent}
+        // this.saveInformationForError(saveInscription);
+        // Swal.fire({
+        //   title: "Error",
+        //   text: "Lo sentimos estamos teniendo problemas con nuestro servidor de inscripciones. En este momento no podemos procesar tu solicitud de inscripción, por favor intenta mas tarde.",
+        //   icon: "error",
+        //   confirmButtonText: "Cerrar"
+        // });
         //alert("Lo sentimos estamos teniendo problemas con nuestro servidor de inscripciones. En este momento no podemos procesar tu solicitud de inscripción, por favor intenta mas tarde.")
         console.log(error)
       }
@@ -230,12 +231,12 @@ const app = Vue.createApp({
       return response.json()
     },
 
-    isStudent(){      
+    isStudent(){
       const dataSaveStudent = JSON.parse(sessionStorage.getItem(this.keyStudentStorage));
       this.reactive.studentDB = {
         ...dataSaveStudent
-      }    
-      this.isUserStudent = true;      
+      }
+      this.isUserStudent = true;
     },
 
     saveDataNewRegister(object) {      

@@ -4,10 +4,10 @@ let file;
 let file2;
 
 async function sendForInscripcion(formData){    
-    console.log(formData.get("estudios"))
-    const endpoint = `http://svo-5-191.servidoresvirtuales.mx/files`
+    console.log(formData.get("comprobanteEstudios"))
+    //const endpoint = `http://svo-5-191.servidoresvirtuales.mx/files`
     //const endpoint = `http://localhost:3500/files`;
-    //const endpoint = `http://localhost:3000/API/V1/students/newStudent/inscription`;
+    const endpoint = `http://localhost:3000/API/v1/students/files`;
     const response = await fetch( endpoint, {
     method: "post",
     // headers: {
