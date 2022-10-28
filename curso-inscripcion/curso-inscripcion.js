@@ -172,10 +172,10 @@ const app = Vue.createApp({
     
           //falta manejo de errores que responda el servidor
           if (responseData.status) {
-            // this.dataConfirmation.nombre = objDataInscription.nombre,
-            // this.dataConfirmation.matricula = responseData.matricula,
-            // this.dataConfirmation.fechaRegistro = responseData.fechaRegistro
-            // sessionStorage.removeItem(this.keyCourseStorage)
+            this.dataConfirmation.nombre = objDataInscription.nombre,
+            this.dataConfirmation.matricula = responseData.matricula,
+            this.dataConfirmation.fechaRegistro = responseData.fechaRegistro
+            sessionStorage.removeItem(this.keyCourseStorage)
           } else {
             new Error("Falla al inscribir en BD")
           }
@@ -1640,7 +1640,7 @@ app.component("v-disability", {
     
   <input list="list-suffering" id="suffering" name="padecimiento">
   <datalist id="list-suffering">
-    <option value="Ninguna">
+    <option value="Ninguno">
     <option value="Diabetes">
     <option value="Hipertensión">
     <option value="Asma">
