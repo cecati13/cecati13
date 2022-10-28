@@ -1,10 +1,11 @@
 const app = Vue.createApp({
   data() {
     return {
-      //API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1",
-      API: "http://localhost:3000/API/V1",
+      API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1",
+      //API: "http://localhost:3000/API/V1",
+      API_files: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1",
       //API_files: "http://svo-5-191.servidoresvirtuales.mx",
-      API_files:"http://localhost:3000/API/V1",
+      //API_files:"http://localhost:3000/API/V1",
       keyCourseStorage: "CourseCecati13",
       keyStudentStorage: "studentC13",
       curso:{},
@@ -1635,15 +1636,16 @@ app.component("v-disability", {
         <option v-for= "disability in discapacidades">{{ disability }}</option>
       </select>
     </label>
-  <label for="padecimiento">¿Tienes algún padecimiento de salud? Diabetes, Asma, Epilepsia, etc.</label>
+  <label for="padecimiento">¿Tienes algún padecimiento de salud? Diabetes, Asma, Epilepsia, etc.</label>  
     
   <input list="list-suffering" id="suffering" name="padecimiento">
   <datalist id="list-suffering">
-      <option value="Diabetes">
-      <option value="Hipertensión">
-      <option value="Asma">
-      <option value="Epilepsia">
-      <option value="VIH">
+    <option value="Ninguna">
+    <option value="Diabetes">
+    <option value="Hipertensión">
+    <option value="Asma">
+    <option value="Epilepsia">
+    <option value="VIH">
   </datalist>
   `
 })
