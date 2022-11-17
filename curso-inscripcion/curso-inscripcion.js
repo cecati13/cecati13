@@ -1,8 +1,8 @@
 const app = Vue.createApp({
   data() {
     return {
-      API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1",
-      //API: "http://localhost:3000/API/V1",
+      //API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1",
+      API: "http://localhost:3000/API/V1",
       API_files: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1",
       //API_files: "http://svo-5-191.servidoresvirtuales.mx",
       //API_files:"http://localhost:3000/API/V1",
@@ -77,12 +77,17 @@ const app = Vue.createApp({
           confirmButtonText: "Cerrar"
         })
         //alert("La Estructura de la CURP es incorrecta, revisa y corrige la información");
+      // } else if(response.updateContact) {
+      //   //usuario existe, pero actualizar datos de contacto es obligatorio
+      //   const storageResponse = JSON.stringify(response);
+      //   sessionStorage.setItem(this.keyStudentStorage, storageResponse);
+      //   //crear un nuevo componente para obligar a actualizar
       } else {
-        //el usuario existe en nuestros registros
+        //el usuario existe en nuestros registros mas recientes
         const storageResponse = JSON.stringify(response);
         sessionStorage.setItem(this.keyStudentStorage, storageResponse);
         this.preloader();
-        this.isStudent();        
+        this.isStudent();
       }
     },
 
@@ -220,16 +225,21 @@ const app = Vue.createApp({
       return info
     },
 
-    async sendData(API, obj = {}){      
-      const response = await fetch( API, {
-        method: "POST",
-        headers: {
-          //"Content-Type": "multipart/form-data"
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(obj)
-      })
-      return response.json()
+    async sendData(API, obj = {}){
+      try {
+        const response = await fetch( API, {
+          method: "POST",
+          headers: {
+            //"Content-Type": "multipart/form-data"
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(obj)
+        })
+        return response.json()        
+      } catch (error) {
+        console.log("sendData catch");
+        console.error(error);        
+      }
     },
 
     isStudent(){
@@ -384,18 +394,26 @@ app.component("v-dbRegister", {
   
   data(){
     return {
-      showInscription: true,      
+      showInscription: true,
+      showForceUpdate: this.reactive.studentDB.updateContact
     }
   },
 
   methods : {
     showUpdateFieldOnly() {
       this.showInscription = !this.showInscription
+      if (this.showForceUpdate) {
+        this.showForceUpdate = !this.showForceUpdate;
+        this.showInscription = !this.showInscription;
+      }
     },   
 
     updateProperties(object) {
       this.reactive.studentDB.update = true;
       this.saveDataStudentDB(object);
+      if (object.forceUpdate) {
+        this.showUpdateFieldOnly();
+      }
     },
 
     saveDataStudentDB(object) {
@@ -445,11 +463,10 @@ app.component("v-dbRegister", {
 
   template: `  
   <div 
-    v-if="showInscription"    
+    v-if="showInscription && !showForceUpdate"    
     class="register__preSend--db">
       
-    <h4>Bienvenido a un nuevo curso en CECATI 13.</h4>
-    <p><span class="register__preSend--data">{{ reactive.studentDB.nombre }} {{ reactive.studentDB.a_paterno }} {{ reactive.studentDB.a_materno }}</span> usaremos la información personal del último curso al que te inscribiste.</p>
+    <v-dbRegisterLegend/>
       
     <br>
       
@@ -461,23 +478,62 @@ app.component("v-dbRegister", {
     <p class="register__preSend--data">{{ reactive.studentDB.telefono }}</p>
     <br>
 
-    <p>Si es necesario puedes actualizar la información personal que registraste en tu último curso.</p>
+    <p>También puedes actualizar la información personal que registraste en tu último curso antes de inscribirte.</p>
     <p class="note">NOTA: Algunos datos no pueden actualizarse desde este sitio. Si necesitas realizar una correción por favor <a href="../contacto">CONTACTANOS</a> antes de inscribirte.</p>
   </div>
   
+  <v-forceUpdateDB 
+    v-if="showForceUpdate"
+    v-on:showUpdateFieldOnly="showUpdateFieldOnly"
+    v-on:updateProperties="updateProperties"
+  />
+
   <v-updateRegister
+    v-if="!showForceUpdate"
     v-on:showUpdateFieldOnly="showUpdateFieldOnly"
     v-on:updateProperties="updateProperties"
   />
     
-  <v-course v-if="showInscription"/>
+  <v-course v-if="showInscription && !showForceUpdate"/>
   
-  <div v-if="showInscription">    
+  <div v-if="showInscription && !showForceUpdate">    
     <v-buttonInscription
       v-on:click="inscription">        
     </-button>
   </div>    
   ` 
+})
+
+app.component("v-dbRegisterLegend", {
+  inject: ["reactive"],
+  template: `
+  <h4>Bienvenido a un nuevo curso en CECATI 13.</h4>
+  <p><span class="register__preSend--data">{{ reactive.studentDB.nombre }} {{ reactive.studentDB.a_paterno }} {{ reactive.studentDB.a_materno }}</span> usaremos la información personal del último curso al que te inscribiste.</p>
+  <br>
+  `
+})
+
+app.component("v-forceUpdateDB", {
+  methods: {
+    forceUpdateContact(object){
+      const newObj = {
+        ...object, 
+        forceUpdate: true
+      }
+      this.$emit("updateProperties", newObj)
+    }
+  },
+
+  template: `
+  <div class="register__preSend--db">
+    <v-dbRegisterLegend/>
+    <p>Estamos actualizando nuestra base de datos.</p>   
+    
+    <v-updateContact
+    v-on:updateProperties="forceUpdateContact"
+    />
+  </div>
+  `
 })
 
 app.component("v-newRegister", {
@@ -654,10 +710,11 @@ app.component("v-dataGeneral", {
           this.$emit("continueFirstRegister", responseFile)
           //VERIFICAR SI USUARIO CAMBIO LA CURP Y VERIFICAR QUE NO ESTE INSCRITO EN EL SISTEMA
           } else if (responseFile.curp == false) {
-            console.log("La CURP no corresponde con los datos enviados. Verifica la información.")
+            const message = responseFile.message;
+            console.log(message)
             Swal.fire({
               title: "Error",
-              text: "Verifica la información.",
+              text: message,
               icon: "error",
               confirmButtonText: "Aceptar"
             });
@@ -1679,7 +1736,7 @@ app.component("v-confirmation", {
     <p>Tú número de matrícula: <span class="confirmation--data">{{ this.dataConfirmation.matricula }}</span></p>
 
     <br>
-    <p>Revisaremos tu información, y en un plazo de entre <span class="confirmation--data">24 y 72 horas hábiles</span> te contactaremos para darte instrucciones respecto al pago del curso por <span class="confirmation--data">$ {{ this.course.costo }}</span></p>
+    <p>Revisaremos tu información, y en un plazo de entre <span class="confirmation--data">24 a 48 horas hábiles</span> te contactaremos para darte instrucciones respecto al pago del curso.</p>
     
     <br>
     <p>¡Gracias por tu preferencia!</p>
@@ -1715,7 +1772,5 @@ app.component("v-conexionFailBack", {
     </div>  
   `
 })
-
-
 
 const vm = app.mount('#app');
