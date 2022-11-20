@@ -1,8 +1,8 @@
 const app = Vue.createApp({
   data() {
     return {
-      //API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1",
-      API: "http://localhost:3000/API/V1",
+      API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1",
+      //API: "http://localhost:3000/API/V1",
       API_files: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1",
       //API_files: "http://svo-5-191.servidoresvirtuales.mx",
       //API_files:"http://localhost:3000/API/V1",
