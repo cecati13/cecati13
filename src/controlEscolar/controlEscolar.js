@@ -4,7 +4,6 @@ const app = Vue.createApp({
             API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1",
             //API:"http://localhost:3000/API/v1",
             auth: false,
-            //render: false,
             fileSource: ""
         }
     },
@@ -40,13 +39,13 @@ const app = Vue.createApp({
                 typeFile
             }
             const endpoint = `${this.API}/controlStudents/getFile`;
-            const res = await this.sendDataFile(endpoint, obj)            
-            const fileURL = URL.createObjectURL(res);
-            //this.render = true;
+            const res = await this.sendData(endpoint, obj)
+            //convert base64 to file
+            const base64Response = await fetch(`data:${typeFile};base64,${res.file}`);
+            const blob = await base64Response.blob();            
+            const fileURL = URL.createObjectURL(blob);            
             this.fileSource = fileURL;
-            window.open(this.fileSource, "_blank")
-            // if (typeFile === "application/pdf") {                
-            // }
+            window.open(this.fileSource, "_blank")            
         },
 
         async sendData(API, obj){
@@ -59,22 +58,6 @@ const app = Vue.createApp({
                   body: JSON.stringify(obj)
                 })
                 return response.json();
-              } catch (error) {
-                console.log("sendData catch");
-                console.error(error);
-              }
-        },
-
-        async sendDataFile(API, obj){
-            try {
-                const response = await fetch( API, {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json"
-                  },
-                  body: JSON.stringify(obj)
-                })
-                return response.blob()
               } catch (error) {
                 console.log("sendData catch");
                 console.error(error);
@@ -105,11 +88,7 @@ const app = Vue.createApp({
                     break;
                 }
             return type;
-        },
-
-        showRender(){
-
-        },
+        }       
     },
 
     template: `
@@ -148,14 +127,7 @@ const app = Vue.createApp({
         </select>
         <button>Enviar</button>
     </form>
-    `
-    // <div v-if=render width="500px">
-    //     <img
-    //         width="100%"
-    //         v-bind:src=fileSource
-    //         alt="documento"
-    //     >
-    // </div>    
+    `      
 })
 
 const vm = app.mount("#app");
