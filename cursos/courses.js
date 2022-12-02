@@ -279,8 +279,13 @@ class Specialties {
     static showButtonBack() {        
         const nodeButtonBack = document.querySelector("#buttonBack");
         nodeButtonBack.classList.toggle("buttonBack--HIDE");
-        nodeButtonBack.addEventListener("click", backToSpecialties)
+        nodeButtonBack.addEventListener("click", backToSpecialties);
     }
+}
+
+function showSignUp() {
+    const node = document.querySelector(".controlEscolar");
+    node.classList.toggle("singUp");
 }
 
 function preloader() {
@@ -293,6 +298,7 @@ const backToSpecialties = function () {
     AvailableCourses.removeCourses();
     Specialties.showButtonBack();
     AvailableCourses.alternateTitle(Specialties.textTitle);
+    showSignUp();
 }
 
 function saveCourse(e) {
@@ -309,7 +315,8 @@ function saveCourse(e) {
 
 function locateEvent(event) {
     const ubication = event.target.dataset.specialty.toUpperCase();
-    const showCourses = new AvailableCourses(ubication);
+    new AvailableCourses(ubication);
+    showSignUp();
 }
 
 async function conexion(URL) {

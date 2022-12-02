@@ -185,6 +185,17 @@
 }
 /*Termina: Not Found para Fichas de Información */
 
+/*Link para acceso a Control Escolar*/
+.singUp {
+    display: none;
+}
+
+.controlEscolar {
+    margin-bottom: 5px;
+    cursor: default;
+    font-size: 0.9rem;
+}
+
 /* estilos de diseño con PDF, analizar si reutilizar en inscripcion*/
 .educativeOffer__button {
     padding: 12px 25px;

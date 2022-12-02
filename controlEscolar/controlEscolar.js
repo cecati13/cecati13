@@ -5,29 +5,31 @@ const app = Vue.createApp({
             API:"http://localhost:3000/API/v1",
             auth: false,
             fileSource: "",
-            username: ""
+            username: "",
+            message: ""
         }
     },
 
     methods: {
         async login(e) {
             e.preventDefault();
-            const username = e.target.children.username.children.username.value;
-            const password = e.target.children.password.children.password.value;
+            const username = e.target.children.username.value;
+            const password = e.target.children.password.value;
             const obj = {
                 password: password,
                 username: username
             };
             const endpoint = `${this.API}/controlStudents/oauth`;
-            const response = await this.sendData(endpoint, obj);
-            console.log(response)
+            const response = await this.sendData(endpoint, obj);            
             if (response.statusCode === 401) {
-                alert(response.message);
+                this.message = response.message;
+                //this.message = "Acceso NO autorizado."
             } else {
                 localStorage.setItem("token", response.token);
                 localStorage.setItem("username", response.username)
                 this.username = response.username;
                 this.auth = true;
+                this.message = "";
             }
         },
 
@@ -48,12 +50,17 @@ const app = Vue.createApp({
             }
             const endpoint = `${this.API}/controlStudents/getFile`;
             const res = await this.sendData(endpoint, obj)
-            //convert base64 to file
-            const base64Response = await fetch(`data:${typeFile};base64,${res.file}`);
-            const blob = await base64Response.blob();            
-            const fileURL = URL.createObjectURL(blob);            
-            this.fileSource = fileURL;
-            window.open(this.fileSource, "_blank")            
+            if (res.error) {
+                this.message = res.error;
+            } else{
+                //convert base64 to file
+                const base64Response = await fetch(`data:${typeFile};base64,${res.file}`);
+                const blob = await base64Response.blob();
+                const fileURL = URL.createObjectURL(blob);
+                this.fileSource = fileURL;
+                this.message = "";
+                window.open(this.fileSource, "_blank")
+            }
         },
 
         async sendData(API, obj){
@@ -103,7 +110,11 @@ const app = Vue.createApp({
                     break;
                 }
             return type;
-        }       
+        },
+
+        clearMessage() {
+            this.message = "";
+        }
     },
 
     template: `
@@ -112,14 +123,28 @@ const app = Vue.createApp({
         v-on:submit="login"
         v-if=!auth
     >
-        <label name="username"> Usuario
-            <input type="text" name="username">
+        <label> Usuario
         </label>
-        <label name="password"> Contraseña
-            <input type="password" name="password">
+        <input 
+            type="text"
+            name="username" 
+            v-on:focus="clearMessage"
+        >
+        <label> Contraseña
         </label>
-        <button>Enviar</button>
+        <input 
+            type="password" 
+            name="password" 
+            v-on:focus="clearMessage"
+        >
+        <button>Iniciar Sesión</button>
+        <p class="message">{{ message }}</p>
     </form>
+    <div v-if=!auth class="buttonBackCourses">
+        <a href="./../cursos" >
+            Regresar a Cursos Disponibles
+        </a>
+    </div>
     <p v-if=auth>
         Bienvenido {{ username.toUpperCase() }} 
     </p>
@@ -129,21 +154,22 @@ const app = Vue.createApp({
         class="formFile"
     >
         <label for="curp">CURP</label>
-        <input type="¿Cual es la CURP?" name="curp" id="">
-        <label for="">Selecciona el Tipo de Archivo</label>
-        <select name="typeDocument">
+        <input name="curp" v-on:focus="clearMessage">
+        <label>Selecciona el Tipo de Archivo</label>
+        <select name="typeDocument" v-on:focus="clearMessage">
             <option value="actaNacimiento">Acta de Nacimiento</option>
             <option value="comprobanteDomicilio">Domicilio</option>
             <option value="comprobanteEstudios">Grado de Estudios</option>
         </select>
-        <label for="">Seleciona el tipo de archivo</label>
-        <select name="extension">
+        <label>Seleciona el tipo de archivo</label>
+        <select name="extension" v-on:focus="clearMessage">
             <option value="jpg">jpg</option>
             <option value="jpeg">jpeg</option>
             <option value="pdf">pdf</option>
             <option value="png">png</option>
         </select>
         <button>Enviar</button>
+        <p class="message">{{ message }}</p>
     </form>
     `      
 })
