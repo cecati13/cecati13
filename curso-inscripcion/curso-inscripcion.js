@@ -4,11 +4,11 @@ const app = Vue.createApp({
       API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1",
       //API: "http://localhost:3000/API/V1",
       API_files: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1",
-      //API_files: "http://svo-5-191.servidoresvirtuales.mx",
       //API_files:"http://localhost:3000/API/V1",
       keyCourseStorage: "CourseCecati13",
       keyStudentStorage: "studentC13",
       curso:{},
+      studentLocalStorage: {},
       MAX_SIZE_FILES: 5000000, // 5MB
       sizeFile: "5",
       reactive: {
@@ -20,6 +20,7 @@ const app = Vue.createApp({
         curp: "",
       },
       infoCourseShow: true,
+      isStudentLocalStorage: false,
       isWelcome: true,
       isUserStudent: false,
       isNewStudent: false,
@@ -36,6 +37,7 @@ const app = Vue.createApp({
       API_files: this.API_files,
       keyCourseStorage: this.keyCourseStorage,
       course: this.getCourse,
+      studentLocalStorage: this.getStudentLocalStorage,
       reactive: this.reactive,
       MAX_SIZE_FILES: this.MAX_SIZE_FILES,
       sizeFile: this.sizeFile,
@@ -289,14 +291,22 @@ const app = Vue.createApp({
   computed: {
     getCourse(){
       const getItem = sessionStorage.getItem(this.keyCourseStorage);
-      if (!getItem) {        
+      if (!getItem) {
         window.location.href = "../cursos"
         //Si no se ha selecionado un curso redireccionar a /cursos
       }
-      const courseInfo = JSON.parse(getItem);      
-      this.curso = courseInfo;
+      const courseInfo = JSON.parse(getItem);
+      this.curso = courseInfo;      
       return courseInfo;
     },
+
+    getStudentLocalStorage(){
+      const getItem = sessionStorage.getItem(this.keyStudentStorage);
+      if (getItem) {
+        this.studentLocalStorage = JSON.parse(getItem);
+        this.reactive.curp = this.studentLocalStorage.curp;
+      }
+    }
   },
 
   template: `
@@ -1408,7 +1418,7 @@ app.component("v-tagCurp", {
       type="text" 
       id="valueCurp" 
       name="curp" 
-      placeholder="CURP..."
+      placeholder="CURP..."      
       required
       v-bind:value=reactive.curp
       onkeyup="javascript:this.value=this.value.toUpperCase();"
