@@ -1,10 +1,11 @@
 const app = Vue.createApp({
     data(){
         return {
-            API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1",
-            //API:"http://localhost:3000/API/v1",
+            //API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1",
+            API:"http://localhost:3000/API/v1",
             auth: false,
-            fileSource: ""
+            fileSource: "",
+            username: ""
         }
     },
 
@@ -19,8 +20,15 @@ const app = Vue.createApp({
             };
             const endpoint = `${this.API}/controlStudents/oauth`;
             const response = await this.sendData(endpoint, obj);
-            this.auth = response.access;
-
+            console.log(response)
+            if (response.statusCode === 401) {
+                alert(response.message);
+            } else {
+                localStorage.setItem("token", response.token);
+                localStorage.setItem("username", response.username)
+                this.username = response.username;
+                this.auth = true;
+            }
         },
 
         async findFile(e) {
@@ -50,11 +58,18 @@ const app = Vue.createApp({
 
         async sendData(API, obj){
             try {
+                const objHeaders = { "Content-Type": "application/json" }                
+                if (!obj.username) {
+                    Object.defineProperty(objHeaders, "Authorization",{
+                        value: `Bearer ${localStorage.getItem("token")}`,
+                        writable: true,
+                        enumerable: true,
+                        configurable: true
+                    })
+                }
                 const response = await fetch( API, {
                   method: "POST",
-                  headers: {
-                    "Content-Type": "application/json"
-                  },
+                  headers: objHeaders,
                   body: JSON.stringify(obj)
                 })
                 return response.json();
@@ -105,6 +120,9 @@ const app = Vue.createApp({
         </label>
         <button>Enviar</button>
     </form>
+    <p v-if=auth>
+        Bienvenido {{ username.toUpperCase() }} 
+    </p>
     <form 
         v-if=auth
         v-on:submit="findFile"
