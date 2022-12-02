@@ -61,7 +61,6 @@ async function conexion(URL) {
         const infoJSON = await info.json()
         const response = new ObjFromArray(infoJSON);
         galleryContainer(response);
-        console.log(response);        
     } catch (error) {
         console.log(error)
         const nodeGallery = document.querySelector(".gallery");

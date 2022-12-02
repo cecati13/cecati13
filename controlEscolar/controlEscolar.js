@@ -29,7 +29,7 @@ const app = Vue.createApp({
                 localStorage.setItem("username", response.username)
                 this.username = response.username;
                 this.auth = true;
-                this.message = "";
+                this.clearMessage();
             }
         },
 
@@ -58,7 +58,7 @@ const app = Vue.createApp({
                 const blob = await base64Response.blob();
                 const fileURL = URL.createObjectURL(blob);
                 this.fileSource = fileURL;
-                this.message = "";
+                this.clearMessage();
                 window.open(this.fileSource, "_blank")
             }
         },
@@ -80,8 +80,7 @@ const app = Vue.createApp({
                   body: JSON.stringify(obj)
                 })
                 return response.json();
-              } catch (error) {
-                console.log("sendData catch");
+              } catch (error) {                
                 console.error(error);
               }
         },

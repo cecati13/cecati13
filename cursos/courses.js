@@ -308,8 +308,7 @@ function saveCourse(e) {
         sessionStorage.removeItem(keyCourseStorage);
         const nodeCourse = document.querySelector(`#${locate}`);
         const valueCourse = nodeCourse.value;
-        sessionStorage.setItem(keyCourseStorage, valueCourse)
-        console.log("Guardado en Storage")
+        sessionStorage.setItem(keyCourseStorage, valueCourse)        
     //}
 }
 
@@ -323,8 +322,7 @@ async function conexion(URL) {
     try {
         const info = await fetch(`${URL}`);        
         const infoJSON = await info.json()                
-        const response = new ObjFromArray(infoJSON);
-        console.log(response);
+        const response = new ObjFromArray(infoJSON);        
         const specialitie = new Specialties(response);        
         infoFetch = [...response];        
     } catch (error) {
@@ -339,11 +337,3 @@ async function conexion(URL) {
 }
 preloader();
 conexion(URL);
-//Codigo migrado desde las pruebas de src/cursos julio 2022
-// window.HashChangeEvent  = (event) => {
-    
-//     alert("localizacion: " + document.location + "; estado " + JSON.stringify(event.state))
-//     event.preventDefault();
-//     console.log("evento onchange")
-//     console.log(event)
-// }
