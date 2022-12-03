@@ -36,8 +36,19 @@ h5 {
 }
 
 section img {
+    max-height: 450px;
     min-width: 310px;
-    max-width: 350px;
+    max-width: 99%;
+}
+
+section object {
+    height: 400px;
+    width: 99%;
+}
+
+section iframe {
+    height: 400px;
+    width: 99%;
 }
 
 form {
@@ -196,10 +207,11 @@ input::-webkit-file-upload-button,
     border-radius: 5px;
     color: var(--fontColor2);
     font-size: 1.6rem;
+    text-align: center;
     padding: 10px;
     margin: 10px;
     min-width: 300px;
-    max-width: 370px;
+    width: 90%;
 }
 
 .register__preSend--data {

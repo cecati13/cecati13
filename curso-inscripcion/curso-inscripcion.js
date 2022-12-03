@@ -1471,20 +1471,10 @@ app.component("v-viewInscriptionNew", {
     isDocumentUpload(array){
       const fileRender = this.reactive.newStudent[array[0]];
       const file = this.reactive.newStudent[array[1]];
-      if (file.type === 'application/pdf') {
-        this.renderPDF[array[1]] = true;
-        //temporal hasta mostrar render pdf en el DOM        
-        this.nameFilePDF[array[1]] = file.name;
-        //temporal hasta mostrar render pdf en el DOM
-      } else {
-        this.renderPDF[array[1]] = false;
-      }
-
-      if (fileRender == undefined) {
-        return ""
-      } else {
-        return fileRender
-      }
+      this.nameFilePDF[array[1]] = file.name;
+      this.renderPDF[array[1]] = file.type === 'application/pdf' ? true : false;
+      const render = fileRender == undefined ? "" : fileRender;
+      return render;
     },
 
     async inscription(e){
@@ -1532,32 +1522,56 @@ app.component("v-viewInscriptionNew", {
       <h5>Datos personales.</h5>      
       <p>Nombre: <span class="register__preSend--data">{{ reactive.newStudent.nombre }} {{ reactive.newStudent.a_paterno }} {{ reactive.newStudent.a_materno }}</span>.</p>
       <p>CURP: <span class="register__preSend--data">{{ reactive.newStudent.curp }}</span></p>
-      <p v-if="!renderPDF.actaNacimiento">Acta de nacimiento:</p>
+      <br>
+      <p>Acta de nacimiento:</p>
+      
       <figure v-if="!renderPDF.actaNacimiento">
-      <img v-bind:src=isDocumentUpload(arrayActa) alt="Acta de nacimiento">
+        <img v-bind:src=isDocumentUpload(arrayActa) alt="Acta de nacimiento">
       </figure>
-      <p v-else>Como acta de nacimiento ingresaste el archivo: <span class="register__preSend--data">{{ nameFilePDF.actaNacimiento }}</span></p>
+      
+      <iframe 
+        v-if="renderPDF.actaNacimiento"
+        v-bind:src=isDocumentUpload(arrayActa)
+        type="application/pdf">
+      </iframe>      
+      <p>Nombre del archivo seleccionado: {{nameFilePDF.actaNacimiento}}</p>
     </div>    
 
     <div class="register__preSend">
       <h5>Domicilio.</h5>
       <p>{{ reactive.newStudent.calle}}, {{ reactive.newStudent.colonia }}, en {{ reactive.newStudent.municipio }}, {{ reactive.newStudent.estado  }}, Código Postal {{ reactive.newStudent.cp }}</p>
-      <p v-if="!renderPDF.comprobanteDomicilio">Comprobante de Domicilio:</p>
+      <br>
+      <p>Comprobante de Domicilio:</p>
+      
       <figure v-if="!renderPDF.comprobanteDomicilio">
         <img v-bind:src=isDocumentUpload(arrayDomicilio) alt="Comprobante de Domicilio">
       </figure>
-      <p v-else>Tu comprobante de domicilio es el archivo PDF con el nombre: <span class="register__preSend--data">{{ nameFilePDF.comprobanteDomicilio }}</span></p>
+
+      <iframe 
+        v-if="renderPDF.comprobanteDomicilio"
+        v-bind:src=isDocumentUpload(arrayDomicilio)
+        type="application/pdf">
+      </iframe>
+      <p>Nombre del archivo seleccionado: {{nameFilePDF.comprobanteDomicilio}}</p>
     </div>
         
       
     <div class="register__preSend">
       <h5>Escolaridad.</h5>
       <p>Máximo grado de estudios alcanzados: <span class="register__preSend--data">{{ this.reactive.newStudent.escolaridad}}</span></p>
-      <p v-if="!renderPDF.comprobanteEstudios">Comprobante de Estudios:</p>
+      <br>
+      <p>Comprobante de Estudios:</p>
+      
       <figure v-if="!renderPDF.comprobanteEstudios">
         <img v-bind:src=isDocumentUpload(arrayEstudios) alt="Comprobante de Estudios">        
       </figure>
-      <p v-else>Tu comprobante de estudios es el archivo PDF con el nombre: <span class="register__preSend--data">{{ nameFilePDF.comprobanteEstudios }}</span></p>
+
+      <iframe 
+        v-if="renderPDF.comprobanteEstudios"
+        v-bind:src=isDocumentUpload(arrayEstudios)
+        type="application/pdf">
+      </iframe>
+      <p>Nombre del archivo seleccionado: {{nameFilePDF.comprobanteEstudios}}</p>
     </div>
 
     <div class="register__preSend">
@@ -1582,12 +1596,6 @@ app.component("v-viewInscriptionNew", {
     v-on:click="inscription">
   </v-buttonInscription>
   `
-  // <iframe 
-  //       v-else
-  //       v-bind:src=isDocumentUpload(arrayActa)
-  //       type="application/pdf"
-  //       width="50%" height="50%>
-  //     </iframe>
 })
 
 app.component("v-updateBirthCertificate", {
@@ -1691,30 +1699,32 @@ app.component("v-disability", {
   data() {
     return {
       discapacidades: [
-        "Ninguna", "Visual", "Auditiva", "de Comunicación", "motriz", "Intelectual"
-      ]
+        "Ninguna", "Visual", "Auditiva", "de Comunicación", "Motríz", "Intelectual"
+      ],
+      padecimientos: [ "Ninguno", "Diabetes", "Hipertensión", "Asma", "Epilepsia", "VIH" ]
     }
   },
 
   template: `
   <p>¿Presentas alguna discapacidad?</p>
     <label for="disability">
-      <select name="disability" id="disability">
+      <select name="disability" id="disability" required>
         <option v-for= "disability in discapacidades">{{ disability }}</option>
       </select>
     </label>
   <label for="padecimiento">¿Tienes algún padecimiento de salud? Diabetes, Asma, Epilepsia, etc.</label>  
     
-  <input list="list-suffering" id="suffering" name="padecimiento">
+  <input list="list-suffering" id="suffering" name="padecimiento" required>
   <datalist id="list-suffering">
-    <option value="Ninguno">
-    <option value="Diabetes">
-    <option value="Hipertensión">
-    <option value="Asma">
-    <option value="Epilepsia">
-    <option value="VIH">
+    <option v-for="padecimiento in padecimientos">{{ padecimiento }} </option>
   </datalist>
   `
+  // <option value="Ninguno">
+  //   <option value="Diabetes">
+  //   <option value="Hipertensión">
+  //   <option value="Asma">
+  //   <option value="Epilepsia">
+  //   <option value="VIH">
 })
 
 app.component("v-buttonInscription", {
