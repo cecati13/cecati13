@@ -517,8 +517,8 @@ app.component("v-dbRegister", {
 app.component("v-dbRegisterLegend", {
   inject: ["reactive"],
   template: `
-  <h4>Bienvenido a un nuevo curso en CECATI 13.</h4>
-  <p><span class="register__preSend--data">{{ reactive.studentDB.nombre }} {{ reactive.studentDB.a_paterno }} {{ reactive.studentDB.a_materno }}</span> usaremos la información personal del último curso al que te inscribiste.</p>
+  <h4>Bienvenido a un nuevo curso en el CECATI 13.</h4>
+  <p><span class="register__preSend--data">{{ reactive.studentDB.nombre }} {{ reactive.studentDB.a_paterno }} {{ reactive.studentDB.a_materno }}</span> usaremos la información personal del último curso del que tenemos registro.</p>
   <br>
   `
 })
@@ -881,7 +881,7 @@ app.component("v-contact", {
     <input type="email" name="email" placeholder="email válido..." required>
     <label for="telefono">Teléfono</label>
     <input type="tel" name="telefono" placeholder="Teléfono a 10 dígitos" required>
-    <p>Generalmente los docentes crean grupos de WhatsApp para dar instrucciones a los estudiantes.</p>
+    <p>Tanto los docentes como el área de control escolar utilizan estos medios para ponerse en contacto y brindar instrucciones a los estudiantes.</p>
     <v-button></v-button>
   </form>
   `
@@ -1123,7 +1123,7 @@ app.component("v-scholarship", {
   <form v-on:submit="scholarshipDetailCompleted">
     <h4>Grado Escolar</h4>
     
-    <p>¿Cual es el máximo grado de estudios que alcanzaste? Selecciona una opción.</p>
+    <p>¿Cuál es el máximo grado de estudios que alcanzaste? Selecciona una opción.</p>
     <label for="scholarship">
     <select name="scholarship" id="scholarship">            
       <option 
@@ -1142,8 +1142,36 @@ app.component("v-scholarship", {
       accept=".jpg, .jpeg, .pdf"
     >
 
+    <v-notScholarshipExample></v-notScholarshipExample>
+    
     <v-button></v-button>
   </form>
+  `
+})
+
+app.component("v-notScholarshipExample", {
+  data: function() {
+    return {
+      example: false,
+    }
+  },
+
+  methods: {
+    showExample() {
+      this.example = !this.example;
+      console.log("mostramos u ocultamos imagen")
+    }
+  },
+
+  template: `
+  <p class="notScholarshipExample">En caso de no contar con ningún comprobante de estudios favor de redactar una carta en la cual menciones que sabes leer y escribir, que incluya tu nombre completo, tu firma y tu CURP. <span v-on:click="showExample" class="notScholarshipExample--span">Ver ejemplo</span></p>
+
+  <img
+    v-if="example"
+    src="https://storage.googleapis.com/cecati13/ejemplo_estudios.png"
+    class="notScholarshipExample--img"
+    alt="Ejemplo. Carta para comprobar estudios"
+  >
   `
 })
 
@@ -1719,12 +1747,6 @@ app.component("v-disability", {
     <option v-for="padecimiento in padecimientos">{{ padecimiento }} </option>
   </datalist>
   `
-  // <option value="Ninguno">
-  //   <option value="Diabetes">
-  //   <option value="Hipertensión">
-  //   <option value="Asma">
-  //   <option value="Epilepsia">
-  //   <option value="VIH">
 })
 
 app.component("v-buttonInscription", {
@@ -1756,7 +1778,7 @@ app.component("v-confirmation", {
     <p>Tú número de matrícula: <span class="confirmation--data">{{ this.dataConfirmation.matricula }}</span></p>
 
     <br>
-    <p>Revisaremos tu información, y en un plazo de entre <span class="confirmation--data">24 a 48 horas hábiles</span> te contactaremos para darte instrucciones respecto al pago del curso.</p>
+    <p>Revisaremos tu información, y en un plazo de 1 a 2 días <span class="confirmation--data">hábiles</span> te contactaremos para darte instrucciones respecto al pago del curso.</p>
     
     <br>
     <p>¡Gracias por tu preferencia!</p>
@@ -1778,7 +1800,7 @@ app.component("v-legendFiles", {
   
   template: `
     <p class="legendFiles" v-bind=size>
-      Tamaño maximo de archivos: {{ this.sizeFile }} MB
+      Tamaño máximo de archivos: {{ this.sizeFile }} MB
     </p>
     <p class="legendFiles">Formatos aceptados: .pdf, .jpeg y .jpg</p>
   `

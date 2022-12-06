@@ -275,6 +275,24 @@ input::-webkit-file-upload-button,
     font-size: 1.2rem;    
 }
 
+.notScholarshipExample {
+    max-width: 600px;
+    font-size: 1.3rem;
+    margin: 7px 0;
+}
+
+.notScholarshipExample--span {
+    text-decoration: dashed underline var(--contrastColor);
+    color: var(--fontColor);
+    cursor: pointer;
+}
+
+.notScholarshipExample--img {
+    max-width: 95%;
+    border: solid var(--fontColor) 1px;
+    border-radius: 5px;
+}
+
 .confirmation {
     max-width: 600px;
     background: linear-gradient(180deg, var(--mainColor2), transparent);
