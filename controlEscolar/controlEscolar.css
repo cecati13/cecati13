@@ -33,16 +33,3 @@ button {
     margin-top: 15px;
     align-self: center;
 }
-
-.buttonBackCourses {    
-    display: flex;
-    justify-content: center;
-    margin-top: 40px;
-}
-
-.buttonBackCourses a {
-    padding: 20px;
-    background-color: var(--fontColor);
-    color: var(--mainColor);
-    border-radius: 40px;
-}

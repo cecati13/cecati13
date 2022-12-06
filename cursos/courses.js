@@ -18,7 +18,7 @@ class AvailableCourses {
             this.mountNode(containerCourses);
             Specialties.showSpecialties();
             window.scroll(top);
-            AvailableCourses.alternateTitle(`Cursos de ${nameSpeciality.toUpperCase()}`);            
+            AvailableCourses.alternateTitle(`Cursos de ${nameSpeciality.toUpperCase()}`);
         }
     }
 
@@ -76,7 +76,7 @@ class AvailableCourses {
         return container;
     }
 
-    createContainerButton(course){        
+    createContainerButton(course){
         console.log("course number: ",course.number)
         const containerAnchor = document.createElement("a");
         containerAnchor.className = "course--img-button button-inscription buttonAnimate";
@@ -108,16 +108,16 @@ class AvailableCourses {
         const coursesContainers = document.createElement("div");
         coursesContainers.id = "containerCourses";
         coursesContainers.className ="containerCourses";
-        containerCourses.forEach( course => {            
+        containerCourses.forEach( course => {
             coursesContainers.appendChild(course);
         })
-        nodeAPI_Offer.appendChild(coursesContainers);        
+        nodeAPI_Offer.appendChild(coursesContainers);
         Specialties.showButtonBack();
     }
 
     sendCourses(array){
-        let arrayCourses = [];        
-        array[0].forEach(element => {            
+        let arrayCourses = [];
+        array[0].forEach(element => {
             const course = this.constructorCourse(element);
             arrayCourses.push(course);
         })                
@@ -130,12 +130,12 @@ class AvailableCourses {
     }    
 
     static alternateTitle(stringText){
-        const title = document.querySelector("#alternateTitle");    
+        const title = document.querySelector("#alternateTitle");
         title.innerText = stringText;
     }
 
     static removeCourses() {
-        const containerCourses = document.querySelector("#containerCourses");        
+        const containerCourses = document.querySelector("#containerCourses");
         nodeAPI_Offer.removeChild(containerCourses);
     }    
 }
@@ -143,8 +143,8 @@ class AvailableCourses {
 class ObjFromArray {
     static countCourses = 0;
     constructor (objCourses){        
-        const arrayWithPlaces = this.coursesWithPlaces(objCourses)        
-        const specialities = this.sortBySpeciality(arrayWithPlaces);        
+        const arrayWithPlaces = this.coursesWithPlaces(objCourses)
+        const specialities = this.sortBySpeciality(arrayWithPlaces);
         return specialities;
     }
 
@@ -175,7 +175,7 @@ class ObjFromArray {
         return assignPreInscription
     }
 
-    sortBySpeciality(objCourses){        
+    sortBySpeciality(objCourses){
         const onlySpecialities = [];
         for (const key in objCourses) {
             const item = objCourses[key];
@@ -209,25 +209,25 @@ class ObjFromArray {
 class Specialties {
     static textTitle = "Selecciona una especialidad para ver los cursos disponibles:"
 
-    constructor(arrayBySpecialties){        
+    constructor(arrayBySpecialties){
         this.textTitleCount(arrayBySpecialties)
         this.title()
         this.createContainer(arrayBySpecialties);
-        this.createButtoBack();        
+        this.createButtoBack();
         Specialties.showSpecialties();
         preloader();
     }
 
-    textTitleCount(array){        
+    textTitleCount(array){
         const countSpecialties = array.length;
-        Specialties.textTitle= `        
+        Specialties.textTitle= `
         Tenemos ${countSpecialties} especialidades con ${ObjFromArray.countCourses} cursos abiertos.
-        Selecciona una especialidad y ve los cursos disponibles:        
-        `;        
+        Selecciona una especialidad y ve los cursos disponibles:
+        `;
     }
 
     title(array){
-        const title = document.createElement("h3");        
+        const title = document.createElement("h3");
         title.innerText = Specialties.textTitle
         title.id = "alternateTitle"
         title.className ="section__courses--title";
@@ -283,11 +283,6 @@ class Specialties {
     }
 }
 
-function showSignUp() {
-    const node = document.querySelector(".controlEscolar");
-    node.classList.toggle("singUp");
-}
-
 function preloader() {
     nodeAPI_Offer.classList.toggle("preloader");
 }
@@ -298,7 +293,6 @@ const backToSpecialties = function () {
     AvailableCourses.removeCourses();
     Specialties.showButtonBack();
     AvailableCourses.alternateTitle(Specialties.textTitle);
-    showSignUp();
 }
 
 function saveCourse(e) {
@@ -308,23 +302,22 @@ function saveCourse(e) {
         sessionStorage.removeItem(keyCourseStorage);
         const nodeCourse = document.querySelector(`#${locate}`);
         const valueCourse = nodeCourse.value;
-        sessionStorage.setItem(keyCourseStorage, valueCourse)        
+        sessionStorage.setItem(keyCourseStorage, valueCourse)
     //}
 }
 
 function locateEvent(event) {
     const ubication = event.target.dataset.specialty.toUpperCase();
     new AvailableCourses(ubication);
-    showSignUp();
 }
 
 async function conexion(URL) {
     try {
-        const info = await fetch(`${URL}`);        
-        const infoJSON = await info.json()                
-        const response = new ObjFromArray(infoJSON);        
-        const specialitie = new Specialties(response);        
-        infoFetch = [...response];        
+        const info = await fetch(`${URL}`);
+        const infoJSON = await info.json()
+        const response = new ObjFromArray(infoJSON);
+        const specialitie = new Specialties(response);
+        infoFetch = [...response];
     } catch (error) {
         console.log(error)
         const titleError = document.createElement("h3");

@@ -21,15 +21,15 @@ const app = Vue.createApp({
             };
             const endpoint = `${this.API}/controlStudents/oauth`;
             const response = await this.sendData(endpoint, obj);            
-            if (response.statusCode === 401) {
-                this.message = response.message;
-                //this.message = "Acceso NO autorizado."
-            } else {
+            if (response.statusCode === 200) {
                 localStorage.setItem("token", response.token);
                 localStorage.setItem("username", response.username)
                 this.username = response.username;
                 this.auth = true;
                 this.clearMessage();
+            } else {
+                this.message = response.message;
+                //this.message = "Acceso NO autorizado."
             }
         },
 
@@ -139,14 +139,11 @@ const app = Vue.createApp({
         <button>Iniciar Sesión</button>
         <p class="message">{{ message }}</p>
     </form>
-    <div v-if=!auth class="buttonBackCourses">
-        <a href="./../cursos" >
-            Regresar a Cursos Disponibles
-        </a>
-    </div>
+
     <p v-if=auth>
         Bienvenido {{ username.toUpperCase() }} 
     </p>
+
     <form 
         v-if=auth
         v-on:submit="findFile"
