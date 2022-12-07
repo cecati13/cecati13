@@ -122,14 +122,16 @@ const app = Vue.createApp({
         v-on:submit="login"
         v-if=!auth
     >
-        <label> Usuario
+        <label for="username"> 
+            Usuario
         </label>
         <input 
             type="text"
             name="username" 
             v-on:focus="clearMessage"
         >
-        <label> Contraseña
+        <label for="password"> 
+            Contraseña
         </label>
         <input 
             type="password" 
@@ -151,13 +153,13 @@ const app = Vue.createApp({
     >
         <label for="curp">CURP</label>
         <input name="curp" v-on:focus="clearMessage">
-        <label>Selecciona el Tipo de Archivo</label>
+        <label for="typeDocument">Selecciona el Tipo de Archivo</label>
         <select name="typeDocument" v-on:focus="clearMessage">
             <option value="actaNacimiento">Acta de Nacimiento</option>
             <option value="comprobanteDomicilio">Domicilio</option>
             <option value="comprobanteEstudios">Grado de Estudios</option>
         </select>
-        <label>Seleciona el tipo de archivo</label>
+        <label for="extension">Seleciona el tipo de archivo</label>
         <select name="extension" v-on:focus="clearMessage">
             <option value="jpg">jpg</option>
             <option value="jpeg">jpeg</option>
