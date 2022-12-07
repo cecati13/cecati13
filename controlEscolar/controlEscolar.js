@@ -21,7 +21,7 @@ const app = Vue.createApp({
             };
             const endpoint = `${this.API}/controlStudents/oauth`;
             const response = await this.sendData(endpoint, obj);            
-            if (response.statusCode === 200) {
+            if (response.token) {
                 localStorage.setItem("token", response.token);
                 localStorage.setItem("username", response.username)
                 this.username = response.username;
