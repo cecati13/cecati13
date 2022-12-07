@@ -405,9 +405,22 @@ app.component("v-dbRegister", {
   data(){
     return {
       showInscription: true,
-      showForceUpdate: this.reactive.studentDB.updateContact
+      showForceUpdate: this.reactive.studentDB.updateContact,
+      telefonoFormated : this.reactive.studentDB.telefono
     }
   },
+
+  // watch:{
+  //   telefonoFormated(value, old){
+  //     const arraytTel = value.split("");
+  //     const lada = [arraytTel[0], arraytTel[1]];
+  //     const firtsPart = [arraytTel[2],arraytTel[3],arraytTel[4],arraytTel[5]];
+  //     const secondPart = [arraytTel[6],arraytTel[7],arraytTel[8],arraytTel[9]];
+  //     const arrayFormated = [...lada, "-", ...firtsPart, "-", ...secondPart];
+  //     const numberFormat = arrayFormated.join("");
+  //     return numberFormat;
+  //   }
+  // },
 
   methods : {
     showUpdateFieldOnly() {
@@ -471,21 +484,33 @@ app.component("v-dbRegister", {
     }
   },
 
+  computed:{
+    phoneFormated(){
+      const arraytTel = this.reactive.studentDB.telefono.split("");
+      const lada = [arraytTel[0], arraytTel[1]];
+      const firtsPart = [arraytTel[2],arraytTel[3],arraytTel[4],arraytTel[5]];
+      const secondPart = [arraytTel[6],arraytTel[7],arraytTel[8],arraytTel[9]];
+      const arrayFormated = [...lada, "-", ...firtsPart, "-", ...secondPart];
+      const numberFormat = arrayFormated.join("");
+      return numberFormat;
+    }
+  },
+
   template: `  
   <div 
-    v-if="showInscription && !showForceUpdate"    
+    v-if="showInscription && !showForceUpdate"
     class="register__preSend--db">
       
     <v-dbRegisterLegend/>
       
     <br>
       
-    <h5>Datos de contacto.</h5>    
+    <h5>Datos de contacto.</h5>
     <br>
     <p>Correo electrónico:</p>
     <p class="register__preSend--data">{{ reactive.studentDB.email }}</p>
     <p>Teléfono:</p>
-    <p class="register__preSend--data">{{ reactive.studentDB.telefono }}</p>
+    <p class="register__preSend--data">{{ phoneFormated }}</p>
     <br>
 
     <p>También puedes actualizar la información personal que registraste en tu último curso antes de inscribirte.</p>
@@ -506,11 +531,11 @@ app.component("v-dbRegister", {
     
   <v-course v-if="showInscription && !showForceUpdate"/>
   
-  <div v-if="showInscription && !showForceUpdate">    
+  <div v-if="showInscription && !showForceUpdate">
     <v-buttonInscription
-      v-on:click="inscription">        
+      v-on:click="inscription">
     </-button>
-  </div>    
+  </div>
   ` 
 })
 
@@ -878,9 +903,21 @@ app.component("v-contact", {
   <form v-on:submit="contactDetailCompleted">
     <h4>Datos de contacto:</h4>
     <label for="email">Correo Electrónico</label>
-    <input type="email" name="email" placeholder="email válido..." required>
+    <input 
+      type="email" 
+      name="email" 
+      placeholder="email válido..."       
+      required
+    >
     <label for="telefono">Teléfono</label>
-    <input type="tel" name="telefono" placeholder="Teléfono a 10 dígitos" required>
+    <input 
+      type="tel"
+      name="telefono"
+      placeholder="Teléfono a 10 dígitos"
+      required
+      pattern="[0-9]{10}"
+      title="Número de teléfono a 10 dígitos, sin espacios ni guiones. Ejemplo: 5511223344"
+    >
     <p>Tanto los docentes como el área de control escolar utilizan estos medios para ponerse en contacto y brindar instrucciones a los estudiantes.</p>
     <v-button></v-button>
   </form>
@@ -1024,12 +1061,13 @@ app.component("v-address", {
     <label for="cp"> <span>Código Postal</span>
     </label>
     <input 
-      type="number" 
+      type="text" 
       name="cp" 
-      placeholder="Código Postal..."
+      placeholder="Código Postal a 5 dígitos..."
       required
-      min="01000"
-      max="99999"
+      inputmode="numeric" 
+      pattern="[0-9]{5}"
+      title="Número de 5 dígitos. Ejemplo: 04380"
     />      
     <p>Estado</p>
     <label for="estado">
