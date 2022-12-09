@@ -853,7 +853,7 @@ app.component("v-contact", {
     return {
       formatEmail: true,
       formatPhone: true,
-      legendPhoneError: "Incorrecto. Verifica que sea un número a 10 dígitos, sin espacios ni guiones. Ejemplo: 5511223344"
+      legendPhoneError: "Incorrecto. Verifica que sea un número a 10 dígitos, sin espacios ni guiones. Ejemplo: 5544332211"
     }
   },
 
@@ -937,7 +937,7 @@ app.component("v-contact", {
     <input 
       type="tel"
       name="telefono"
-      placeholder="Número a 10 dígitos sin espacios ni guiones"
+      placeholder="Número a 10 dígitos"
       v-on:change="verifyPhone"
       required
       pattern="[0-9]{10}"
