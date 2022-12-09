@@ -1,6 +1,6 @@
 {
   "name": "cecati13",
-  "version": "1.0.2",
+  "version": "3.0.0",
   "description": "Proyecto de mejora del sitio oficial del CECATI 13",
   "main": "base.js",
   "scripts": {
