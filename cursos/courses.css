@@ -99,8 +99,7 @@
 .containerCourses > div {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
+    align-items: center;    
     background: linear-gradient(180deg, var(--mainColor), var(--mainColor2));
     border-radius: 7px;
     margin: 10px 10px 25px 10px;    
@@ -151,6 +150,23 @@
     margin-right: 10px;
 }
 
+.button-inscription {
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.button-inscription > img {
+    margin-bottom: 0;
+    border-radius: 15px;
+    height: 80px;
+}
+
+.button-inscription > p {
+    color: var(--fontColor);
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
 /* Not Found para Fichas de Información */
 .mainNotFound{
     color: var(--fontColor);
@@ -169,18 +185,6 @@
 }
 /*Termina: Not Found para Fichas de Información */
 
-.floating__button {
-    position: fixed;
-    right: 1vw;
-    top: 60vh;    
-    height: 70px;
-    padding: 6px;
-    border-radius: 5px;
-}
-
-.floating__button--HIDE{
-    display: none;
-}
 
 /* estilos de diseño con PDF, analizar si reutilizar en inscripcion*/
 .educativeOffer__button {

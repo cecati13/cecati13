@@ -1,0 +1,35 @@
+.main {
+    font-size: 1.6rem;
+    padding: 15px;
+    color: var(--fontColor2);
+    text-align: center;
+}
+
+.message {
+    margin-top: 20px;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+form {
+    max-width: 450px;
+    padding: 25px;
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;    
+}
+
+input, select {
+    margin: 20px 0;
+}
+
+button {
+    width: 130px;
+    color: var(--mainColor);
+    background-color: var(--contrastColor);
+    padding: 10px 15px;
+    border-radius: 15px;
+    margin-top: 15px;
+    align-self: center;
+}

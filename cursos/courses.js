@@ -3,6 +3,8 @@ const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
 const URL = host + "API/v1/frontendURL/10"
 const URL_BASE_ASSETS = "https://storage.googleapis.com/cecati13/assets/";
 const URL_BASE_FI = "http://cecati13.com.mx/informacion/";
+//Nombre de key guardado en Session Storage para preinscribir Curso
+const keyCourseStorage = "CourseCecati13";
 
 let infoFetch = [];
 const nodeAPI_Offer = document.getElementById("sectionCourses");
@@ -16,7 +18,7 @@ class AvailableCourses {
             this.mountNode(containerCourses);
             Specialties.showSpecialties();
             window.scroll(top);
-            AvailableCourses.alternateTitle(`Cursos de ${nameSpeciality.toUpperCase()}`);            
+            AvailableCourses.alternateTitle(`Cursos de ${nameSpeciality.toUpperCase()}`);
         }
     }
 
@@ -38,8 +40,7 @@ class AvailableCourses {
             course.observaciones = "Observaciones: " + textObs;
         }
         course.imageURL = (course.imagenURL != undefined ? URL_BASE_ASSETS + course.imagenURL : "");
-        const container = document.createElement("div");
-        //container.className = "course";
+        const container = document.createElement("div");        
         const preregister = this.preRegistrationInformation(course);
         container.innerHTML = `
         <div class="course">
@@ -64,35 +65,35 @@ class AvailableCourses {
                 <img src="${URL_BASE_ASSETS}moreInfo.png">
                     INFORMACIÓN
             </a>
+            <div id="node${course.number}"></div>
+            
             <textarea id="pre-${course.number}" style="display:none">${preregister}</textarea>
-        </div>
+            </div>
             `;
         const containerImgButton = this.createContainerButton(course);
-        //containerImgButton.addEventListener("click", event => saveCourse(event))
-        //container.appendChild(containerImgButton);
-            //<a class="button__link educativeOffer__button" href="../html/Inscribete.html">Inscribete...</a>
+        containerImgButton.addEventListener("click", event => saveCourse(event));        
+        container.appendChild(containerImgButton);
         return container;
     }
 
     createContainerButton(course){
-        console.log(course)
-        console.log(course.number)
+        console.log("course number: ",course.number)
         const containerAnchor = document.createElement("a");
-        containerAnchor.className = "course--img-button";
+        containerAnchor.className = "course--img-button button-inscription buttonAnimate";
         containerAnchor.dataset.numberCourse = `pre-${course.number}`;
-        containerAnchor.href = "/src/formulario"
-        containerAnchor.innerHTML = `       
-            <img src="https://cecati13web.blob.core.windows.net/assets-web-cecati13/inscripcion.svg"
-            alt="Inscripción" class="button__link floating__button" id="buttonFloatingReg"
+        containerAnchor.href = "../curso-inscripcion"
+        containerAnchor.innerHTML = `
+            <img src="${URL_BASE_ASSETS}inscripcion.svg"
+            alt="Inscripción" class="button__link" id="buttonFloatingReg"
             data-numberCourse="pre-${course.number}">
-            <p data-numberCourse="pre-${course.number}">INSCRIBIRME</p>        
-        `;      
+            <p data-numberCourse="pre-${course.number}">Inscribirme...</p>
+        `;
         return containerAnchor;
     }
 
     preRegistrationInformation(course) {
         const newObject = {
-           ...course,           
+           ...course,
         };
         delete newObject.imageURL;
         delete newObject.imagenURL;
@@ -107,16 +108,16 @@ class AvailableCourses {
         const coursesContainers = document.createElement("div");
         coursesContainers.id = "containerCourses";
         coursesContainers.className ="containerCourses";
-        containerCourses.forEach( course => {            
+        containerCourses.forEach( course => {
             coursesContainers.appendChild(course);
         })
-        nodeAPI_Offer.appendChild(coursesContainers);        
+        nodeAPI_Offer.appendChild(coursesContainers);
         Specialties.showButtonBack();
     }
 
     sendCourses(array){
-        let arrayCourses = [];        
-        array[0].forEach(element => {            
+        let arrayCourses = [];
+        array[0].forEach(element => {
             const course = this.constructorCourse(element);
             arrayCourses.push(course);
         })                
@@ -129,12 +130,12 @@ class AvailableCourses {
     }    
 
     static alternateTitle(stringText){
-        const title = document.querySelector("#alternateTitle");    
+        const title = document.querySelector("#alternateTitle");
         title.innerText = stringText;
     }
 
     static removeCourses() {
-        const containerCourses = document.querySelector("#containerCourses");        
+        const containerCourses = document.querySelector("#containerCourses");
         nodeAPI_Offer.removeChild(containerCourses);
     }    
 }
@@ -142,9 +143,14 @@ class AvailableCourses {
 class ObjFromArray {
     static countCourses = 0;
     constructor (objCourses){        
-        const arrayWithPlaces = this.coursesWithPlaces(objCourses)        
-        const specialities = this.sortBySpeciality(arrayWithPlaces);        
+        const arrayWithPlaces = this.coursesWithPlaces(objCourses)
+        const specialities = this.sortBySpeciality(arrayWithPlaces);
         return specialities;
+    }
+
+    avalilableDate(array){
+        //si la fecha rebasa el 10% de las horas totales del curso. NO PUBLICAR
+        return array
     }
 
     coursesWithPlaces(objCourses){
@@ -169,7 +175,7 @@ class ObjFromArray {
         return assignPreInscription
     }
 
-    sortBySpeciality(objCourses){        
+    sortBySpeciality(objCourses){
         const onlySpecialities = [];
         for (const key in objCourses) {
             const item = objCourses[key];
@@ -203,25 +209,25 @@ class ObjFromArray {
 class Specialties {
     static textTitle = "Selecciona una especialidad para ver los cursos disponibles:"
 
-    constructor(arrayBySpecialties){        
+    constructor(arrayBySpecialties){
         this.textTitleCount(arrayBySpecialties)
         this.title()
         this.createContainer(arrayBySpecialties);
-        this.createButtoBack();        
+        this.createButtoBack();
         Specialties.showSpecialties();
         preloader();
     }
 
-    textTitleCount(array){        
+    textTitleCount(array){
         const countSpecialties = array.length;
-        Specialties.textTitle= `        
+        Specialties.textTitle= `
         Tenemos ${countSpecialties} especialidades con ${ObjFromArray.countCourses} cursos abiertos.
-        Selecciona una especialidad y ve los cursos disponibles:        
-        `;        
+        Selecciona una especialidad y ve los cursos disponibles:
+        `;
     }
 
     title(array){
-        const title = document.createElement("h3");        
+        const title = document.createElement("h3");
         title.innerText = Specialties.textTitle
         title.id = "alternateTitle"
         title.className ="section__courses--title";
@@ -255,23 +261,13 @@ class Specialties {
 
     createButtoBack(){        
         const buttonBack = document.createElement("div");        
-        buttonBack.className = "container__buttons";
-        const inscripcion = document.querySelector("#inscription");
-        const buttonHref = inscripcion.href;
+        buttonBack.className = "container__buttons";      
         buttonBack.innerHTML = `
         <div class="buttonBack buttonBack--HIDE" id="buttonBack">
             <img src="${URL_BASE_ASSETS}arrowBack.svg" alt="Retroceder">
             <span>REGRESAR</span>        
         </div>
-        <a href="${buttonHref}">
-            <img src="${URL_BASE_ASSETS}inscripcion.svg" 
-            alt="Inscripción" class="button__link floating__button floating__button--HIDE" id="buttonFloatingReg">
-        </a>
-        `;        
-        //PARA USAR CUANDO LA INSCRIPCION LLEVE DIRECTO AL FORMULARIO PRECARGADO CON EL CURSO
-        // registrationButton.innerText = "Preinscríbete...";
-        // registrationButton.className = "button__link floating__button floating__button--HIDE";
-        //registrationButton.id = "buttonFloatingReg";
+        `;
         nodeAPI_Offer.appendChild(buttonBack);
     }
 
@@ -280,13 +276,10 @@ class Specialties {
         nodeSpecialties.classList.toggle("container__Specialties--HIDE");
     }
 
-    static showButtonBack() {
-        //habilitar si se usa boton flotante
-        const nodeButtonFloatingReg = document.querySelector("#buttonFloatingReg");
-        nodeButtonFloatingReg.classList.toggle("floating__button--HIDE");
+    static showButtonBack() {        
         const nodeButtonBack = document.querySelector("#buttonBack");
         nodeButtonBack.classList.toggle("buttonBack--HIDE");
-        nodeButtonBack.addEventListener("click", backToSpecialties)
+        nodeButtonBack.addEventListener("click", backToSpecialties);
     }
 }
 
@@ -302,19 +295,29 @@ const backToSpecialties = function () {
     AvailableCourses.alternateTitle(Specialties.textTitle);
 }
 
+function saveCourse(e) {
+    //const expresion = /pre-\d\d/
+    const locate = e.target.dataset.numbercourse 
+    //if(expresion.test(locate)){   
+        sessionStorage.removeItem(keyCourseStorage);
+        const nodeCourse = document.querySelector(`#${locate}`);
+        const valueCourse = nodeCourse.value;
+        sessionStorage.setItem(keyCourseStorage, valueCourse)
+    //}
+}
+
 function locateEvent(event) {
     const ubication = event.target.dataset.specialty.toUpperCase();
-    const showCourses = new AvailableCourses(ubication);
+    new AvailableCourses(ubication);
 }
 
 async function conexion(URL) {
     try {
-        const info = await fetch(`${URL}`);        
-        const infoJSON = await info.json()                
+        const info = await fetch(`${URL}`);
+        const infoJSON = await info.json()
         const response = new ObjFromArray(infoJSON);
-        console.log(response);
-        const specialitie = new Specialties(response);        
-        infoFetch = [...response];        
+        const specialitie = new Specialties(response);
+        infoFetch = [...response];
     } catch (error) {
         console.log(error)
         const titleError = document.createElement("h3");

@@ -144,11 +144,11 @@ const indexArrayImage = () => {
     //    let position2 = 2;
     return {
         function (increment) {
-        console.log("antes: del forEach", positions)
+        //console.log("antes: del forEach", positions)
         positions.forEach(element => {
             element += increment;
         });        
-        console.log("despuesdel forEach: ", positions)
+        //console.log("despuesdel forEach: ", positions)
         return positions
     }
 }
@@ -187,12 +187,10 @@ async function conexion() {
     try {
         const infoImage = await fetch(imageURL);
         const imageJSON = await infoImage.json();
-        console.log(imageJSON);
         createArrayImageFetch(imageJSON);
 
         const info = await fetch(announceURL);
         const infoJSON = await info.json();
-        console.log(infoJSON);        
         const announce = new HomePage(infoJSON);
 
     } catch (error) {

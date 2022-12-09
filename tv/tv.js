@@ -7,9 +7,9 @@ const nodeAPI_TV = document.getElementById("tv");
 class ShowCoursesTV {
     static textTitle = "Selecciona una especialidad para ver los cursos disponibles:"
 
-    constructor(objCourses){        
+    constructor(objCourses){
         const courses = this.createContainer(objCourses);
-        nodeAPI_TV.appendChild(courses)        
+        nodeAPI_TV.appendChild(courses);
         preloader();
     }
     
@@ -19,13 +19,13 @@ class ShowCoursesTV {
         container.id = "containerSpecialties";
         for (const key in objCourses) {
             const element = objCourses[key];
-            const course = this.constructorCourse(element);             
-            container.appendChild(course);          
-        }        
+            const course = this.constructorCourse(element);
+            container.appendChild(course);
+        }
         return container;
     }
 
-    constructorCourse(course){        
+    constructorCourse(course){
         if (course.observaciones == undefined || course.observaciones === "") {
             course.observaciones = "";
         } else {
@@ -39,7 +39,7 @@ class ShowCoursesTV {
         <p class="course__title">Curso: <strong>${course.curso}</strong></p>
         <p class="course__specialtie">${course.especialidad.toLowerCase()}</p>
         <img src="${course.imageURL}" alt="Logo de Especialidad">
-        <p class="course__profesor">Profesor: ${course.profesor.toLowerCase()}</p>        
+        <p class="course__profesor">Profesor: ${course.profesor.toLowerCase()}</p>
         <p class="course__date">
         Del <span class="course__highlight">${course.fecha_inicio}</span>
         al <span class="course__highlight">${course.fecha_termino}</span>
@@ -81,10 +81,9 @@ function preloader() {
 
 async function conexion(URL) {
     try {
-        const info = await fetch(`${URL}`);        
-        const infoJSON = await info.json()                        
-        console.log(infoJSON);
-        const specialitie = new ShowCoursesTV(infoJSON);        
+        const info = await fetch(`${URL}`);
+        const infoJSON = await info.json();
+        const specialitie = new ShowCoursesTV(infoJSON);
     } catch (error) {
         console.log(error)
         const titleError = document.createElement("h3");
