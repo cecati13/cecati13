@@ -247,8 +247,9 @@ const app = Vue.createApp({
     isStudent(){
       const dataSaveStudent = JSON.parse(sessionStorage.getItem(this.keyStudentStorage));
       this.reactive.studentDB = {
-        ...dataSaveStudent
+        ...dataSaveStudent,
       }
+
       this.isUserStudent = true;
     },
 
@@ -410,18 +411,6 @@ app.component("v-dbRegister", {
     }
   },
 
-  // watch:{
-  //   telefonoFormated(value, old){
-  //     const arraytTel = value.split("");
-  //     const lada = [arraytTel[0], arraytTel[1]];
-  //     const firtsPart = [arraytTel[2],arraytTel[3],arraytTel[4],arraytTel[5]];
-  //     const secondPart = [arraytTel[6],arraytTel[7],arraytTel[8],arraytTel[9]];
-  //     const arrayFormated = [...lada, "-", ...firtsPart, "-", ...secondPart];
-  //     const numberFormat = arrayFormated.join("");
-  //     return numberFormat;
-  //   }
-  // },
-
   methods : {
     showUpdateFieldOnly() {
       this.showInscription = !this.showInscription
@@ -484,18 +473,6 @@ app.component("v-dbRegister", {
     }
   },
 
-  computed:{
-    phoneFormated(){
-      const arraytTel = this.reactive.studentDB.telefono.split("");
-      const lada = [arraytTel[0], arraytTel[1]];
-      const firtsPart = [arraytTel[2],arraytTel[3],arraytTel[4],arraytTel[5]];
-      const secondPart = [arraytTel[6],arraytTel[7],arraytTel[8],arraytTel[9]];
-      const arrayFormated = [...lada, "-", ...firtsPart, "-", ...secondPart];
-      const numberFormat = arrayFormated.join("");
-      return numberFormat;
-    }
-  },
-
   template: `  
   <div 
     v-if="showInscription && !showForceUpdate"
@@ -510,7 +487,7 @@ app.component("v-dbRegister", {
     <p>Correo electrónico:</p>
     <p class="register__preSend--data">{{ reactive.studentDB.email }}</p>
     <p>Teléfono:</p>
-    <p class="register__preSend--data">{{ phoneFormated }}</p>
+    <p class="register__preSend--data">{{ reactive.studentDB.formatPhone }}</p>
     <br>
 
     <p>También puedes actualizar la información personal que registraste en tu último curso antes de inscribirte.</p>
@@ -526,7 +503,7 @@ app.component("v-dbRegister", {
   <v-updateRegister
     v-if="!showForceUpdate"
     v-on:showUpdateFieldOnly="showUpdateFieldOnly"
-    v-on:updateProperties="updateProperties"
+    v-on:updateProperties="updateProperties"    
   />
     
   <v-course v-if="showInscription && !showForceUpdate"/>
@@ -872,30 +849,72 @@ app.component("v-dataGeneral", {
 })
 
 app.component("v-contact", {
+  data(){
+    return {
+      formatEmail: true,
+      formatPhone: true,
+      legendPhoneError: "Incorrecto. Verifica que sea un número a 10 dígitos, sin espacios ni guiones. Ejemplo: 5511223344"
+    }
+  },
 
   methods:{
     contactDetailCompleted(e){
       e.preventDefault()
       const email = e.target.children['email'].value
       const phone = e.target.children['telefono'].value
-      const expReg= /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
-      const validateEmail = expReg.test(email)
-      if (phone.length >= 10 && validateEmail) {        
+      const verifyEmail = this.validateEmail(email);
+      const verifyPhone = this.validatePhone(phone)
+      if (verifyPhone && verifyEmail) {
+        const formatPhone = this.formatedNumberPhone(phone);
         const objContact = {
           email: email,
-          telefono: phone
+          telefono: phone,
+          formatPhone: formatPhone
         }
         this.$emit("contactDetailCompleted", objContact)
       } else {
-        console.log("verificar telefono o email");
         Swal.fire({
           title: "Error",
-          text: "Verifica que tu teléfono y correo electrónico sean correctos.",
+          text: "Verifica que tu teléfono y correo electrónico sean correctos y esten en el formato solicitado.",
           icon: "error",
           confirmButtonText: "Aceptar"
         });
-        //alert("Error. Verifica que tu teléfono y correo electrónico sean correctos.")
       }
+    },
+
+    verifyEmail(e){
+      const email = e.target.value;
+      const validate = this.validateEmail(email);
+      validate ? this.formatEmail = true : this.formatEmail = false;
+    },
+    
+    verifyPhone(e){
+      const phone = e.target.value;
+      const validate = this.validatePhone(phone);
+      validate ? this.formatPhone = true : this.formatPhone = false;
+    },
+
+    validateEmail(email){
+      const expReg = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+      const validateEmail = expReg.test(email);
+      return validateEmail;
+    },
+
+    validatePhone(phone){
+      const expReg = /[0-9]/;
+      const onlyNumber = expReg.test(phone);      
+      const validatePhone = onlyNumber && phone.length === 10 ? true : false;
+      return validatePhone;
+    },
+
+    formatedNumberPhone(telefono){
+      const arraytTel = telefono.split("");
+      const lada = [arraytTel[0], arraytTel[1]];
+      const firtsPart = [arraytTel[2],arraytTel[3],arraytTel[4],arraytTel[5]];
+      const secondPart = [arraytTel[6],arraytTel[7],arraytTel[8],arraytTel[9]];
+      const arrayFormated = [...lada, " ", ...firtsPart, " ", ...secondPart];
+      const numberFormat = arrayFormated.join("");
+      return numberFormat;
     }
   },
 
@@ -906,18 +925,27 @@ app.component("v-contact", {
     <input 
       type="email" 
       name="email" 
-      placeholder="email válido..."       
+      placeholder="email válido..."
+      v-on:change="verifyEmail"
       required
     >
+    <p v-if="!formatEmail" class="contactError">
+      Incorrecto. Verifica que tu correo electrónico sea valido.
+    </p>
+
     <label for="telefono">Teléfono</label>
     <input 
       type="tel"
       name="telefono"
-      placeholder="Teléfono a 10 dígitos"
+      placeholder="Número a 10 dígitos sin espacios ni guiones"
+      v-on:change="verifyPhone"
       required
       pattern="[0-9]{10}"
-      title="Número de teléfono a 10 dígitos, sin espacios ni guiones. Ejemplo: 5511223344"
+      v-bind:title=legendPhoneError
     >
+    <p v-if="!formatPhone" class="contactError">
+      {{ legendPhoneError }}
+    </p>
     <p>Tanto los docentes como el área de control escolar utilizan estos medios para ponerse en contacto y brindar instrucciones a los estudiantes.</p>
     <v-button></v-button>
   </form>
@@ -1645,7 +1673,7 @@ app.component("v-viewInscriptionNew", {
       <p>Correo electrónico: </p>
       <p class="register__preSend--data">{{ reactive.newStudent.email }}</p>
       <p>Teléfono de contacto: </p>
-      <p class="register__preSend--data">{{ reactive.newStudent.telefono }}</p>
+      <p class="register__preSend--data">{{ reactive.newStudent.formatPhone }}</p>
     </div>
     
   </section>
