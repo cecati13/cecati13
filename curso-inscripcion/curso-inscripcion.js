@@ -487,7 +487,7 @@ app.component("v-dbRegister", {
     <p>Correo electrónico:</p>
     <p class="register__preSend--data">{{ reactive.studentDB.email }}</p>
     <p>Teléfono:</p>
-    <p class="register__preSend--data">{{ reactive.studentDB.formatPhone }}</p>
+    <p class="register__preSend--data">{{ reactive.studentDB.telefono }}</p>
     <br>
 
     <p>También puedes actualizar la información personal que registraste en tu último curso antes de inscribirte.</p>
