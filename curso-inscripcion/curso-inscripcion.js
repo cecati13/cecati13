@@ -1838,7 +1838,11 @@ app.component("v-confirmation", {
   <div class="confirmation">
     <p>Inscripción recibida. {{ this.dataConfirmation.fechaRegistro }}</p>
     <br>
-    <p>{{ this.dataConfirmation.nombre }}, has sido preinscrito en el curso <span class="confirmation--data">{{ this.course.curso }}</span>, que inicia el {{ this.course.fecha_inicio }}.</p>
+    <p>{{ this.dataConfirmation.nombre }}, has sido preinscrito en el curso: </p>
+    <p><span class="confirmation--data">{{ this.course.curso }}</span>.</p>
+    <p>Horario de {{ this.course.dias_de_clases }} de <span class="confirmation--data">{{ this.course.hora_inicio }} a {{ this.course.hora_fin }} hrs. </span></p> 
+    <p>Profesor <span class="confirmation--data">{{ this.course.profesor }}</span>.</p>
+    <p>Inicio: <span class="confirmation--data">{{ this.course.fecha_inicio }}</span>.</p>
     
     <br>
     <p>Tú número de matrícula: <span class="confirmation--data">{{ this.dataConfirmation.matricula }}</span></p>
