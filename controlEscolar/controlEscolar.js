@@ -172,4 +172,29 @@ const app = Vue.createApp({
     `      
 })
 
+app.component("v-information", {
+    template: `
+    <v-datosGenerales></v-datosGenerales>
+    <v-domicilio></v-domicilio>
+    <v-contacto></v-contacto>
+    <v-curso></v-curso>
+    `
+})
+
+app.component("v-datosGenerales", {
+
+})
+
+app.component("v-domicilio",{
+
+})
+
+app.component("v-contacto", {
+    
+})
+
+app.component("v-curso", {
+
+})
+
 const vm = app.mount("#app");
