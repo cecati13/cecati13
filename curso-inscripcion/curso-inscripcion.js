@@ -658,7 +658,7 @@ app.component("v-dataGeneral", {
           }
       }
       
-      if (age <= 15) {
+      if (age < 15) {
         this.reactive.ageRequeriment = false;
         this.meetsAgeRequirement = false;
       } else {
