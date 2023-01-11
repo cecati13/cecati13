@@ -1,8 +1,8 @@
 const app = Vue.createApp({
     data(){
         return {
-            API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1/controlStudents",
-            //API:"http://localhost:3000/API/v1/controlStudents",
+            //API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1/controlStudents",
+            API:"http://localhost:3000/API/v1/controlStudents",
             auth: false,
             fileSource: "",
             username: "",
