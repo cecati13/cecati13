@@ -1,12 +1,14 @@
 const app = Vue.createApp({
     data(){
         return {
-            //API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1/controlStudents",
-            API:"http://localhost:3000/API/v1/controlStudents",
+            API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1/controlStudents",
+            //API:"http://localhost:3000/API/v1/controlStudents",
             auth: false,
             fileSource: "",
             username: "",
-            message: ""
+            message: "",
+            messageFI: false,
+            url_FI: "link"
         }
     },
 
@@ -135,13 +137,14 @@ const app = Vue.createApp({
             const enpoint = `${this.API}/fileInformation`
             console.log("uploadFileFI", formFiles)
             const res = await this.sendFiles(formFiles, enpoint)
-            console.log(res)
+            this.message= res.message;
+            //this.messageFI = true;
         },
     },
 
     template: `
     <h3>Exclusivo del área de control escolar</h3>
-    <form         
+    <form
         v-on:submit="login"
         v-if=!auth
     >
@@ -197,7 +200,13 @@ const app = Vue.createApp({
         v-if=auth
         v-on:fileInformation="uploadFileFI"
     >
+
     `      
+    // <v-linkFI 
+    //     v-bind:url="url_FI"
+    //     v-if=messageFI
+    // >
+    // </v-linkFI>
 })
 
 app.component("v-findFileStudent", {
@@ -235,7 +244,7 @@ app.component("v-uploadFile", {
             const file = e.target.fileInformation.files[0];
             this.$emit("fileInformation", file)
         }
-    }, 
+    },
 
     template: `
     <form v-on:submit="uploadFI">
@@ -247,6 +256,16 @@ app.component("v-uploadFile", {
         >
         <button>Subir</button>
     </form>
+    `
+})
+
+app.component("v-linkFI", {
+    props: ["url"],
+
+    template: `
+    <p>Archivo disponible en la nube.</p>
+    <p>Link:</p>
+    <p>{{ url }}</p>
     `
 })
 

@@ -58,20 +58,25 @@ class AvailableCourses {
             <p>${course.observaciones}</p>
             <br>
             <img src="${course.imageURL}" alt="Logo de Especialidad">
-            <a  
-                href="${(course.ficha_informacion != undefined ? URL_BASE_FI + course.ficha_informacion : "./notFound.html")}"
-                target="${course.ficha_informacion != undefined ? "_blank" : ""}" 
-                id="containerCourse--info">
+            <div id="node${course.number}"></div>            
+            <textarea id="pre-${course.number}" style="display:none">${preregister}</textarea>
+            <div  
+                data-moreInformation="${URL_BASE_FI + course.ficha_informacion}"
+                id="containerCourse--info"
+            >
                 <img src="${URL_BASE_ASSETS}moreInfo.png">
                     INFORMACIÓN
-            </a>
-            <div id="node${course.number}"></div>
-            
-            <textarea id="pre-${course.number}" style="display:none">${preregister}</textarea>
             </div>
-            `;
+        </div>
+        `;
+        const courseInfo = container.childNodes[1].lastElementChild;
+        courseInfo.addEventListener("click", event => moreInformation(event))
+        const informationTab = this.isTrueFichaInformacion(course.ficha_informacion);
+        if (!informationTab) {            
+            courseInfo.remove();            
+        }
         const containerImgButton = this.createContainerButton(course);
-        containerImgButton.addEventListener("click", event => saveCourse(event));        
+        containerImgButton.addEventListener("click", event => saveCourse(event));
         container.appendChild(containerImgButton);
         return container;
     }
@@ -89,6 +94,13 @@ class AvailableCourses {
             <p data-numberCourse="pre-${course.number}">Inscribirme...</p>
         `;
         return containerAnchor;
+    }
+
+    isTrueFichaInformacion(url){
+        if (url !== undefined) {
+            return true            
+        }
+        return false;
     }
 
     preRegistrationInformation(course) {
@@ -304,6 +316,11 @@ function saveCourse(e) {
         const valueCourse = nodeCourse.value;
         sessionStorage.setItem(keyCourseStorage, valueCourse)
     //}
+}
+
+function moreInformation(e) {
+    const url =  e.target.dataset.moreinformation;
+    window.open(url, '_blank');
 }
 
 function locateEvent(event) {
