@@ -33,4 +33,18 @@ button {
     border-radius: 15px;
     margin-top: 15px;
     align-self: center;
+    cursor: pointer;
 }
+
+.message2 > p {    
+    width: max-content;
+    color: var(--contrastColor2);
+    overflow-wrap: anywhere;
+    padding: 10px;
+    cursor: pointer;
+}
+/* br + p {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--contrastColor);
+} */

@@ -1,14 +1,14 @@
 const app = Vue.createApp({
     data(){
         return {
-            API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1/controlStudents",
-            //API:"http://localhost:3000/API/v1/controlStudents",
+            //API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1/controlStudents",
+            API:"http://localhost:3000/API/v1/controlStudents",
             auth: false,
             fileSource: "",
             username: "",
             message: "",
             messageFI: false,
-            url_FI: "link"
+            listButton: true,            
         }
     },
 
@@ -131,15 +131,62 @@ const app = Vue.createApp({
             this.message = "";
         },
 
-        async uploadFileFI(file){
+        async generateList () {
+            const endpoint = `${this.API}/listBlobs`;
+            const obj = { message: true}
+            const res = await this.sendData(endpoint, obj);
+            console.log(res.message);
+            const totalList = res.message.length;
+            this.message = `El sistema tiene ${totalList} fichas de información disponibles`;
+            this.messageFI = true;
+            this.listOfInformation(res.message);
+            this.listButton = false;
+            
+        },
+
+        listOfInformation(array){
+            const container = document.querySelector(".message2");
+            const arrayContainer = [];
+            array.forEach( item => {
+                const p1 = document.createElement("p");
+                p1.innerText = `Archivo: ${item.name}`;                
+                p1.dataset.url = item.url;
+                p1.addEventListener("click", this.showPDF);
+                arrayContainer.push(p1);
+            })          
+            container.append(...arrayContainer);
+        },
+
+        showPDF(e){
+            e.preventDefault();            
+            const elementURL = e.target.dataset.url;
+            window.open(elementURL, "_blank")            
+        },
+
+        async uploadFileFI(arrayFiles){
             const formFiles = new FormData;
-            formFiles.append("fileFI", file)
+            arrayFiles.forEach( file => {
+                formFiles.append("fileFI", file);
+            })
             const enpoint = `${this.API}/fileInformation`
             console.log("uploadFileFI", formFiles)
             const res = await this.sendFiles(formFiles, enpoint)
-            this.message= res.message;
-            //this.messageFI = true;
+            this.messageFI = true;
+            const container = this.showUrlMessageUpload(res.message);
+            const node = document.querySelector(".showURLMessage");
+            node.append(...container);
+            this.listButton = true;
         },
+        
+        showUrlMessageUpload(array){
+            const arrayContainer = [];
+            array.forEach( url => {
+                const p = document.createElement("p");
+                p.innerText = url;
+                arrayContainer.push(p);
+            });
+            return arrayContainer;
+        }
     },
 
     template: `
@@ -199,14 +246,22 @@ const app = Vue.createApp({
     <v-uploadFile
         v-if=auth
         v-on:fileInformation="uploadFileFI"
-    >
+    ></v-uploadFile>
 
+    
+    <v-availableFI 
+    v-if=auth&&listButton
+    v-on:listFI="generateList"
+    ></v-availableFI>
+    
+    <v-linkFI
+        v-if=messageFI
+    >
+    </v-linkFI>
+
+    <div class="message2"></div>
+    
     `      
-    // <v-linkFI 
-    //     v-bind:url="url_FI"
-    //     v-if=messageFI
-    // >
-    // </v-linkFI>
 })
 
 app.component("v-findFileStudent", {
@@ -238,34 +293,85 @@ app.component("v-findFileStudent", {
 })
 
 app.component("v-uploadFile", {
+    data(){
+        return {
+            arrayFilesNames : [],
+            arrayFilesUpload: [],
+            filesShow : false
+        }
+    },
+
     methods: {
         uploadFI(e) {
             e.preventDefault();            
-            const file = e.target.fileInformation.files[0];
-            this.$emit("fileInformation", file)
+            const totalFiles = e.target.fileInformation.files.length;
+            for (let i = 0; i < totalFiles; i++) {
+                const file = e.target.fileInformation.files[i];
+                this.arrayFilesUpload.push(file);                
+            }            
+            this.$emit("fileInformation", this.arrayFilesUpload);
+            this.cleanArrays();
+            document.getElementById("inputFiles").value = "";
+        }, 
+
+        selectedFiles(e){
+            this.cleanArrays();
+            const totalFiles = e.target.files.length;
+            let index = 0;
+            while (index < totalFiles) {
+                const fileName = e.target.files[index].name;
+                this.arrayFilesNames.push(fileName);
+                index++;
+            }
+            this.filesShow = this.arrayFilesNames.length > 0 ? true : false;            
+        },
+
+        cleanArrays(){
+            while (this.arrayFilesNames.length > 0) {
+                this.arrayFilesNames.pop();
+                this.arrayFilesUpload.pop();
+            }
         }
     },
 
     template: `
     <form v-on:submit="uploadFI">
-        <label>Subir Ficha de información de Curso</label>
+        <label>Subir Fichas de información de Cursos. Arrastra los archivos al espacio inferior:</label>
         <input
             type="file"
             name="fileInformation"
+            id="inputFiles"
             accept=".pdf"
+            multiple
+            @input="selectedFiles"
         >
-        <button>Subir</button>
+        <p Archivos v-if="filesShow"> {{ arrayFilesNames.length }} Archivos seleccionados:</p>
+        <p v-for="item in arrayFilesNames" :key="item"> {{ item }} </p>
+        <button>Generar URL</button>
     </form>
     `
 })
 
 app.component("v-linkFI", {
-    props: ["url"],
+    template: `
+    <p>Archivos disponible en la nube.</p>    
+    <div class="showURLMessage"></div>
+    `
+})
+
+app.component("v-availableFI", {
+    methods: {
+        availableFI(e){
+            e.preventDefault();            
+            this.$emit("listFI")
+        }
+    },
 
     template: `
-    <p>Archivo disponible en la nube.</p>
-    <p>Link:</p>
-    <p>{{ url }}</p>
+    <p></p>
+    <form v-on:submit="availableFI">
+        <button>Fichas de Información disponibles.</button>
+    </form>
     `
 })
 
