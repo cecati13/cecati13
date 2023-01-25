@@ -87,6 +87,29 @@ const app = Vue.createApp({
               }
         },
 
+        async getData(API){
+            try {
+                const objHeaders = { 
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                };
+                // if (!obj.username) {
+                //     Object.defineProperty(objHeaders, "Authorization",{
+                //         value: `Bearer ${localStorage.getItem("token")}`,
+                //         writable: true,
+                //         enumerable: true,
+                //         configurable: true
+                //     })
+                // }
+                const response = await fetch( API, {                  
+                  headers: objHeaders,                  
+                })
+                return response.json();
+              } catch (error) {                
+                console.error(error);
+              }
+        },
+
         async sendFiles(formFiles, API){
             const response = await fetch( API, {
               method: "post",
@@ -131,10 +154,9 @@ const app = Vue.createApp({
             this.message = "";
         },
 
-        async generateList () {
-            const endpoint = `${this.API}/listBlobs`;
-            const obj = { message: true}
-            const res = await this.sendData(endpoint, obj);
+        async generateList (container) {
+            const endpoint = `${this.API}/listBlobs/${container}`;            
+            const res = await this.getData(endpoint);
             console.log(res.message);
             const totalList = res.message.length;
             this.message = `El sistema tiene ${totalList} fichas de información disponibles`;
@@ -362,8 +384,9 @@ app.component("v-linkFI", {
 app.component("v-availableFI", {
     methods: {
         availableFI(e){
-            e.preventDefault();            
-            this.$emit("listFI")
+            e.preventDefault();
+            const container = "informacion";
+            this.$emit("listFI", container)
         }
     },
 
