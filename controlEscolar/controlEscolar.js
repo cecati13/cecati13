@@ -37,32 +37,38 @@ const app = Vue.createApp({
 
         async findFile(e) {
             e.preventDefault();
-            const form = document.querySelector(".formFile")
-            const curp = form.elements.curp.value;
-            const typeDocument = form.elements.typeDocument.value;
-            const extension = form.elements.extension.value;
-            const typeFile = this.typeFile(extension)
-            const contentType = this.createContentType(typeFile);
-            const obj = {
-                curp,
-                typeDocument,
-                extension,
-                contentType,
-                typeFile
-            }
-            const endpoint = `${this.API}/getFile`;
-            const res = await this.sendData(endpoint, obj)
-            if (res.error) {
-                this.message = res.error;
-            } else{
-                //convert base64 to file
-                const base64Response = await fetch(`data:${typeFile};base64,${res.file}`);
-                const blob = await base64Response.blob();
-                const fileURL = URL.createObjectURL(blob);
-                this.fileSource = fileURL;
-                this.clearMessage();
-                window.open(this.fileSource, "_blank")
-            }
+            const curp = e.target.curp.value;            
+            // const form = document.querySelector(".formFile")
+            // const curp = form.elements.curp.value;
+            // const typeDocument = form.elements.typeDocument.value;
+            // const extension = form.elements.extension.value;
+            // const typeFile = this.typeFile(extension)
+            // const contentType = this.createContentType(typeFile);
+            // const obj = {
+            //     curp,
+            //     typeDocument,
+            //     extension,
+            //     contentType,
+            //     typeFile
+            // }            
+            const queryParam = new URLSearchParams({
+                user: curp
+            });
+            const endpoint = `${this.API}/listBlobs/comprobantes?user=${curp}`;
+            const res = await this.getData(endpoint)
+            console.log(res.message)
+            // if (res.error) {
+            //     this.message = res.error;
+            // } else{
+            //      // return of endpoint: /getFile
+            //     //convert base64 to file
+            //     const base64Response = await fetch(`data:${typeFile};base64,${res.file}`);
+            //     const blob = await base64Response.blob();
+            //     const fileURL = URL.createObjectURL(blob);
+            //     this.fileSource = fileURL;
+            //     this.clearMessage();
+            //     window.open(this.fileSource, "_blank")
+            // }
         },
 
         async sendData(API, obj){
@@ -248,19 +254,7 @@ const app = Vue.createApp({
     >
         <label for="curp">CURP</label>
         <input name="curp" v-on:focus="clearMessage">
-        <label for="typeDocument">Selecciona el Tipo de Archivo</label>
-        <select name="typeDocument" v-on:focus="clearMessage">
-            <option value="actaNacimiento">Acta de Nacimiento</option>
-            <option value="comprobanteDomicilio">Domicilio</option>
-            <option value="comprobanteEstudios">Grado de Estudios</option>
-        </select>
-        <label for="extension">Seleciona el tipo de archivo</label>
-        <select name="extension" v-on:focus="clearMessage">
-            <option value="jpg">jpg</option>
-            <option value="jpeg">jpeg</option>
-            <option value="pdf">pdf</option>
-            <option value="png">png</option>
-        </select>
+        
         <button>Enviar</button>
         <p class="message">{{ message }}</p>
     </form>
