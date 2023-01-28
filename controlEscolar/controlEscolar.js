@@ -8,7 +8,10 @@ const app = Vue.createApp({
             username: "",
             message: "",
             messageFI: false,
+            inputCurp: true,
             listButton: true,            
+            arrayForBlobs: [],
+            buttonsBlobs: false,
         }
     },
 
@@ -35,45 +38,43 @@ const app = Vue.createApp({
             }
         },
 
-        async findFile(e) {
+        async findFilesCURP(e) {
             e.preventDefault();
-            const curp = e.target.curp.value;            
-            // const form = document.querySelector(".formFile")
-            // const curp = form.elements.curp.value;
-            // const typeDocument = form.elements.typeDocument.value;
-            // const extension = form.elements.extension.value;
-            // const typeFile = this.typeFile(extension)
-            // const contentType = this.createContentType(typeFile);
-            // const obj = {
-            //     curp,
-            //     typeDocument,
-            //     extension,
-            //     contentType,
-            //     typeFile
-            // }            
-            const queryParam = new URLSearchParams({
-                user: curp
-            });
+            const curp = e.target.curp.value;
             const endpoint = `${this.API}/listBlobs/comprobantes?user=${curp}`;
             const res = await this.getData(endpoint)
             console.log(res.message)
+            if (res.message.length > 1) {
+                this.arrayForBlobs.push(...res.message);
+                this.buttonsBlobs = true;
+                this.inputCurp = false;
+            }
             // if (res.error) {
-            //     this.message = res.error;
+                //     this.message = res.error;
             // } else{
-            //      // return of endpoint: /getFile
-            //     //convert base64 to file
-            //     const base64Response = await fetch(`data:${typeFile};base64,${res.file}`);
-            //     const blob = await base64Response.blob();
-            //     const fileURL = URL.createObjectURL(blob);
-            //     this.fileSource = fileURL;
-            //     this.clearMessage();
-            //     window.open(this.fileSource, "_blank")
-            // }
+                // }
+            },
+            
+            async findFile(e){
+                e.preventDefault();
+                const file = e.target.textContent;                
+                const arrayTypeFile = file.split(".");
+                const typeFile = this.typeFile(arrayTypeFile[1]);                
+                const endpoint = `${this.API}/file/${file}`;                
+                //return of endpoint: /file
+                const res = await this.getData(endpoint)
+                //convert base64 to file
+                const base64Response = await fetch(`data:${typeFile};base64,${res.file}`);
+                const blob = await base64Response.blob();
+                const fileURL = URL.createObjectURL(blob);
+                this.fileSource = fileURL;
+                this.clearMessage();
+                window.open(this.fileSource, "_blank")
         },
 
         async sendData(API, obj){
             try {
-                const objHeaders = { "Content-Type": "application/json" }                
+                const objHeaders = { "Content-Type": "application/json" }
                 if (!obj.username) {
                     Object.defineProperty(objHeaders, "Authorization",{
                         value: `Bearer ${localStorage.getItem("token")}`,
@@ -99,14 +100,6 @@ const app = Vue.createApp({
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${localStorage.getItem("token")}`
                 };
-                // if (!obj.username) {
-                //     Object.defineProperty(objHeaders, "Authorization",{
-                //         value: `Bearer ${localStorage.getItem("token")}`,
-                //         writable: true,
-                //         enumerable: true,
-                //         configurable: true
-                //     })
-                // }
                 const response = await fetch( API, {                  
                   headers: objHeaders,                  
                 })
@@ -249,7 +242,7 @@ const app = Vue.createApp({
 
     <form 
         v-if=auth
-        v-on:submit="findFile"
+        v-on:submit="findFilesCURP"
         class="formFile"
     >
         <label for="curp">CURP</label>
@@ -258,6 +251,13 @@ const app = Vue.createApp({
         <button>Enviar</button>
         <p class="message">{{ message }}</p>
     </form>
+
+    <div v-if=buttonsBlobs>
+        <div 
+            v-for="blob in arrayForBlobs"
+            @click="findFile"
+        > {{ blob.name }}</div>
+    </div>
 
     <v-uploadFile
         v-if=auth
