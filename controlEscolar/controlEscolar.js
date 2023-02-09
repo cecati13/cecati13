@@ -51,26 +51,27 @@ const app = Vue.createApp({
             this.optionFindFiles = false;
             this.listInCloud = false;
             this.listButton = true;
-            this.clearMessage();
-            
+            this.clearMessage();            
         },
 
         async findFilesCURP(e) {
             e.preventDefault();
+            while(this.arrayForBlobs.length > 0) {
+                this.arrayForBlobs.pop()
+            }
             const curp = e.target.curp.value;
             const endpoint = `${this.API}/listBlobs/comprobantes?user=${curp}`;
             const res = await this.getData(endpoint)
             console.log(res.message)
+            if (res.status === 404){
+                this.arrayForBlobs.push({ name: "NO existe, Revisa Archivos fisicos" })
+            }
             if (res.message.length > 1) {
                 this.arrayForBlobs.push(...res.message);
                 this.buttonsBlobs = true;
                 this.inputCurp = false;
             }
-            // if (res.error) {
-                //     this.message = res.error;
-            // } else{
-                // }
-            },
+        },
             
         async findFile(e){
                 e.preventDefault();
@@ -120,6 +121,9 @@ const app = Vue.createApp({
                 const response = await fetch( API, {                  
                   headers: objHeaders,                  
                 })
+                if (response.status === 404) {
+                    return response;
+                }
                 return response.json();
               } catch (error) {                
                 console.error(error);
@@ -284,7 +288,7 @@ const app = Vue.createApp({
         class="formFile"
     >
         <label for="curp">CURP</label>
-        <input name="curp" v-on:focus="clearMessage">
+        <input name="curp">
         
         <button>Enviar</button>
         <p class="message">{{ message }}</p>
@@ -294,6 +298,7 @@ const app = Vue.createApp({
         <div 
             v-for="blob in arrayForBlobs"
             @click="findFile"
+            class="blobs--button"
         > {{ blob.name }}</div>
     </div>
 

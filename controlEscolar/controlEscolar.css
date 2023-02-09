@@ -79,3 +79,13 @@ button {
     width: 50px;
     padding: 4px;
 }
+
+.blobs--button {
+    background-color: var(--contrastColor);    
+    border-radius: 3em;
+    color: var(--mainColor);
+    font-size: 1.4rem;
+    margin: 25px 0;
+    padding: 15px;
+    cursor: pointer;
+}
