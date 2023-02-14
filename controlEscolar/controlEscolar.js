@@ -98,6 +98,7 @@ const app = Vue.createApp({
 
         async sendData(API, obj){
             try {
+                this.preloader();
                 const objHeaders = { "Content-Type": "application/json" }
                 if (!obj.username) {
                     Object.defineProperty(objHeaders, "Authorization",{
@@ -112,14 +113,17 @@ const app = Vue.createApp({
                   headers: objHeaders,
                   body: JSON.stringify(obj)
                 })
+                this.preloader();
                 return response.json();
-              } catch (error) {                
+              } catch (error) {
+                this.preloader();
                 console.error(error);
               }
         },
 
         async getData(API){
             try {
+                this.preloader();
                 const objHeaders = { 
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${localStorage.getItem("token")}`
@@ -129,14 +133,18 @@ const app = Vue.createApp({
                 })
                 if (response.status === 404) {
                     return response;
+                    this.preloader();
                 }
+                this.preloader();
                 return response.json();
               } catch (error) {
+                this.preloader();
                 console.error(error);
               }
         },
 
         async sendFiles(formFiles, API){
+            this.preloader();
             const response = await fetch( API, {
               method: "post",
               headers: {
@@ -147,6 +155,7 @@ const app = Vue.createApp({
             })
             const info = await response.json();
             console.log("regresando de files: ", info)
+            this.preloader();
             return info
           },
         
@@ -229,21 +238,13 @@ const app = Vue.createApp({
             const res = await this.sendFiles(formFiles, enpoint)
             this.messageFI = true;
             this.showUrlMessageUpload(res.message)
-            // const container = this.showUrlMessageUpload(res.message);
-            // const node = document.querySelector(".showURLMessage");
-            // node.append(...container);
             this.listButton = true;
         },
         
         showUrlMessageUpload(array){
-            //const arrayContainer = [];
             array.forEach( url => {
-                // const p = document.createElement("p");
-                // p.innerText = url;
-                //arrayContainer.push(p);
                 this.arrayForLinksFI.push(url)
             });
-            //return arrayContainer;
         },
 
         cleanArrays(){
@@ -253,11 +254,19 @@ const app = Vue.createApp({
             while (this.arrayForLinksFI.length > 0) {
                 this.arrayForLinksFI.pop();
             }
-        }
+        },
+
+        preloader() {
+            const nodeAPP = document.getElementById("preloader");
+            nodeAPP.classList.toggle("preloader");
+          },
     },
 
     template: `
     <h3>Exclusivo del área de control escolar</h3>
+
+    <div id="preloader"></div>
+
     <form
         v-on:submit="login"
         v-if=!auth
@@ -352,7 +361,7 @@ const app = Vue.createApp({
         class="piecesInformationCloud"
     ></div>
     
-    `      
+    `
 })
 
 app.component("v-selectOption", {
@@ -459,8 +468,6 @@ app.component("v-uploadFile", {
     `
 })
 
-
-
 app.component("v-availableFI", {
     methods: {
         availableFI(e){
@@ -476,31 +483,6 @@ app.component("v-availableFI", {
         <button>Consultar</button>
     </form>
     `
-})
-
-app.component("v-information", {
-    template: `
-    <v-datosGenerales></v-datosGenerales>
-    <v-domicilio></v-domicilio>
-    <v-contacto></v-contacto>
-    <v-curso></v-curso>
-    `
-})
-
-app.component("v-datosGenerales", {
-
-})
-
-app.component("v-domicilio",{
-
-})
-
-app.component("v-contacto", {
-    
-})
-
-app.component("v-curso", {
-
 })
 
 const vm = app.mount("#app");
