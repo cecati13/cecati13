@@ -13,8 +13,10 @@ const app = Vue.createApp({
             inputCurp: true,
             listButton: true,
             arrayForBlobs: [],
+            arrayForLinksFI: [],
             buttonsBlobs: false,
-            listInCloud: false
+            listInCloud: false,
+            uploadPiecesInformation: true,
         }
     },
 
@@ -28,7 +30,7 @@ const app = Vue.createApp({
                 username: username
             };
             const endpoint = `${this.API}/oauth`;
-            const response = await this.sendData(endpoint, obj);            
+            const response = await this.sendData(endpoint, obj);
             if (response.token) {
                 localStorage.setItem("token", response.token);
                 localStorage.setItem("username", response.username)
@@ -51,7 +53,9 @@ const app = Vue.createApp({
             this.optionFindFiles = false;
             this.listInCloud = false;
             this.listButton = true;
-            this.clearMessage();            
+            this.uploadPiecesInformation = true;
+            this.clearMessage();
+            this.cleanArrays();
         },
 
         async findFilesCURP(e) {
@@ -64,10 +68,12 @@ const app = Vue.createApp({
             const res = await this.getData(endpoint)
             console.log(res.message)
             if (res.status === 404){
-                this.arrayForBlobs.push({ name: "NO existe, Revisa Archivos fisicos" })
+                //this.arrayForBlobs.push({ name: "NO existe, Revisa Archivos fisicos" })
+                this.message = "NO ENCONTRADO. Revisa Archivos fisicos"
             }
             if (res.message.length > 1) {
                 this.arrayForBlobs.push(...res.message);
+                this.message = "";
                 this.buttonsBlobs = true;
                 this.inputCurp = false;
             }
@@ -75,10 +81,10 @@ const app = Vue.createApp({
             
         async findFile(e){
                 e.preventDefault();
-                const file = e.target.textContent;                
+                const file = e.target.textContent;
                 const arrayTypeFile = file.split(".");
-                const typeFile = this.typeFile(arrayTypeFile[1]);                
-                const endpoint = `${this.API}/file/${file}`;                
+                const typeFile = this.typeFile(arrayTypeFile[1]);
+                const endpoint = `${this.API}/file/${file}`;
                 //return of endpoint: /file
                 const res = await this.getData(endpoint)
                 //convert base64 to file
@@ -118,14 +124,14 @@ const app = Vue.createApp({
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${localStorage.getItem("token")}`
                 };
-                const response = await fetch( API, {                  
-                  headers: objHeaders,                  
+                const response = await fetch( API, {
+                  headers: objHeaders,
                 })
                 if (response.status === 404) {
                     return response;
                 }
                 return response.json();
-              } catch (error) {                
+              } catch (error) {
                 console.error(error);
               }
         },
@@ -174,7 +180,6 @@ const app = Vue.createApp({
             this.message = "";
             const messageInfCloud = document.querySelector(".piecesInformationCloud");
             messageInfCloud.innerHTML = "";
-            this.cleanArrays();
         },
 
         async generateList (container) {
@@ -187,6 +192,7 @@ const app = Vue.createApp({
             this.listInCloud = true;
             this.listOfInformation(res.message);
             this.listButton = false;
+            this.uploadPiecesInformation = false;
             
         },
 
@@ -195,7 +201,11 @@ const app = Vue.createApp({
             const arrayContainer = [];
             array.forEach( item => {
                 const p1 = document.createElement("p");
-                p1.innerHTML = `Archivo: <span>${item.name}</span> `;
+                p1.innerHTML = `Archivo: 
+                    <span 
+                        data-url="${item.url}">
+                    ${item.name}
+                    </span> `;
                 p1.dataset.url = item.url;
                 p1.addEventListener("click", this.showPDF);
                 arrayContainer.push(p1);
@@ -204,9 +214,9 @@ const app = Vue.createApp({
         },
 
         showPDF(e){
-            e.preventDefault();            
+            e.preventDefault();
             const elementURL = e.target.dataset.url;
-            window.open(elementURL, "_blank")            
+            window.open(elementURL, "_blank")
         },
 
         async uploadFileFI(arrayFiles){
@@ -218,25 +228,30 @@ const app = Vue.createApp({
             console.log("uploadFileFI", formFiles)
             const res = await this.sendFiles(formFiles, enpoint)
             this.messageFI = true;
-            const container = this.showUrlMessageUpload(res.message);
-            const node = document.querySelector(".showURLMessage");
-            node.append(...container);
+            this.showUrlMessageUpload(res.message)
+            // const container = this.showUrlMessageUpload(res.message);
+            // const node = document.querySelector(".showURLMessage");
+            // node.append(...container);
             this.listButton = true;
         },
         
         showUrlMessageUpload(array){
-            const arrayContainer = [];
+            //const arrayContainer = [];
             array.forEach( url => {
-                const p = document.createElement("p");
-                p.innerText = url;
-                arrayContainer.push(p);
+                // const p = document.createElement("p");
+                // p.innerText = url;
+                //arrayContainer.push(p);
+                this.arrayForLinksFI.push(url)
             });
-            return arrayContainer;
+            //return arrayContainer;
         },
 
         cleanArrays(){
             while (this.arrayForBlobs.length > 0) {
                 this.arrayForBlobs.pop();
+            }
+            while (this.arrayForLinksFI.length > 0) {
+                this.arrayForLinksFI.pop();
             }
         }
     },
@@ -264,7 +279,6 @@ const app = Vue.createApp({
             v-on:focus="clearMessage"
         >
         <button>Iniciar Sesión</button>
-        <p class="message">{{ message }}</p>
     </form>
 
     <p v-if=auth>
@@ -275,6 +289,12 @@ const app = Vue.createApp({
         v-if=auth&&(optionFindFiles||optionPiecesInformation)
         v-on:click="ShowMenu"
     ></v-buttonBack>
+
+    <p
+        class="message"
+    >
+        {{ message }}
+    </p>
 
     <v-selectOption
         v-if=auth&&!optionPiecesInformation&&!optionFindFiles
@@ -287,11 +307,14 @@ const app = Vue.createApp({
         v-on:submit="findFilesCURP"
         class="formFile"
     >
+        <h4>Buscar comprobantes...</h4>
         <label for="curp">CURP</label>
-        <input name="curp">
+        <input 
+            name="curp"
+            onkeyup="javascript:this.value=this.value.toUpperCase();"
+        >
         
         <button>Enviar</button>
-        <p class="message">{{ message }}</p>
     </form>
 
     <div v-if=optionFindFiles&&buttonsBlobs>
@@ -303,9 +326,20 @@ const app = Vue.createApp({
     </div>
 
     <v-uploadFile
-        v-if=auth&&optionPiecesInformation
+        v-if=auth&&optionPiecesInformation&&uploadPiecesInformation
         v-on:fileInformation="uploadFileFI"
     ></v-uploadFile>
+
+    <div 
+        v-if=auth&&optionPiecesInformation&&uploadPiecesInformation
+        class="uploadFiles"
+    >
+        <p 
+            v-for="link in arrayForLinksFI"
+        >
+            {{ link }}
+        </p>
+    </div>
 
     
     <v-availableFI 
@@ -313,11 +347,6 @@ const app = Vue.createApp({
         v-on:listFI="generateList"
     ></v-availableFI>
     
-    <v-linkFI
-        v-if=messageFI&&optionPiecesInformation&&listInCloud
-    >
-    </v-linkFI>
-
     <div 
         v-if=auth
         class="piecesInformationCloud"
@@ -339,22 +368,22 @@ app.component("v-selectOption", {
         findFile(){
             this.option.files = true;
             this.option.fInformation = false;
-            this.$emit("selectedFunction", this.option)
+            this.$emit("selectedFunction", this.option);
         },
         
         piecesInformation(){
             this.option.fInformation = true;
             this.option.files = false;
-            this.$emit("selectedFunction", this.option)
+            this.$emit("selectedFunction", this.option);
         }
     },
 
     template: `
     <p>Selecciona las funciones del sitio que deseas utilizar:</p>
-    <div v-on:click="findFile">
+    <div v-on:click="findFile" class="functionOption">
         <button>Buscar comprobantes</button>
     </div>
-    <div v-on:click="piecesInformation">
+    <div v-on:click="piecesInformation" class="functionOption">
         <button>Fichas de información</button>
     </div>
     `
@@ -412,8 +441,9 @@ app.component("v-uploadFile", {
     },
 
     template: `
+    <h4>Subir Fichas de Información de cursos al sistema.</h4>
     <form v-on:submit="uploadFI">
-        <label>Subir Fichas de información de Cursos. Arrastra los archivos al espacio inferior:</label>
+        <label>Arrastra los archivos al espacio inferior:</label>
         <input
             type="file"
             name="fileInformation"
@@ -429,12 +459,7 @@ app.component("v-uploadFile", {
     `
 })
 
-app.component("v-linkFI", {
-    template: `
-    <p>Archivos disponible en la nube.</p>
-    <div class="showURLMessage"></div>
-    `
-})
+
 
 app.component("v-availableFI", {
     methods: {
@@ -446,9 +471,9 @@ app.component("v-availableFI", {
     },
 
     template: `
-    <p></p>
+    <h4>Ver Fichas de Información disponibles en el sistema.</h4>
     <form v-on:submit="availableFI">
-        <button>Fichas de Información disponibles.</button>
+        <button>Consultar</button>
     </form>
     `
 })
