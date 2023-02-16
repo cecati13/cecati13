@@ -44,7 +44,16 @@ const app = Vue.createApp({
             }
         },
 
+        closeSession(){
+            this.auth = false;
+            localStorage.removeItem("token");
+        },
+
         showFunctionSite(obj){
+            if (obj.closed) {
+                console.log("Close Session......")
+                this.closeSession();
+            }
             this.optionPiecesInformation = obj.fInformation;
             this.optionFindFiles = obj.files;
         },
@@ -67,7 +76,7 @@ const app = Vue.createApp({
             const curp = e.target.curp.value;
             const endpoint = `${this.API}/listBlobs/comprobantes?user=${curp}`;
             const res = await this.getData(endpoint)
-            console.log(res.message)
+            //console.log(res.message)
             if (res.status === 404){
                 //this.arrayForBlobs.push({ name: "NO existe, Revisa Archivos fisicos" })
                 this.message = "NO ENCONTRADO. Revisa Archivos fisicos"
@@ -155,7 +164,7 @@ const app = Vue.createApp({
               body: formFiles
             })
             const info = await response.json();
-            console.log("regresando de files: ", info)
+            //console.log("regresando de files: ", info)
             this.preloader();
             return info
           },
@@ -195,7 +204,7 @@ const app = Vue.createApp({
         async generateList (container) {
             const endpoint = `${this.API}/listBlobs/${container}`;
             const res = await this.getData(endpoint);
-            console.log(res.message);
+            //console.log(res.message);
             const totalList = res.message.length;
             this.message = `El sistema tiene ${totalList} fichas de información disponibles`;
             this.messageFI = true;
@@ -235,7 +244,7 @@ const app = Vue.createApp({
                 formFiles.append("fileFI", file);
             })
             const enpoint = `${this.API}/fileInformation`
-            console.log("uploadFileFI", formFiles)
+            //console.log("uploadFileFI", formFiles)
             const res = await this.sendFiles(formFiles, enpoint)
             this.messageFI = true;
             this.showUrlMessageUpload(res.message)
@@ -373,7 +382,8 @@ app.component("v-selectOption", {
         return {
             option: {
                 files: false,
-                fInformation: false
+                fInformation: false,
+                closed: false,
             }
         }
     },
@@ -388,6 +398,11 @@ app.component("v-selectOption", {
             this.option.fInformation = true;
             this.option.files = false;
             this.$emit("selectedFunction", this.option);
+        },
+
+        closeSession(){
+            this.option.closed = true;
+            this.$emit("selectedFunction", this.option);
         }
     },
 
@@ -398,6 +413,9 @@ app.component("v-selectOption", {
     </div>
     <div v-on:click="piecesInformation" class="functionOption">
         <button>Fichas de información</button>
+    </div>
+    <div v-on:click="closeSession" class="functionOption">
+        <button>Cerrar Sesión</button>
     </div>
     `
 })
