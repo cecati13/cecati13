@@ -39,8 +39,7 @@ const app = Vue.createApp({
                 this.auth = true;
                 this.clearMessage();
             } else {
-                this.message = response.message;
-                //this.message = "Acceso NO autorizado."
+                this.message = response.message
             }
         },
 
@@ -50,8 +49,7 @@ const app = Vue.createApp({
         },
 
         showFunctionSite(obj){
-            if (obj.closed) {
-                console.log("Close Session......")
+            if (obj.closed) {                
                 this.closeSession();
             }
             this.optionPiecesInformation = obj.fInformation;
@@ -126,8 +124,9 @@ const app = Vue.createApp({
                 this.preloader();
                 return response.json();
               } catch (error) {
-                this.preloader();
-                console.error(error);
+                //this.preloader();
+                console.log("ASQUI ESTOY ENTRANDO")
+                //console.error(error);
               }
         },
 
@@ -198,7 +197,9 @@ const app = Vue.createApp({
         clearMessage() {
             this.message = "";
             const messageInfCloud = document.querySelector(".piecesInformationCloud");
-            messageInfCloud.innerHTML = "";
+            if ( !(messageInfCloud === null) ) {
+                messageInfCloud.innerHTML = "";
+            }
         },
 
         async generateList (container) {
@@ -219,8 +220,8 @@ const app = Vue.createApp({
             const container = document.querySelector(".piecesInformationCloud");
             const arrayContainer = [];
             array.forEach( item => {
-                const p1 = document.createElement("p");
-                p1.innerHTML = `Archivo: 
+                const p1 = document.createElement("li");
+                p1.innerHTML = ` 
                     <span 
                         data-url="${item.url}">
                     ${item.name}
@@ -369,10 +370,10 @@ const app = Vue.createApp({
             v-on:listFI="generateList"
         ></v-availableFI>
         
-        <div 
+        <ol 
             v-if=auth
             class="piecesInformationCloud"
-        ></div>
+        ></ol>
     </section>
     `
 })

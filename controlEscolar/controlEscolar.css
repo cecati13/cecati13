@@ -47,21 +47,23 @@ button {
 .piecesInformationCloud {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-evenly;
+    justify-content: space-between;
+    padding: 0 25px;
 }
 
-.piecesInformationCloud > p > span {
+.piecesInformationCloud > li > span {
     color: var(--contrastColor);
     font-size: 1.8rem;
 }
 
-.piecesInformationCloud > p {    
+.piecesInformationCloud > li {    
     width: max-content;
-    color: var(--mainColor2);
+    color: var(--fontColor);
     overflow-wrap: anywhere;
-    padding: 10px 25px;
+    padding: 15px 5px;
     cursor: pointer;
-    font-size: 1.4rem;
+    font-size: 1.5rem;
+    margin-right: 40px;
 }
 
 .functionOption {
