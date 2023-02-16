@@ -1,8 +1,8 @@
 const app = Vue.createApp({
     data(){
         return {
-            //API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1/controlStudents",
-            API:"http://localhost:3000/API/v1/controlStudents",
+            API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1/controlStudents",
+            //API:"http://localhost:3000/API/v1/controlStudents",
             auth: false,
             optionPiecesInformation: false,
             optionFindFiles: false,
@@ -17,6 +17,7 @@ const app = Vue.createApp({
             buttonsBlobs: false,
             listInCloud: false,
             uploadPiecesInformation: true,
+            loading: false
         }
     },
 
@@ -132,8 +133,8 @@ const app = Vue.createApp({
                   headers: objHeaders,
                 })
                 if (response.status === 404) {
-                    return response;
                     this.preloader();
+                    return response;
                 }
                 this.preloader();
                 return response.json();
@@ -257,110 +258,113 @@ const app = Vue.createApp({
         },
 
         preloader() {
-            const nodeAPP = document.getElementById("preloader");
-            nodeAPP.classList.toggle("preloader");
+            this.loading = !this.loading;
           },
     },
 
     template: `
     <h3>Exclusivo del área de control escolar</h3>
 
-    <div id="preloader"></div>
-
-    <form
-        v-on:submit="login"
-        v-if=!auth
-    >
-        <label for="username"> 
-            Usuario
-        </label>
-        <input 
-            type="text"
-            name="username" 
-            v-on:focus="clearMessage"
-        >
-        <label for="password"> 
-            Contraseña
-        </label>
-        <input 
-            type="password" 
-            name="password" 
-            v-on:focus="clearMessage"
-        >
-        <button>Iniciar Sesión</button>
-    </form>
-
-    <p v-if=auth>
-        Bienvenido {{ username.toUpperCase() }} 
-    </p>
-
-    <v-buttonBack
-        v-if=auth&&(optionFindFiles||optionPiecesInformation)
-        v-on:click="ShowMenu"
-    ></v-buttonBack>
-
-    <p
-        class="message"
-    >
-        {{ message }}
-    </p>
-
-    <v-selectOption
-        v-if=auth&&!optionPiecesInformation&&!optionFindFiles
-        v-on:selectedFunction="showFunctionSite"
-    ></v-selectOption>
-
-
-    <form 
-        v-if=auth&&optionFindFiles
-        v-on:submit="findFilesCURP"
-        class="formFile"
-    >
-        <h4>Buscar comprobantes...</h4>
-        <label for="curp">CURP</label>
-        <input 
-            name="curp"
-            onkeyup="javascript:this.value=this.value.toUpperCase();"
-        >
-        
-        <button>Enviar</button>
-    </form>
-
-    <div v-if=optionFindFiles&&buttonsBlobs>
-        <div 
-            v-for="blob in arrayForBlobs"
-            @click="findFile"
-            class="blobs--button"
-        > {{ blob.name }}</div>
-    </div>
-
-    <v-uploadFile
-        v-if=auth&&optionPiecesInformation&&uploadPiecesInformation
-        v-on:fileInformation="uploadFileFI"
-    ></v-uploadFile>
-
-    <div 
-        v-if=auth&&optionPiecesInformation&&uploadPiecesInformation
-        class="uploadFiles"
-    >
-        <p 
-            v-for="link in arrayForLinksFI"
-        >
-            {{ link }}
-        </p>
-    </div>
-
-    
-    <v-availableFI 
-        v-if=auth&&listButton&&optionPiecesInformation
-        v-on:listFI="generateList"
-    ></v-availableFI>
-    
-    <div 
-        v-if=auth
-        class="piecesInformationCloud"
+    <div  
+        v-if=loading
+        v-bind:class="['preloader']"
     ></div>
-    
+
+    <section v-if=!loading>
+        <form
+            v-on:submit="login"
+            v-if=!auth
+        >
+            <label for="username"> 
+                Usuario
+            </label>
+            <input 
+                type="text"
+                name="username" 
+                v-on:focus="clearMessage"
+            >
+            <label for="password"> 
+                Contraseña
+            </label>
+            <input 
+                type="password" 
+                name="password" 
+                v-on:focus="clearMessage"
+            >
+            <button>Iniciar Sesión</button>
+        </form>
+
+        <p v-if=auth>
+            Bienvenido {{ username.toUpperCase() }} 
+        </p>
+
+        <v-buttonBack
+            v-if=auth&&(optionFindFiles||optionPiecesInformation)
+            v-on:click="ShowMenu"
+        ></v-buttonBack>
+
+        <p
+            class="message"
+        >
+            {{ message }}
+        </p>
+
+        <v-selectOption
+            v-if=auth&&!optionPiecesInformation&&!optionFindFiles
+            v-on:selectedFunction="showFunctionSite"
+        ></v-selectOption>
+
+
+        <form 
+            v-if=auth&&optionFindFiles
+            v-on:submit="findFilesCURP"
+            class="formFile"
+        >
+            <h4>Buscar comprobantes...</h4>
+            <label for="curp">CURP</label>
+            <input 
+                name="curp"
+                onkeyup="javascript:this.value=this.value.toUpperCase();"
+            >
+            
+            <button>Enviar</button>
+        </form>
+
+        <div v-if=optionFindFiles&&buttonsBlobs>
+            <div 
+                v-for="blob in arrayForBlobs"
+                @click="findFile"
+                class="blobs--button"
+            > {{ blob.name }}</div>
+        </div>
+
+        <v-uploadFile
+            v-if=auth&&optionPiecesInformation&&uploadPiecesInformation
+            v-on:fileInformation="uploadFileFI"
+        ></v-uploadFile>
+
+        <div 
+            v-if=auth&&optionPiecesInformation&&uploadPiecesInformation
+            class="uploadFiles"
+        >
+            <p 
+                v-for="link in arrayForLinksFI"
+            >
+                {{ link }}
+            </p>
+        </div>
+
+        
+        <v-availableFI 
+            v-if=auth&&listButton&&optionPiecesInformation
+            v-on:listFI="generateList"
+        ></v-availableFI>
+        
+        <div 
+            v-if=auth
+            class="piecesInformationCloud"
+        ></div>
+    </section>
     `
 })
 
