@@ -2,7 +2,6 @@ const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
 //const host = "http://localhost:3000/";
 const URL = host + "API/v1/frontendURL/10"
 const URL_BASE_ASSETS = "https://storage.googleapis.com/cecati13/assets/";
-const URL_BASE_FI = "http://cecati13.com.mx/informacion/";
 //Nombre de key guardado en Session Storage para preinscribir Curso
 const keyCourseStorage = "CourseCecati13";
 
@@ -61,7 +60,7 @@ class AvailableCourses {
             <div id="node${course.number}"></div>            
             <textarea id="pre-${course.number}" style="display:none">${preregister}</textarea>
             <div  
-                data-moreInformation="${URL_BASE_FI + course.ficha_informacion}"
+                data-moreInformation="${course.ficha_informacion}"
                 id="containerCourse--info"
             >
                 <img src="${URL_BASE_ASSETS}moreInfo.png">
