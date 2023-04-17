@@ -1,10 +1,35 @@
-:root {    
+/* @media (prefers-color-scheme: dark){
+    :root {
+    --fontColor: #ff8847;
+    --fontColor2: #775b4e;
+    --contrastColor: #95b0b1;
+    --contrastColor2: #452d22;
+    --mainColor2: #324b4c;
+    --mainColor: #1d1e1e;
+    }
+} */
+
+@media (prefers-color-scheme: dark){
+    :root {
+    --fontColor: #e3bdc7;
+    --fontColor2: #BFC1DC;    
+    --contrastColor: #af9bad;
+    /* --contrastColor2: #7d7c8c; */
+    --contrastColor2: #515e73;
+    --mainColor: #1d1e1e;
+    --mainColor2: #353c3f;
+    }
+}
+
+@media (prefers-color-scheme: light){
+    :root {
     --fontColor: #972648;
     --fontColor2: #691C32;
     --contrastColor: #43655a;
     --contrastColor2: #628281;
     --mainColor: #ffffff;
     --mainColor2: #b1bdc5;
+    }
 }
 
 * {
@@ -244,13 +269,14 @@ a, a:visited, a:active{
 .preloader {
     width: 70px;
     height: 70px;
-    border: 10px solid #eee;
-    border-top: 8px solid #666;
+    border: 10px solid var(--mainColor2);
+    border-top: 8px solid var(--fontColor2);
     border-radius: 50%;
     animation-name: girar;
     animation-duration: 900ms;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
+    margin-top: 25px;
   }
   @keyframes girar {
     from {
