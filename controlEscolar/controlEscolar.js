@@ -1,8 +1,12 @@
+import { vAvailableFI } from "./components/v-availableFI.js";
+import { vButtonBack } from "./components/v-buttonBack.js";
+import { vSelectOption } from "./components/v-selectOption.js";
+import { vUploadFile } from "./components/v-uploadFile.js";
+
 const app = Vue.createApp({
     data(){
         return {
             API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1/controlStudents",
-            //API:"http://localhost:3000/API/v1/controlStudents",
             auth: false,
             optionPiecesInformation: false,
             optionFindFiles: false,
@@ -49,7 +53,7 @@ const app = Vue.createApp({
         },
 
         showFunctionSite(obj){
-            if (obj.closed) {                
+            if (obj.closed) {
                 this.closeSession();
             }
             this.optionPiecesInformation = obj.fInformation;
@@ -74,7 +78,6 @@ const app = Vue.createApp({
             const curp = e.target.curp.value;
             const endpoint = `${this.API}/listBlobs/comprobantes?user=${curp}`;
             const res = await this.getData(endpoint)
-            //console.log(res.message)
             if (res.status === 404){
                 //this.arrayForBlobs.push({ name: "NO existe, Revisa Archivos fisicos" })
                 this.message = "NO ENCONTRADO. Revisa Archivos fisicos"
@@ -95,13 +98,12 @@ const app = Vue.createApp({
                 const endpoint = `${this.API}/file/${file}`;
                 //return of endpoint: /file
                 const res = await this.getData(endpoint)
-                //convert base64 to file
                 const base64Response = await fetch(`data:${typeFile};base64,${res.file}`);
                 const blob = await base64Response.blob();
                 const fileURL = URL.createObjectURL(blob);
                 this.fileSource = fileURL;
                 this.clearMessage();
-                window.open(this.fileSource, "_blank")
+                window.open(this.fileSource, "_blank");
         },
 
         async sendData(API, obj){
@@ -114,19 +116,17 @@ const app = Vue.createApp({
                         writable: true,
                         enumerable: true,
                         configurable: true
-                    })
+                    });
                 }
                 const response = await fetch( API, {
                   method: "POST",
                   headers: objHeaders,
                   body: JSON.stringify(obj)
-                })
+                });
                 this.preloader();
                 return response.json();
               } catch (error) {
-                //this.preloader();
-                console.log("ASQUI ESTOY ENTRANDO")
-                //console.error(error);
+                console.error(error)
               }
         },
 
@@ -159,11 +159,9 @@ const app = Vue.createApp({
               headers: {
                 "Authorization": `Bearer ${localStorage.getItem("token")}`
               },
-              //si vamos a subir archivos, se debe usar el formData, y no el json y quitar el headers
               body: formFiles
             })
             const info = await response.json();
-            //console.log("regresando de files: ", info)
             this.preloader();
             return info
           },
@@ -205,7 +203,6 @@ const app = Vue.createApp({
         async generateList (container) {
             const endpoint = `${this.API}/listBlobs/${container}`;
             const res = await this.getData(endpoint);
-            //console.log(res.message);
             const totalList = res.message.length;
             this.message = `El sistema tiene ${totalList} fichas de información disponibles`;
             this.messageFI = true;
@@ -236,7 +233,7 @@ const app = Vue.createApp({
         showPDF(e){
             e.preventDefault();
             const elementURL = e.target.dataset.url;
-            window.open(elementURL, "_blank")
+            window.open(elementURL, "_blank");
         },
 
         async uploadFileFI(arrayFiles){
@@ -244,17 +241,16 @@ const app = Vue.createApp({
             arrayFiles.forEach( file => {
                 formFiles.append("fileFI", file);
             })
-            const enpoint = `${this.API}/fileInformation`
-            //console.log("uploadFileFI", formFiles)
-            const res = await this.sendFiles(formFiles, enpoint)
+            const enpoint = `${this.API}/fileInformation`;
+            const res = await this.sendFiles(formFiles, enpoint);
             this.messageFI = true;
-            this.showUrlMessageUpload(res.message)
+            this.showUrlMessageUpload(res.message);
             this.listButton = true;
         },
         
         showUrlMessageUpload(array){
             array.forEach( url => {
-                this.arrayForLinksFI.push(url)
+                this.arrayForLinksFI.push(url);
             });
         },
 
@@ -376,136 +372,11 @@ const app = Vue.createApp({
         ></ol>
     </section>
     `
-})
-
-app.component("v-selectOption", {
-    data() {
-        return {
-            option: {
-                files: false,
-                fInformation: false,
-                closed: false,
-            }
-        }
-    },
-    methods: {
-        findFile(){
-            this.option.files = true;
-            this.option.fInformation = false;
-            this.$emit("selectedFunction", this.option);
-        },
-        
-        piecesInformation(){
-            this.option.fInformation = true;
-            this.option.files = false;
-            this.$emit("selectedFunction", this.option);
-        },
-
-        closeSession(){
-            this.option.closed = true;
-            this.$emit("selectedFunction", this.option);
-        }
-    },
-
-    template: `
-    <p>Selecciona las funciones del sitio que deseas utilizar:</p>
-    <div v-on:click="findFile" class="functionOption">
-        <button>Buscar comprobantes</button>
-    </div>
-    <div v-on:click="piecesInformation" class="functionOption">
-        <button>Fichas de información</button>
-    </div>
-    <div v-on:click="closeSession" class="functionOption">
-        <button>Cerrar Sesión</button>
-    </div>
-    `
-})
-
-app.component("v-buttonBack", {
-    template:`
-    <div class="buttonBack buttonBack--HIDE">
-        <img src="https://storage.googleapis.com/cecati13/assets/arrowBack.svg" alt="Retroceder">
-        <span>REGRESAR</span>
-    </div>
-    `
 });
 
-app.component("v-uploadFile", {
-    data(){
-        return {
-            arrayFilesNames : [],
-            arrayFilesUpload: [],
-            filesShow : false
-        }
-    },
+app.component("v-selectOption", vSelectOption);
+app.component("v-buttonBack", vButtonBack);
+app.component("v-uploadFile", vUploadFile);
+app.component("v-availableFI", vAvailableFI);
 
-    methods: {
-        uploadFI(e) {
-            e.preventDefault();
-            const totalFiles = e.target.fileInformation.files.length;
-            for (let i = 0; i < totalFiles; i++) {
-                const file = e.target.fileInformation.files[i];
-                this.arrayFilesUpload.push(file);
-            }            
-            this.$emit("fileInformation", this.arrayFilesUpload);
-            this.cleanArrays();
-            document.getElementById("inputFiles").value = "";
-        },
-
-        selectedFiles(e){
-            this.cleanArrays();
-            const totalFiles = e.target.files.length;
-            let index = 0;
-            while (index < totalFiles) {
-                const fileName = e.target.files[index].name;
-                this.arrayFilesNames.push(fileName);
-                index++;
-            }
-            this.filesShow = this.arrayFilesNames.length > 0 ? true : false;
-        },
-
-        cleanArrays(){
-            while (this.arrayFilesNames.length > 0) {
-                this.arrayFilesNames.pop();
-                this.arrayFilesUpload.pop();
-            }
-        }
-    },
-
-    template: `
-    <h4>Subir Fichas de Información de cursos al sistema.</h4>
-    <form v-on:submit="uploadFI">
-        <label>Arrastra los archivos al espacio inferior:</label>
-        <input
-            type="file"
-            name="fileInformation"
-            id="inputFiles"
-            accept=".pdf"
-            multiple
-            @input="selectedFiles"
-        >
-        <p Archivos v-if="filesShow"> {{ arrayFilesNames.length }} Archivos seleccionados:</p>
-        <p v-for="item in arrayFilesNames" :key="item"> {{ item }} </p>
-        <button>Generar URL</button>
-    </form>
-    `
-})
-
-app.component("v-availableFI", {
-    methods: {
-        availableFI(e){
-            e.preventDefault();
-            const container = "informacion";
-            this.$emit("listFI", container)
-        }
-    },
-
-    template: `
-    <h4>Ver Fichas de Información disponibles en el sistema.</h4>
-    <form v-on:submit="availableFI">
-        <button>Consultar</button>
-    </form>
-    `
-})
-
-const vm = app.mount("#app");
+app.mount("#app");
