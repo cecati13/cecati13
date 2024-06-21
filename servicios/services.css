@@ -61,4 +61,5 @@ main {
     padding: 7px;
     border-radius: 10px;    
     font-weight: bold;
+    cursor: pointer;
 }

@@ -1,5 +1,5 @@
-const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
-//const host = "http://localhost:3000/";
+//const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
+const host = "http://localhost:3000/";
 const URL = host + "API/v1/frontendURL/10"
 const URL_BASE_ASSETS = "https://storage.googleapis.com/cecati13/assets/";
 //Nombre de key guardado en Session Storage para preinscribir Curso
