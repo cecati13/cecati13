@@ -252,6 +252,32 @@ a, a:visited, a:active{
     animation-iteration-count: infinite;
     animation-timing-function: linear;
   }
+
+  /*Button para acceso a Control Escolar*/
+.controlEscolar--button {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-bottom: 10px;
+    cursor: default;
+    font-size: 1.4rem;
+    font-weight: 600;
+    border: solid 2px var(--fontColor);
+    background-color: var(--mainColor);
+    color: var(--fontColor2);
+    padding: 7px;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 150px;
+}
+
+.controlEscolar--button img {
+    width: 25px;
+    border-radius: 4em;
+}
+
+ /*Button para acceso a Control Escolar*/
+
   @keyframes girar {
     from {
       transform: rotate(0deg);
