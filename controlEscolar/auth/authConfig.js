@@ -7,7 +7,7 @@ const msalConfig = {
     auth: {
         clientId: '0aa405cf-4844-4ef6-bff2-1cb237ededc8',
         authority: 'https://login.microsoftonline.com/dgcft.sems.gob.mx/',
-        redirectUri: '/controlEscolar', 
+        redirectUri: '/controlEscolar',
         postLogoutRedirectUri: '/',
         scope: "openid api://e7db502b-8ed9-4af6-8ed6-280918b39123/User.Read"
     },
@@ -63,7 +63,7 @@ const protectedResources = {
  */
 const loginRequest = {
     //scopes: [...protectedResources.todolistApi.scopes.read, ...protectedResources.todolistApi.scopes.write],
-    scopes: []
+    scopes: ["User.Read"]
 };
 
 /**

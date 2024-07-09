@@ -1,7 +1,7 @@
-import { vAvailableFI } from "./components/v-availableFI.js";
-import { vButtonBack } from "./components/v-buttonBack.js";
-import { vSelectOption } from "./components/v-selectOption.js";
-import { vUploadFile } from "./components/v-uploadFile.js";
+import { vAvailableFI, vButtonBack, vSelectOption, vTableUsers, vUploadFile } from "./components/index.js";
+import { IconEdit } from "./components/icons/IconEdit.js";
+import { vUsers } from "./pages/index.js"
+import { roles } from "./models/roles.js";
 
 const app = Vue.createApp({
     data() {
@@ -11,8 +11,13 @@ const app = Vue.createApp({
             auth: false,
             optionPiecesInformation: false,
             optionFindFiles: false,
+            optionListUsers: false,
             fileSource: "",
             username: "",
+            email: "",
+            permissions: {
+                role: roles.notFunctions,
+            },
             message: "",
             messageFI: false,
             inputCurp: true,
@@ -22,11 +27,55 @@ const app = Vue.createApp({
             buttonsBlobs: false,
             listInCloud: false,
             uploadPiecesInformation: true,
-            loading: false
+            loading: true,
+            thereAreSesion: this.areThereSession,
         }
     },
 
+    provide() {
+        return {
+            permissions: this.permissions,
+        }
+    },
+
+    mounted() {
+        this.areThereSession()
+    },
+
     methods: {
+        async areThereSession() {
+            try {
+                areSessionRedirect();
+                const accessToken = await this.getToken();
+                if (accessToken === null) {
+                    signIn();
+                    return
+                }
+                const endpoint = this.API + "/oauth";
+                const response = await this.callApi(
+                    'GET',
+                    endpoint,
+                    accessToken
+                );
+                console.log(await response);
+                if (response.token) {
+                    console.log(await response.token);
+                    localStorage.setItem("token", response.token);
+                    localStorage.setItem("username", response.username)
+                    this.username = response.username;
+                    this.email = response.email;
+                    this.permissions.role = this.assignRoleFunctions(response.role);
+                    this.auth = true;
+                    this.clearMessage();
+                    this.preloader();
+                } else {
+                    this.message = response.message
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
         async login(e) {
             e.preventDefault();
             const username = e.target.children.username.value;
@@ -42,6 +91,7 @@ const app = Vue.createApp({
                 localStorage.setItem("username", response.username)
                 this.username = response.username;
                 this.auth = true;
+                this.preloader();
                 this.clearMessage();
             } else {
                 this.message = response.message
@@ -51,6 +101,8 @@ const app = Vue.createApp({
         closeSession() {
             this.auth = false;
             localStorage.removeItem("token");
+            document.cookie = "token_jwt=null";
+            signOut();
         },
 
         showFunctionSite(obj) {
@@ -59,11 +111,13 @@ const app = Vue.createApp({
             }
             this.optionPiecesInformation = obj.fInformation;
             this.optionFindFiles = obj.files;
+            this.optionListUsers = obj.adminUsers;
         },
 
         ShowMenu() {
             this.optionPiecesInformation = false;
             this.optionFindFiles = false;
+            this.optionListUsers = false;
             this.listInCloud = false;
             this.listButton = true;
             this.uploadPiecesInformation = true;
@@ -264,37 +318,33 @@ const app = Vue.createApp({
             }
         },
 
+        assignRoleFunctions(role) {
+            if (String(role) === String(roles.admin)) {
+                return roles.admin;
+            } else if (String(role) === String(roles.user)) {
+                return roles.user;
+            } else {
+                return roles.notFunctions;
+            }
+        },
+
         preloader() {
             this.loading = !this.loading;
         },
 
-        async getBackend(e) {
-            e.preventDefault();
-            try {
-                const accessToken = await this.getToken();
-                const endpoint = this.API + "/prueba";
-
-                const data = await this.callApi(
-                    'GET',
-                    endpoint,
-                    accessToken
-                );
-                console.log(await data);
-            } catch (error) {
-                console.error(error);
-            }
-        },
-
         async getToken() {
             let tokenResponse;
+            console.log("GET_TOKEN!");
             if (typeof getTokenPopup === 'function') {
+                console.log("if typeof getTokenPopup", getTokenPopup);
                 tokenResponse = await getTokenPopup({
                     scopes: [],
                     redirectUri: '/redirect'
                 });
             } else {
+                console.log("else typeof getTokenPopup");
                 tokenResponse = await this.getTokenRedirect({
-                    scopes: [],
+                    scopes: ["User.Read"],
                 });
             }
 
@@ -336,6 +386,7 @@ const app = Vue.createApp({
              * See here for more info on account retrieval:
              * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-common/docs/Accounts.md
              */
+            console.log("getTokenRedirect. MI param request: ", request);
             request.account = myMSALObj.getAccountByUsername(username);
             return myMSALObj.acquireTokenSilent(request).catch((error) => {
                 console.error(error);
@@ -359,42 +410,17 @@ const app = Vue.createApp({
         v-bind:class="['preloader']"
     ></div>
 
-    <section>
-        <form>
-            <button v-on:click="getBackend">Pruebas GET AZURE a backend</button>
-        </form>
-    </section>
-
-    <section v-if=loading>
-        <form
-            v-on:submit="login"
-            v-if=!auth
-        >
-            <label for="username"> 
-                Usuario
-            </label>
-            <input 
-                type="text"
-                name="username" 
-                v-on:focus="clearMessage"
-            >
-            <label for="password"> 
-                Contraseña
-            </label>
-            <input 
-                type="password" 
-                name="password" 
-                v-on:focus="clearMessage"
-            >
-            <button>Iniciar Sesión</button>
-        </form>
+    <section v-if=!loading>
 
         <p v-if=auth>
             Bienvenido {{ username.toUpperCase() }} 
         </p>
+        <p v-if=auth>
+            {{ email }} 
+        </p>
 
         <v-buttonBack
-            v-if=auth&&(optionFindFiles||optionPiecesInformation)
+            v-if=auth&&(optionFindFiles||optionPiecesInformation||optionListUsers)
             v-on:click="ShowMenu"
         ></v-buttonBack>
 
@@ -405,7 +431,7 @@ const app = Vue.createApp({
         </p>
 
         <v-selectOption
-            v-if=auth&&!optionPiecesInformation&&!optionFindFiles
+            v-if=auth&&!optionPiecesInformation&&!optionFindFiles&&!optionListUsers
             v-on:selectedFunction="showFunctionSite"
         ></v-selectOption>
 
@@ -454,6 +480,11 @@ const app = Vue.createApp({
             v-if=auth&&listButton&&optionPiecesInformation
             v-on:listFI="generateList"
         ></v-availableFI>
+
+        <v-users 
+            v-if=auth&&optionListUsers>
+
+        </v-users>
         
         <ol 
             v-if=auth
@@ -467,5 +498,8 @@ app.component("v-selectOption", vSelectOption);
 app.component("v-buttonBack", vButtonBack);
 app.component("v-uploadFile", vUploadFile);
 app.component("v-availableFI", vAvailableFI);
+app.component("v-tableUsers", vTableUsers);
+app.component("v-users", vUsers);
+app.component("IconEdit", IconEdit);
 
 app.mount("#app");

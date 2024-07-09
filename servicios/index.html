@@ -36,15 +36,26 @@
                 <p class="rocos__advertisement">Por el momento no contamos con fechas disponibles</p>
             </div>
         </section>
-        <a id="Auth" class="controlEscolar--button" href="/controlEscolar/">
+        <button id="Auth" class="controlEscolar--button">
             <span>Iniciar Sesión</span>
             <img src="https://github-personal-dvn.s3.us-east-2.amazonaws.com/img/proyectos/icons-microsoft.svg"
                 alt="Logo Microsoft">
-        </a>
+        </button>
     </main>
 
     <footer class="footer" id="footer"></footer>
     <script src="../base.js?2022-12" type="text/javascript"></script>
+
+    <!-- msal.min.js can be used in the place of msal.js; included msal.js to make debug easy -->
+    <script id="load-msal" src="https://alcdn.msauth.net/browser/2.35.0/js/msal-browser.js"
+        integrity="sha384-+8A1rifuHuJxJgQn6UCxGgmo6Q2SvIeEAqtPOsXCpi0DpqZLtuDhxxnqjJZw/1ve" crossorigin="anonymous"
+        type="text/javascript"></script>
+    <!-- <script src="./../src/msal-brower/index.mjs"  type="module"></script> -->
+    
+    <!-- Auth -->
+    <script src="./../controlEscolar/auth/authConfig.js" type="text/javascript"></script>
+    <script src="./../controlEscolar/auth/authRedirect.js" type="text/javascript"></script>
+    <script src="./services.js" type="text/javascript"></script>
 </body>
 
 </html>

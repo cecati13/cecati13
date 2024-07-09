@@ -87,3 +87,12 @@ function signOut() {
 
     myMSALObj.logoutRedirect(logoutRequest);
 }
+
+function areSessionRedirect(){
+    myMSALObj
+    .handleRedirectPromise()
+    .then(handleResponse)
+    .catch((error) => {
+        console.error(error);
+    });
+}

@@ -4,7 +4,8 @@ const buttonAuth = document.querySelector('#Auth');
 
 buttonAuth.addEventListener("click", () => {
     preloader();
-    
+    signIn();
+    window.open('/controlEscolar', '_self')
 })
 
 function preloader() {
