@@ -1,9 +1,9 @@
 export const IconEdit = {
-     methods: {
-        edit() {            
-           this.$emit("edit")
+    methods: {
+        edit() {
+            this.$emit("edit")
         }
-    }, 
+    },
 
     template: `
     <svg 

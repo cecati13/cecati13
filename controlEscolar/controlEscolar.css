@@ -127,7 +127,7 @@ button {
 }
 
 .table th:last-child {
-    width: 155px;
+    width: 195px;
 }
 
 .table td {
@@ -138,7 +138,10 @@ button {
 
 .table td:last-child {
     padding: 0;
-    width: 150px;
+    width: 185px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
 }
 
 .table--name {
@@ -164,9 +167,10 @@ button {
 }
 
 .td--edit select {
-    min-width: 100px;
-    max-width: 135px;
+    min-width: 120px;
+    max-width: 120px;
     margin: 0;
+    margin-left: 5px;
     padding: 5px 15px;
 }
 

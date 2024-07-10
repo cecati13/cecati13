@@ -55,7 +55,6 @@ export const App = {
                     endpoint,
                     accessToken
                 );
-                console.log(await response);
                 if (response.token) {
                     console.log(await response.token);
                     localStorage.setItem("token", response.token);
@@ -119,8 +118,6 @@ export const App = {
             const endpoint = `${this.API}/users`;
             const res = await this.getData(endpoint);
             this.permissions.users = [...res];
-            console.log(this.permissions);
-            console.log("resm, getUSERS", res);
         },
 
         ShowMenu() {
@@ -142,7 +139,7 @@ export const App = {
             const curp = e.target.curp.value;
             const endpoint = `${this.API}/listBlobs/comprobantes?user=${curp}`;
             const res = await this.getData(endpoint)
-            if (res.status === 404) {
+            if (res.statusCode === 404) {
                 //this.arrayForBlobs.push({ name: "NO existe, Revisa Archivos fisicos" })
                 this.message = "NO ENCONTRADO. Revisa Archivos fisicos"
             }
@@ -194,7 +191,7 @@ export const App = {
             }
         },
 
-        async getData(API) {
+        async getData(API, methodRest = 'GET') {
             try {
                 this.preloader();
                 const objHeaders = {
@@ -202,9 +199,10 @@ export const App = {
                     "Authorization": `Bearer ${localStorage.getItem("token")}`
                 };
                 const response = await fetch(API, {
+                    method: methodRest,
                     headers: objHeaders,
                 })
-                if (response.status === 404) {
+                if (response.statusCode === 404) {
                     this.preloader();
                     return response;
                 }
@@ -337,6 +335,19 @@ export const App = {
             }
         },
 
+        async updateRoleSend(params) {
+            const endpoint = `${this.API}/updateRole/${params}`;
+            const res = await this.getData(endpoint, 'PUT');
+            if (res.statusCode === 405) {
+                this.message = res.message;
+                console.log("mismo usaurio");
+            }
+            if (res.update) {
+                this.ShowMenu();
+            }
+            console.log(res);
+        },
+
         preloader() {
             this.loading = !this.loading;
         },
@@ -433,6 +444,11 @@ export const App = {
             v-on:click="ShowMenu"
         ></v-buttonBack>
 
+         <v-users 
+            v-if=auth&&optionListUsers
+            v-on:updateRole="updateRoleSend"
+        />   
+
         <p
             class="message"
         >
@@ -490,14 +506,7 @@ export const App = {
             v-on:listFI="generateList"
         ></v-availableFI>
 
-        <v-users 
-            v-if=auth&&optionListUsers
-
-        >
-
-        </v-users>
-        
-        <ol 
+       <ol 
             v-if=auth
             class="piecesInformationCloud"
         ></ol>

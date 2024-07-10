@@ -18,13 +18,10 @@ export const vTableUsers = {
     },
 
     methods: {
-        editRole: (id) => {
-            console.log(id);
+        editRole(array) {
+            const params = `${array[0]}?role=${array[1]}`;
+            this.$emit("updateRole", params);
         },
-
-        onChange: (event)=>{
-            console.log(event.target.value);
-        }
     },
 
     template: `
@@ -45,6 +42,7 @@ export const vTableUsers = {
                 <v-rowEditRole 
                     :userID="user.id" 
                     :role="user.role" 
+                    v-on:changeNewRole="editRole"
                 />
             </tr>
         </tbody>

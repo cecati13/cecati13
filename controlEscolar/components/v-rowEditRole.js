@@ -26,23 +26,28 @@ export const vRowEditRole = {
                     value: "user",
                     label: "Usuario"
                 },
-            ]
+            ],
+            changeRole: [this.userID, this.role],
+
         }
     },
 
     methods: {
+        saveRole() {
+            this.$emit("changeNewRole", this.changeRole);
+            this.isItEdited = false;
+
+        },
+        cancelRole() {
+            this.isItEdited = false;
+        },
         editRole() {
             this.isItEdited = true;
+            this.changeRole[1] = this.filteredRoles[0].value;
         },
 
         onChange(event) {
-            const newRole = event.target.value;
-            if (this.role === newRole) {
-                console.log("YA tienes ese rol, no puedes cambiarlo");
-                return;
-            }
-            console.log("cambiando rol a ", newRole);
-            //this.$emit("edit")
+            this.changeRole[1] = event.target.value;
         },
     },
 
@@ -61,8 +66,10 @@ export const vRowEditRole = {
                 :value="role.value"
             >
                 {{ role.label }}
-            </option>            
+            </option>
         </select>
+        <IconSave v-on:save="saveRole"/>
+        <IconCancel v-on:cancel="cancelRole"/>
     </td>
     <td v-else class="td--edit">
         <IconEdit v-on:edit="editRole"/>
