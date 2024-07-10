@@ -29,7 +29,8 @@ form {
     text-align: center;
 }
 
-input, select {
+input,
+select {
     margin: 20px 0;
 }
 
@@ -51,12 +52,12 @@ button {
     padding: 0 25px;
 }
 
-.piecesInformationCloud > li > span {
+.piecesInformationCloud>li>span {
     color: var(--contrastColor);
     font-size: 1.8rem;
 }
 
-.piecesInformationCloud > li {    
+.piecesInformationCloud>li {
     width: max-content;
     color: var(--fontColor);
     overflow-wrap: anywhere;
@@ -70,16 +71,10 @@ button {
     padding: 30px;
 }
 
-.functionOption > button {
+.functionOption>button {
     font-size: 1.9rem;
     width: 165px;
 }
-
-/* br + p {
-    font-size: 1.4rem;
-    font-weight: bold;
-    color: var(--contrastColor);
-} */
 
 .buttonBack {
     background-color: var(--fontColor);
@@ -95,14 +90,14 @@ button {
     padding: 8px;
 }
 
-.buttonBack img{
+.buttonBack img {
     padding: 4px;
     height: 50px;
     width: 50px;
 }
 
 .blobs--button {
-    background-color: var(--contrastColor);    
+    background-color: var(--contrastColor);
     border-radius: 3em;
     color: var(--mainColor);
     font-size: 1.4rem;
@@ -116,6 +111,62 @@ button {
     overflow-wrap: anywhere;
 }
 
-.uploadFiles > p {
+.uploadFiles>p {
     padding: 5px;
 }
+
+.table {
+    border-radius: 0.25rem;
+    margin-top: 4rem;
+    background-color: var(--contrastColor);
+}
+
+.table th {
+    color: var(--mainColor);
+    height: 40px;
+}
+
+.table th:last-child {
+    width: 155px;
+}
+
+.table td {
+    padding: 0 30px;
+    color: var(--fontColor2);
+    height: 45px;
+}
+
+.table td:last-child {
+    padding: 0;
+    width: 150px;
+}
+
+.table--name {
+    min-width: 11rem;
+    height: 25px;
+}
+
+.table--email {
+    min-width: 11rem;
+}
+
+.table--role {
+    min-width: 9rem;
+}
+
+.table--body {
+    background-color: var(--mainColor);
+}
+
+.icons {
+    height: 25px;
+    cursor: pointer;
+}
+
+.td--edit select {
+    min-width: 100px;
+    max-width: 135px;
+    margin: 0;
+    padding: 5px 15px;
+}
+

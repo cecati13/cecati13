@@ -1,9 +1,6 @@
-import { vAvailableFI, vButtonBack, vSelectOption, vTableUsers, vUploadFile } from "./components/index.js";
-import { IconEdit } from "./components/icons/IconEdit.js";
-import { vUsers } from "./pages/index.js"
 import { roles } from "./models/roles.js";
 
-const app = Vue.createApp({
+export const App = {
     data() {
         return {
             //API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1/controlStudents",
@@ -17,6 +14,7 @@ const app = Vue.createApp({
             email: "",
             permissions: {
                 role: roles.notFunctions,
+                users: [],
             },
             message: "",
             messageFI: false,
@@ -109,9 +107,20 @@ const app = Vue.createApp({
             if (obj.closed) {
                 this.closeSession();
             }
+            if (obj.adminUsers) {
+                this.optionListUsers = obj.adminUsers;
+                this.getUsers();
+            }
             this.optionPiecesInformation = obj.fInformation;
             this.optionFindFiles = obj.files;
-            this.optionListUsers = obj.adminUsers;
+        },
+
+        async getUsers() {
+            const endpoint = `${this.API}/users`;
+            const res = await this.getData(endpoint);
+            this.permissions.users = [...res];
+            console.log(this.permissions);
+            console.log("resm, getUSERS", res);
         },
 
         ShowMenu() {
@@ -482,7 +491,9 @@ const app = Vue.createApp({
         ></v-availableFI>
 
         <v-users 
-            v-if=auth&&optionListUsers>
+            v-if=auth&&optionListUsers
+
+        >
 
         </v-users>
         
@@ -492,14 +503,4 @@ const app = Vue.createApp({
         ></ol>
     </section>
     `
-});
-
-app.component("v-selectOption", vSelectOption);
-app.component("v-buttonBack", vButtonBack);
-app.component("v-uploadFile", vUploadFile);
-app.component("v-availableFI", vAvailableFI);
-app.component("v-tableUsers", vTableUsers);
-app.component("v-users", vUsers);
-app.component("IconEdit", IconEdit);
-
-app.mount("#app");
+}

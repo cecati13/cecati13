@@ -1,21 +1,51 @@
 export const vTableUsers = {
+    inject: ["permissions"],
+
+    data() {
+        return {
+            users: [],
+            
+        }
+    },
+
+    watch: {
+        "permissions.users": {
+            handler(newVal) {
+                this.users = [...newVal];
+            },
+            immediate: true
+        }
+    },
+
+    methods: {
+        editRole: (id) => {
+            console.log(id);
+        },
+
+        onChange: (event)=>{
+            console.log(event.target.value);
+        }
+    },
 
     template: `
-    <table className="mt-4 bg-gray-700 rounded">
+    <table class="table">
         <thead>
             <tr>
-                <th className="min-w-44">Nombre</th>
-                <th className="min-w-44">Correo Electrónico</th>
-                <th className="min-w-36 px-2">Permisos</th>
-                <th className="min-w-20">Cambiar Permisos</th>
+                <th class="table--name">Nombre</th>
+                <th class="table--email">E-mail</th>
+                <th class="table--role">Permisos</th>
+                <th class="table--edit">Editar</th>
             </tr>
         </thead>
-        <tbody className="bg-gray-800">            
-            <tr key={user.id}>
-                <td>{user.nameCompleted}</td>
-                <td>{user.email}</td>
-                <td>ROLE</td>
-                <td className="flex justify-center"><IconEdit/></td>
+        <tbody class="table--body">
+            <tr v-for="(user, i) in users" :key="i" >
+                <td>{{ user.nameComplete }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.role }}</td>
+                <v-rowEditRole 
+                    :userID="user.id" 
+                    :role="user.role" 
+                />
             </tr>
         </tbody>
     </table>`
