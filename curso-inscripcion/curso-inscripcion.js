@@ -30,13 +30,12 @@ import {
   vViewInscriptionNew,
 } from "./components/index.js";
 
+const host = base.getApi();
+
 const app = Vue.createApp({
   data() {
     return {
-      API: "http://localhost:3000/API/v1/",
-      API_files: "http://localhost:3000/API/v1/",
-      // API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1",
-      // API_files: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1",
+      API: host + "/students",
       keyCourseStorage: "CourseCecati13",
       keyStudentStorage: "studentC13",
       curso: {},
@@ -66,7 +65,6 @@ const app = Vue.createApp({
   provide() {
     return {
       API: this.API,
-      API_files: this.API_files,
       keyCourseStorage: this.keyCourseStorage,
       course: this.getCourse,
       studentLocalStorage: this.getStudentLocalStorage,
@@ -82,7 +80,7 @@ const app = Vue.createApp({
       this.isWelcome = false;
       this.infoCourseShow = false;
       this.preloader();
-      const API = `${this.API}/students/typeRegister`
+      const API = `${this.API}/typeRegister`
       const response = await this.sendData(API, formData);
       if (response.error) {
         this.preloader();
@@ -174,8 +172,7 @@ const app = Vue.createApp({
           let objLinksFiles = {};
           if (objInscription.formFiles) {
             const formFiles = objInscription.formFiles;
-            //const endpoint = `${this.API_files}/files`;   endpoint anterior a servidores virtuales
-            const endpoint = `${this.API_files}/students/files`;
+            const endpoint = `${this.API}/files`;
             const files = await this.sendFiles(formFiles, endpoint);
             objLinksFiles = { ...files };
             //errores en server files
@@ -194,8 +191,8 @@ const app = Vue.createApp({
           const objOfLinksFiles = { ...objInscription.data, ...objLinksFiles }
           const objDataInscription = this.addCourseData(objOfLinksFiles);
           let endpoint = objInscription.db === true ?
-            `${this.API}/students/DBStudent` :
-            `${this.API}/students/newStudent/inscription`;
+            `${this.API}/DBStudent` :
+            `${this.API}/newStudent/inscription`;
 
           const responseData = await this.sendData(endpoint, objDataInscription);
 

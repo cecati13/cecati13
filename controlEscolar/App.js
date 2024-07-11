@@ -1,10 +1,10 @@
 import { roles } from "./models/roles.js";
+const host = base.getApi();
 
 export const App = {
     data() {
         return {
-            //API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1/controlStudents",
-            API: "http://localhost:3000/API/v1/controlStudents",
+            API: host + "/controlStudents",
             auth: false,
             optionPiecesInformation: false,
             optionFindFiles: false,

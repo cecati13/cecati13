@@ -1,77 +1,77 @@
 export const vDbRegister = {
-    inject: ["API", "reactive"],
-    
-    data(){
-      return {
-        showInscription: true,
-        showForceUpdate: this.reactive.studentDB.updateContact,
-        telefonoFormated : this.reactive.studentDB.telefono
+  inject: ["reactive"],
+
+  data() {
+    return {
+      showInscription: true,
+      showForceUpdate: this.reactive.studentDB.updateContact,
+      telefonoFormated: this.reactive.studentDB.telefono
+    }
+  },
+
+  methods: {
+    showUpdateFieldOnly() {
+      this.showInscription = !this.showInscription
+      if (this.showForceUpdate) {
+        this.showForceUpdate = !this.showForceUpdate;
+        this.showInscription = !this.showInscription;
       }
     },
-  
-    methods : {
-      showUpdateFieldOnly() {
-        this.showInscription = !this.showInscription
-        if (this.showForceUpdate) {
-          this.showForceUpdate = !this.showForceUpdate;
-          this.showInscription = !this.showInscription;
-        }
-      },   
-  
-      updateProperties(object) {
-        this.reactive.studentDB.update = true;
-        this.saveDataStudentDB(object);
-        if (object.forceUpdate) {
-          this.showUpdateFieldOnly();
-        }
-      },
-  
-      saveDataStudentDB(object) {
-        for (const key in object) {
-          const element = object[key];
-          Object.defineProperty(this.reactive.studentDB, key, {
-            value: element,
-            writable: true,
-            configurable: false,
-            enumerable: true
-          });
-        }
-      },
-      
-      async inscription() {
-        const data ={
-          ...this.reactive.studentDB
-        };
-        const formFiles = new FormData;
-        formFiles.append("curp", this.reactive.studentDB.curp);
-        const objInscription = {
-          data,
-          formFiles,
-          db: true,
-          files: 0
-        }
-        
-        if(objInscription.data.update){
-          for (const key in objInscription.data) {
-            const element = objInscription.data[key];
-            if (typeof(element) === "object") {
-              //si es "object" es un archivo (File)
-              objInscription.files = + 1;
-              formFiles.append(key, objInscription.data[key]);
-              delete objInscription.data[key];
-            }
-          }       
-        }
-        
-        if (objInscription.files === 0) {
-          delete objInscription.formFiles;
-        }
-        delete objInscription.files;
-        this.$emit("eventInscription", objInscription);
+
+    updateProperties(object) {
+      this.reactive.studentDB.update = true;
+      this.saveDataStudentDB(object);
+      if (object.forceUpdate) {
+        this.showUpdateFieldOnly();
       }
     },
-  
-    template: `  
+
+    saveDataStudentDB(object) {
+      for (const key in object) {
+        const element = object[key];
+        Object.defineProperty(this.reactive.studentDB, key, {
+          value: element,
+          writable: true,
+          configurable: false,
+          enumerable: true
+        });
+      }
+    },
+
+    async inscription() {
+      const data = {
+        ...this.reactive.studentDB
+      };
+      const formFiles = new FormData;
+      formFiles.append("curp", this.reactive.studentDB.curp);
+      const objInscription = {
+        data,
+        formFiles,
+        db: true,
+        files: 0
+      }
+
+      if (objInscription.data.update) {
+        for (const key in objInscription.data) {
+          const element = objInscription.data[key];
+          if (typeof (element) === "object") {
+            //si es "object" es un archivo (File)
+            objInscription.files = + 1;
+            formFiles.append(key, objInscription.data[key]);
+            delete objInscription.data[key];
+          }
+        }
+      }
+
+      if (objInscription.files === 0) {
+        delete objInscription.formFiles;
+      }
+      delete objInscription.files;
+      this.$emit("eventInscription", objInscription);
+    }
+  },
+
+  template: `  
     <div 
       v-if="showInscription && !showForceUpdate"
       class="register__preSend--db">
@@ -111,5 +111,5 @@ export const vDbRegister = {
         v-on:click="inscription">
       </-button>
     </div>
-    ` 
-  };
+    `
+};

@@ -115,6 +115,11 @@ class Base {
         return line;
     }
 
+    getApi() {
+        //return "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1";
+        return "http://localhost:3000/API/v1";
+    }
+
 }
 const base = new Base();
 
