@@ -1,3 +1,5 @@
+import { roles, rolesLabel } from "../models/roles.js";
+
 export const vRowEditRole = {
     props: {
         userID: {
@@ -13,20 +15,7 @@ export const vRowEditRole = {
     data() {
         return {
             isItEdited: false,
-            roles: [
-                {
-                    value: "notFunctions",
-                    label: "Sin Funciones"
-                },
-                {
-                    value: "admin",
-                    label: "Administrador"
-                },
-                {
-                    value: "user",
-                    label: "Usuario"
-                },
-            ],
+            arrayRoles: rolesLabel,
             changeRole: [this.userID, this.role],
 
         }
@@ -53,7 +42,7 @@ export const vRowEditRole = {
 
     computed: {
         filteredRoles() {
-            return this.roles.filter(roleOption => roleOption.value !== this.role);
+            return this.arrayRoles.filter(roleOption => roleOption.value !== this.role && roleOption.value !== roles.sAdmin);
         }
     },
 

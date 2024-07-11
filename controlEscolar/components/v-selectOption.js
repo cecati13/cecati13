@@ -11,7 +11,8 @@ export const vSelectOption = {
                 adminUsers: false,
                 closed: false,
             },
-            access: this.isAdmin()
+            accessAdmin: this.isAdmin(),
+            doHaveAccess: this.isAccess(),
         }
     },
 
@@ -42,7 +43,12 @@ export const vSelectOption = {
         },
 
         isAdmin() {
-            return String(this.permissions.role) === String(roles.admin);
+            return String(this.permissions.role) === String(roles.admin)
+                //|| String(this.permissions.role) === String(roles.sAdmin);
+        },
+
+        isAccess() {
+            return String(this.permissions.role) !== String(roles.notFunctions);
         },
 
         closeSession() {
@@ -53,13 +59,25 @@ export const vSelectOption = {
     },
 
     template: `
-    <p>Selecciona las funciones del sitio que deseas utilizar:</p>
+    <p v-if=doHaveAccess>
+        Selecciona las funciones del sitio que deseas utilizar:
+    </p>
 
-    <div v-on:click="findFile" class="functionOption">
+    <div v-if=!doHaveAccess>
+        <h3>No tienes ninguna función asignada.</h3>
+        <p>Si crees que debes tener acceso a alguna funcionalidad del sitio, solicitala a algún directivo.</p>
+    </div>
+
+    <div 
+        v-if=doHaveAccess
+        v-on:click="findFile" 
+        class="functionOption"
+    >
         <button>Buscar comprobantes</button>
     </div>
     
     <div 
+        v-if=doHaveAccess
         v-on:click="piecesInformation"
         class="functionOption"
     >
@@ -67,15 +85,18 @@ export const vSelectOption = {
     </div>
     
     <div 
+        v-if=accessAdmin
         v-on:click="adminUsers" 
         class="functionOption"
-        v-if=access
     >
         <button>Administración de Usuarios</button>
     </div>
 
-    <div v-on:click="closeSession" class="functionOption">
-        <button>Cerrar Sesión</button>
+    <div
+        v-on:click="closeSession" 
+        class="functionOption"
+    >
+        <button class="closeSession">Cerrar Sesión</button>
     </div>
     `
 };

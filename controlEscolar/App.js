@@ -47,7 +47,7 @@ export const App = {
                 const accessToken = await this.getToken();
                 if (accessToken === null) {
                     signIn();
-                    return
+                    return;
                 }
                 const endpoint = this.API + "/oauth";
                 const response = await this.callApi(
@@ -326,7 +326,7 @@ export const App = {
         },
 
         assignRoleFunctions(role) {
-            if (String(role) === String(roles.admin)) {
+            if (String(role) === String(roles.admin) || String(role) === String(roles.sAdmin)) {
                 return roles.admin;
             } else if (String(role) === String(roles.user)) {
                 return roles.user;
@@ -406,7 +406,6 @@ export const App = {
              * See here for more info on account retrieval:
              * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-common/docs/Accounts.md
              */
-            console.log("getTokenRedirect. MI param request: ", request);
             request.account = myMSALObj.getAccountByUsername(username);
             return myMSALObj.acquireTokenSilent(request).catch((error) => {
                 console.error(error);
@@ -416,6 +415,10 @@ export const App = {
                     return myMSALObj.acquireTokenRedirect(request);
                 } else {
                     console.error(error);
+                    setTimeout(() => {
+                        this.preloader();
+                        this.message = "Hubo un error al iniciar sesión. Por favor recarga el sitio."
+                    }, 2000)
                 }
             });
         },

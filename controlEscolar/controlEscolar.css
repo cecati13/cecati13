@@ -76,6 +76,10 @@ button {
     width: 165px;
 }
 
+.functionOption .closeSession {
+    background-color: var(--fontColor2);
+}
+
 .buttonBack {
     background-color: var(--fontColor);
     border-radius: 5px;
