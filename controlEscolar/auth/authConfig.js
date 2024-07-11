@@ -48,7 +48,7 @@ const msalConfig = {
  */
 const protectedResources = {
     todolistApi: {
-        endpoint: 'http://localhost:3000/API/v1/controlStudents',
+        endpoint: 'https://api-dvnegrete-mail.ue.r.appspot.com//API/v1/controlStudents',
         scopes: {
             read: ['api://e7db502b-8ed9-4af6-8ed6-280918b39123'],
         },
