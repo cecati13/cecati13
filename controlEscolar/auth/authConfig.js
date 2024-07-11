@@ -7,8 +7,9 @@ const msalConfig = {
     auth: {
         clientId: '0aa405cf-4844-4ef6-bff2-1cb237ededc8',
         authority: 'https://login.microsoftonline.com/dgcft.sems.gob.mx/',
-        redirectUri: '/controlEscolar',
-        postLogoutRedirectUri: '/',
+        redirectUri: '/cecati13/controlEscolar',
+        //quitar /cecati13 en PROD, solo usar en Pruebas DEV 
+        postLogoutRedirectUri: '/cecati13/',
         scope: "openid api://e7db502b-8ed9-4af6-8ed6-280918b39123/User.Read"
     },
     cache: {
