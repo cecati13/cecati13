@@ -1,4 +1,9 @@
 class Base {
+    getApi() {
+        //return "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1";
+        return "https://api-dvnegrete-mail.ue.r.appspot.com/API/v1";
+    }
+
     createNAV(ub) {
         const nav = document.createElement("nav");
         nav.className = "nav__hide";
@@ -32,7 +37,16 @@ class Base {
             <a id="gallery" href="${ub}/galeria">Galería de Imágenes</a>
         </li>
         <li>
-            <a id="contact" href="${ub}/contacto">Contacto y Ubicación</a>
+        <a id="contact" href="${ub}/contacto">Contacto y Ubicación</a>
+        </li>
+        <li>
+            <a 
+                id="calendar" 
+                href="https://storage.googleapis.com/cecati13/Calendario%202024-2025.pdf" 
+                target="_blank"
+            >
+                Calendario Escolar
+            </a>
         </li>
         <li>
             <a id="facebook" href="https://www.facebook.com/cecati.trece/about" target="_blank">
@@ -47,10 +61,6 @@ class Base {
             </a>
         </li>
         `;
-        // <li>
-        //     <a id="calendar" href="https://storage.googleapis.com/cecati13/Calendario%20Escolar%202022-2023.pdf" 
-        // target="_blank">Calendario Escolar</a>
-        // </li>
         const footer = document.querySelector("#footer");
         const line = this.createLine();
         footer.append(line, footerUL);
@@ -114,12 +124,6 @@ class Base {
         line.className = "line";
         return line;
     }
-
-    getApi() {
-        //return "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1";
-        return "http://localhost:3000/API/v1";
-    }
-
 }
 const base = new Base();
 
