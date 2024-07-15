@@ -15,8 +15,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+            token: ${{ secrets.GH_PAT }}
       - name: Deploy to GitHub Pages
         uses: ./.github/actions/deploy
         with:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           folder: /
           branch: main
