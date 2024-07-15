@@ -8,13 +8,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dvnegrete/cecati13.git"
+    "url": "git+https://github.com/cecati13/cecati13.git"
   },
   "keywords": [],
   "author": "Damián Valenzuela <dvnegrete@gmail.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/dvnegrete/cecati13/issues"
+    "url": "https://github.com/cecati13/cecati13/issues"
   },
-  "homepage": "https://github.com/dvnegrete/cecati13#readme"
+  "homepage": "https://github.com/cecati13/cecati13#readme"
 }

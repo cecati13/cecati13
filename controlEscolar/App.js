@@ -1,17 +1,21 @@
-import { vAvailableFI } from "./components/v-availableFI.js";
-import { vButtonBack } from "./components/v-buttonBack.js";
-import { vSelectOption } from "./components/v-selectOption.js";
-import { vUploadFile } from "./components/v-uploadFile.js";
+import { roles } from "./models/roles.js";
+const host = base.getApi();
 
-const app = Vue.createApp({
-    data(){
+export const App = {
+    data() {
         return {
-            API: "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1/controlStudents",
+            API: host + "/controlStudents",
             auth: false,
             optionPiecesInformation: false,
             optionFindFiles: false,
+            optionListUsers: false,
             fileSource: "",
             username: "",
+            email: "",
+            permissions: {
+                role: roles.notFunctions,
+                users: [],
+            },
             message: "",
             messageFI: false,
             inputCurp: true,
@@ -21,11 +25,53 @@ const app = Vue.createApp({
             buttonsBlobs: false,
             listInCloud: false,
             uploadPiecesInformation: true,
-            loading: false
+            loading: true,
+            thereAreSesion: this.areThereSession,
         }
     },
 
+    provide() {
+        return {
+            permissions: this.permissions,
+        }
+    },
+
+    mounted() {
+        this.areThereSession()
+    },
+
     methods: {
+        async areThereSession() {
+            try {
+                areSessionRedirect();
+                const accessToken = await this.getToken();
+                if (accessToken === null) {
+                    signIn();
+                    return;
+                }
+                const endpoint = this.API + "/oauth";
+                const response = await this.callApi(
+                    'GET',
+                    endpoint,
+                    accessToken
+                );
+                if (response.token) {
+                    localStorage.setItem("token", response.token);
+                    localStorage.setItem("username", response.username)
+                    this.username = response.username;
+                    this.email = response.email;
+                    this.permissions.role = this.assignRoleFunctions(response.role);
+                    this.auth = true;
+                    this.clearMessage();
+                    this.preloader();
+                } else {
+                    this.message = response.message
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
         async login(e) {
             e.preventDefault();
             const username = e.target.children.username.value;
@@ -41,28 +87,42 @@ const app = Vue.createApp({
                 localStorage.setItem("username", response.username)
                 this.username = response.username;
                 this.auth = true;
+                this.preloader();
                 this.clearMessage();
             } else {
                 this.message = response.message
             }
         },
 
-        closeSession(){
+        closeSession() {
             this.auth = false;
             localStorage.removeItem("token");
+            document.cookie = "token_jwt=null";
+            signOut();
         },
 
-        showFunctionSite(obj){
+        showFunctionSite(obj) {
             if (obj.closed) {
                 this.closeSession();
+            }
+            if (obj.adminUsers) {
+                this.optionListUsers = obj.adminUsers;
+                this.getUsers();
             }
             this.optionPiecesInformation = obj.fInformation;
             this.optionFindFiles = obj.files;
         },
-        
-        ShowMenu(){
+
+        async getUsers() {
+            const endpoint = `${this.API}/users`;
+            const res = await this.getData(endpoint);
+            this.permissions.users = [...res];
+        },
+
+        ShowMenu() {
             this.optionPiecesInformation = false;
             this.optionFindFiles = false;
+            this.optionListUsers = false;
             this.listInCloud = false;
             this.listButton = true;
             this.uploadPiecesInformation = true;
@@ -72,13 +132,13 @@ const app = Vue.createApp({
 
         async findFilesCURP(e) {
             e.preventDefault();
-            while(this.arrayForBlobs.length > 0) {
+            while (this.arrayForBlobs.length > 0) {
                 this.arrayForBlobs.pop()
             }
             const curp = e.target.curp.value;
             const endpoint = `${this.API}/listBlobs/comprobantes?user=${curp}`;
             const res = await this.getData(endpoint)
-            if (res.status === 404){
+            if (res.statusCode === 404) {
                 //this.arrayForBlobs.push({ name: "NO existe, Revisa Archivos fisicos" })
                 this.message = "NO ENCONTRADO. Revisa Archivos fisicos"
             }
@@ -89,83 +149,84 @@ const app = Vue.createApp({
                 this.inputCurp = false;
             }
         },
-            
-        async findFile(e){
-                e.preventDefault();
-                const file = e.target.textContent;
-                const arrayTypeFile = file.split(".");
-                const typeFile = this.typeFile(arrayTypeFile[1]);
-                const endpoint = `${this.API}/file/${file}`;
-                //return of endpoint: /file
-                const res = await this.getData(endpoint)
-                const base64Response = await fetch(`data:${typeFile};base64,${res.file}`);
-                const blob = await base64Response.blob();
-                const fileURL = URL.createObjectURL(blob);
-                this.fileSource = fileURL;
-                this.clearMessage();
-                window.open(this.fileSource, "_blank");
+
+        async findFile(e) {
+            e.preventDefault();
+            const file = e.target.textContent;
+            const arrayTypeFile = file.split(".");
+            const typeFile = this.typeFile(arrayTypeFile[1]);
+            const endpoint = `${this.API}/file/${file}`;
+            //return of endpoint: /file
+            const res = await this.getData(endpoint)
+            const base64Response = await fetch(`data:${typeFile};base64,${res.file}`);
+            const blob = await base64Response.blob();
+            const fileURL = URL.createObjectURL(blob);
+            this.fileSource = fileURL;
+            this.clearMessage();
+            window.open(this.fileSource, "_blank");
         },
 
-        async sendData(API, obj){
+        async sendData(API, obj) {
             try {
                 this.preloader();
                 const objHeaders = { "Content-Type": "application/json" }
                 if (!obj.username) {
-                    Object.defineProperty(objHeaders, "Authorization",{
+                    Object.defineProperty(objHeaders, "Authorization", {
                         value: `Bearer ${localStorage.getItem("token")}`,
                         writable: true,
                         enumerable: true,
                         configurable: true
                     });
                 }
-                const response = await fetch( API, {
-                  method: "POST",
-                  headers: objHeaders,
-                  body: JSON.stringify(obj)
+                const response = await fetch(API, {
+                    method: "POST",
+                    headers: objHeaders,
+                    body: JSON.stringify(obj)
                 });
                 this.preloader();
                 return response.json();
-              } catch (error) {
+            } catch (error) {
                 console.error(error)
-              }
+            }
         },
 
-        async getData(API){
+        async getData(API, methodRest = 'GET') {
             try {
                 this.preloader();
-                const objHeaders = { 
+                const objHeaders = {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${localStorage.getItem("token")}`
                 };
-                const response = await fetch( API, {
-                  headers: objHeaders,
+                const response = await fetch(API, {
+                    method: methodRest,
+                    headers: objHeaders,
                 })
-                if (response.status === 404) {
+                if (response.statusCode === 404) {
                     this.preloader();
                     return response;
                 }
                 this.preloader();
                 return response.json();
-              } catch (error) {
+            } catch (error) {
                 this.preloader();
                 console.error(error);
-              }
+            }
         },
 
-        async sendFiles(formFiles, API){
+        async sendFiles(formFiles, API) {
             this.preloader();
-            const response = await fetch( API, {
-              method: "post",
-              headers: {
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
-              },
-              body: formFiles
+            const response = await fetch(API, {
+                method: "post",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                },
+                body: formFiles
             })
             const info = await response.json();
             this.preloader();
             return info
-          },
-        
+        },
+
         createContentType(type) {
             const obj = {
                 "Content-Type": type
@@ -188,19 +249,19 @@ const app = Vue.createApp({
                 default: //pdf
                     type = "application/pdf";
                     break;
-                }
+            }
             return type;
         },
 
         clearMessage() {
             this.message = "";
             const messageInfCloud = document.querySelector(".piecesInformationCloud");
-            if ( !(messageInfCloud === null) ) {
+            if (!(messageInfCloud === null)) {
                 messageInfCloud.innerHTML = "";
             }
         },
 
-        async generateList (container) {
+        async generateList(container) {
             const endpoint = `${this.API}/listBlobs/${container}`;
             const res = await this.getData(endpoint);
             const totalList = res.message.length;
@@ -210,13 +271,13 @@ const app = Vue.createApp({
             this.listOfInformation(res.message);
             this.listButton = false;
             this.uploadPiecesInformation = false;
-            
+
         },
 
-        listOfInformation(array){
+        listOfInformation(array) {
             const container = document.querySelector(".piecesInformationCloud");
             const arrayContainer = [];
-            array.forEach( item => {
+            array.forEach(item => {
                 const p1 = document.createElement("li");
                 p1.innerHTML = ` 
                     <span 
@@ -230,15 +291,15 @@ const app = Vue.createApp({
             container.append(...arrayContainer);
         },
 
-        showPDF(e){
+        showPDF(e) {
             e.preventDefault();
             const elementURL = e.target.dataset.url;
             window.open(elementURL, "_blank");
         },
 
-        async uploadFileFI(arrayFiles){
+        async uploadFileFI(arrayFiles) {
             const formFiles = new FormData;
-            arrayFiles.forEach( file => {
+            arrayFiles.forEach(file => {
                 formFiles.append("fileFI", file);
             })
             const enpoint = `${this.API}/fileInformation`;
@@ -247,14 +308,14 @@ const app = Vue.createApp({
             this.showUrlMessageUpload(res.message);
             this.listButton = true;
         },
-        
-        showUrlMessageUpload(array){
-            array.forEach( url => {
+
+        showUrlMessageUpload(array) {
+            array.forEach(url => {
                 this.arrayForLinksFI.push(url);
             });
         },
 
-        cleanArrays(){
+        cleanArrays() {
             while (this.arrayForBlobs.length > 0) {
                 this.arrayForBlobs.pop();
             }
@@ -263,9 +324,98 @@ const app = Vue.createApp({
             }
         },
 
+        assignRoleFunctions(role) {
+            if (String(role) === String(roles.admin) || String(role) === String(roles.sAdmin)) {
+                return roles.admin;
+            } else if (String(role) === String(roles.user)) {
+                return roles.user;
+            } else {
+                return roles.notFunctions;
+            }
+        },
+
+        async updateRoleSend(params) {
+            const endpoint = `${this.API}/updateRole/${params}`;
+            const res = await this.getData(endpoint, 'PUT');
+            if (res.statusCode === 405) {
+                this.message = res.message;
+            }
+            if (res.update) {
+                this.ShowMenu();
+            }
+        },
+
         preloader() {
             this.loading = !this.loading;
-          },
+        },
+
+        async getToken() {
+            let tokenResponse;
+            if (typeof getTokenPopup === 'function') {
+                tokenResponse = await getTokenPopup({
+                    scopes: [],
+                    redirectUri: '/redirect'
+                });
+            } else {
+                tokenResponse = await this.getTokenRedirect({
+                    scopes: ["User.Read"],
+                });
+            }
+
+            if (!tokenResponse) {
+                return null;
+            }
+            return tokenResponse.accessToken;
+        },
+
+        async callApi(method, endpoint, token, data = null) {
+            const headers = new Headers();
+            const bearer = `Bearer ${token}`;
+
+            headers.append('Authorization', bearer);
+
+            if (data) {
+                headers.append('Content-Type', 'application/json');
+            }
+
+            const options = {
+                method: method,
+                headers: headers,
+                body: data ? JSON.stringify(data) : null,
+                credentials: "include"
+            };
+
+            const response = await fetch(endpoint, options);
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.indexOf("application/json") !== -1) {
+                return response.json();
+            } else {
+                return response;
+            }
+        },
+
+        getTokenRedirect(request) {
+            /**
+             * See here for more info on account retrieval:
+             * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-common/docs/Accounts.md
+             */
+            request.account = myMSALObj.getAccountByUsername(username);
+            return myMSALObj.acquireTokenSilent(request).catch((error) => {
+                console.error(error);
+                console.warn('silent token acquisition fails. acquiring token using popup');
+                if (error instanceof msal.InteractionRequiredAuthError) {
+                    // fallback to interaction when silent call fails
+                    return myMSALObj.acquireTokenRedirect(request);
+                } else {
+                    console.error(error);
+                    setTimeout(() => {
+                        this.preloader();
+                        this.message = "Hubo un error al iniciar sesión. Por favor recarga el sitio."
+                    }, 2000)
+                }
+            });
+        },
+
     },
 
     template: `
@@ -277,37 +427,23 @@ const app = Vue.createApp({
     ></div>
 
     <section v-if=!loading>
-        <form
-            v-on:submit="login"
-            v-if=!auth
-        >
-            <label for="username"> 
-                Usuario
-            </label>
-            <input 
-                type="text"
-                name="username" 
-                v-on:focus="clearMessage"
-            >
-            <label for="password"> 
-                Contraseña
-            </label>
-            <input 
-                type="password" 
-                name="password" 
-                v-on:focus="clearMessage"
-            >
-            <button>Iniciar Sesión</button>
-        </form>
 
         <p v-if=auth>
             Bienvenido {{ username.toUpperCase() }} 
         </p>
+        <p v-if=auth>
+            {{ email }} 
+        </p>
 
         <v-buttonBack
-            v-if=auth&&(optionFindFiles||optionPiecesInformation)
+            v-if=auth&&(optionFindFiles||optionPiecesInformation||optionListUsers)
             v-on:click="ShowMenu"
         ></v-buttonBack>
+
+         <v-users 
+            v-if=auth&&optionListUsers
+            v-on:updateRole="updateRoleSend"
+        />   
 
         <p
             class="message"
@@ -316,7 +452,7 @@ const app = Vue.createApp({
         </p>
 
         <v-selectOption
-            v-if=auth&&!optionPiecesInformation&&!optionFindFiles
+            v-if=auth&&!optionPiecesInformation&&!optionFindFiles&&!optionListUsers
             v-on:selectedFunction="showFunctionSite"
         ></v-selectOption>
 
@@ -365,18 +501,11 @@ const app = Vue.createApp({
             v-if=auth&&listButton&&optionPiecesInformation
             v-on:listFI="generateList"
         ></v-availableFI>
-        
-        <ol 
+
+       <ol 
             v-if=auth
             class="piecesInformationCloud"
         ></ol>
     </section>
     `
-});
-
-app.component("v-selectOption", vSelectOption);
-app.component("v-buttonBack", vButtonBack);
-app.component("v-uploadFile", vUploadFile);
-app.component("v-availableFI", vAvailableFI);
-
-app.mount("#app");
+}

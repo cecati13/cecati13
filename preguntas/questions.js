@@ -1,32 +1,32 @@
-const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
-const URL = host + "API/v1/frontendURL/30";
+const host = base.getApi();
+const URL = host + "/frontendURL/30";
 const nodeAPIQuestions = document.querySelector("#sectionQuestions");
 
 class Questions {
-    constructor(objQuestions){
+    constructor(objQuestions) {
         this.title()
         this.createContainer(objQuestions);
-        preloader();        
+        preloader();
     }
 
-    title(){
+    title() {
         const title = document.createElement("h3");
         title.innerText = "Preguntas Frecuentes";
         title.id = "questionsTitle"
-        title.className ="section__questions--title";
+        title.className = "section__questions--title";
         nodeAPIQuestions.appendChild(title);
     }
-    
-    createContainer(objQuestions){
+
+    createContainer(objQuestions) {
         const container = document.createElement("div");
         container.className = `container`;
-        container.id = "containerQuestions";        
-        for (const key in objQuestions) {            
+        container.id = "containerQuestions";
+        for (const key in objQuestions) {
             const element = objQuestions[key];
             let link = element.link;
             let linkText = "";
             let linkClass = "";
-            if (link.length > 1) {                
+            if (link.length > 1) {
                 linkText = "Mas información";
                 linkClass = "button__link";
             }
@@ -39,7 +39,7 @@ class Questions {
                         ${element.respuesta}
                     </div>
                     <a class="${linkClass}" href="${link}">${linkText}</a>
-                </div>`;            
+                </div>`;
         }
         //container.addEventListener("click", event => locateEvent(event));      
         nodeAPIQuestions.appendChild(container);
@@ -52,13 +52,13 @@ function preloader() {
 
 async function conexion(URL) {
     try {
-        const info = await fetch(`${URL}`);        
+        const info = await fetch(`${URL}`);
         const infoJSON = await info.json();
-        const questions = new Questions(infoJSON);        
+        const questions = new Questions(infoJSON);
     } catch (error) {
         console.log(error)
         const titleError = document.createElement("h3");
-        titleError.innerHTML= `
+        titleError.innerHTML = `
         <h3 class="error__API">Lo sentimos, la información no esta disponible en este momento.
         Por favor intenta más tarde, lamentamos los inconvenientes.</h3>`;
         nodeAPIQuestions.appendChild(titleError);

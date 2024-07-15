@@ -1,19 +1,20 @@
-const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
-const URL = host + "API/v1/frontendURL/10"
-const URL_BASE_IMAGE = "https://cecati13web.blob.core.windows.net/assets-web-cecati13/";
+const host = "http://localhost:3000/API/v1";
+//const host = "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1";
+const URL = host + "/frontendURL/10"
+const URL_BASE_IMAGE = "https://storage.googleapis.com/cecati13/assets/";
 
 const nodeAPI_TV = document.getElementById("tv");
-    
+
 class ShowCoursesTV {
     static textTitle = "Selecciona una especialidad para ver los cursos disponibles:"
 
-    constructor(objCourses){
+    constructor(objCourses) {
         const courses = this.createContainer(objCourses);
         nodeAPI_TV.appendChild(courses);
         preloader();
     }
-    
-    createContainer(objCourses){
+
+    createContainer(objCourses) {
         const container = document.createElement("div");
         container.className = `container__courses`;
         container.id = "containerSpecialties";
@@ -25,7 +26,7 @@ class ShowCoursesTV {
         return container;
     }
 
-    constructorCourse(course){
+    constructorCourse(course) {
         if (course.observaciones == undefined || course.observaciones === "") {
             course.observaciones = "";
         } else {
@@ -57,21 +58,21 @@ class ShowCoursesTV {
     }
 
     //determinar si se usaran estos metodos:
-    textTitleCount(array){        
+    textTitleCount(array) {
         const countSpecialties = array.length;
-        Specialties.textTitle= `        
+        Specialties.textTitle = `        
         Tenemos ${countSpecialties} especialidades con ${ObjFromArray.countCourses} cursos abiertos.
         Selecciona una especialidad y ve los cursos disponibles:        
-        `;        
+        `;
     }
 
-    title(array){
-        const title = document.createElement("h3");        
+    title(array) {
+        const title = document.createElement("h3");
         title.innerText = Specialties.textTitle
         title.id = "alternateTitle"
-        title.className ="section__courses--title";
+        title.className = "section__courses--title";
         nodeAPI_TV.appendChild(title);
-    }    
+    }
 }
 
 function preloader() {
@@ -87,7 +88,7 @@ async function conexion(URL) {
     } catch (error) {
         console.log(error)
         const titleError = document.createElement("h3");
-        titleError.innerHTML= `
+        titleError.innerHTML = `
         <h3 class="error__API">Lo sentimos, la información no esta disponible en este momento.
         Por favor intenta más tarde, lamentamos los inconvenientes.</h3>`;
         nodeAPI_TV.appendChild(titleError);

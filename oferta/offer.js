@@ -618,7 +618,6 @@ async function conexion(URL) {
     try {
         const info = await fetch(`${URL}/API/v1/specialtie`);        
         const infoJSON = await info.json()
-        console.log(infoJSON)
         BD_SPECIALITIES = infoJSON.reduce((acumObj,item)=>{
             for(let key in item){
                 if(typeof item[key] === 'object') {

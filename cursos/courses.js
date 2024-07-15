@@ -1,6 +1,5 @@
-const host = "https://backend-cursos-cecati13.uc.r.appspot.com/";
-//const host = "http://localhost:3000/";
-const URL = host + "API/v1/frontendURL/10"
+const api = base.getApi();
+const URL = api + "/frontendURL/10"
 const URL_BASE_ASSETS = "https://storage.googleapis.com/cecati13/assets/";
 //Nombre de key guardado en Session Storage para preinscribir Curso
 const keyCourseStorage = "CourseCecati13";
@@ -10,7 +9,7 @@ const nodeAPI_Offer = document.getElementById("sectionCourses");
 const numberPlacesWithCourses = 25;
 
 class AvailableCourses {
-    constructor(nameSpeciality){
+    constructor(nameSpeciality) {
         const courses = this.getCourses(nameSpeciality);
         if (courses.length > 0) {
             const containerCourses = this.sendCourses(courses);
@@ -21,17 +20,17 @@ class AvailableCourses {
         }
     }
 
-    getCourses(specialitie){
+    getCourses(specialitie) {
         let courses = []
         infoFetch.forEach(element => {
-            if(element.specialty.toUpperCase() === specialitie) {
+            if (element.specialty.toUpperCase() === specialitie) {
                 courses.push(element.courses)
             }
         });
         return courses;
     }
 
-    constructorCourse(course){        
+    constructorCourse(course) {
         if (course.observaciones == undefined || course.observaciones === "") {
             course.observaciones = "";
         } else {
@@ -39,7 +38,7 @@ class AvailableCourses {
             course.observaciones = "Observaciones: " + textObs;
         }
         course.imageURL = (course.imagenURL != undefined ? URL_BASE_ASSETS + course.imagenURL : "");
-        const container = document.createElement("div");        
+        const container = document.createElement("div");
         const preregister = this.preRegistrationInformation(course);
         container.innerHTML = `
         <div class="course">
@@ -71,8 +70,8 @@ class AvailableCourses {
         const courseInfo = container.childNodes[1].lastElementChild;
         courseInfo.addEventListener("click", event => moreInformation(event))
         const informationTab = this.isTrueFichaInformacion(course.ficha_informacion);
-        if (!informationTab) {            
-            courseInfo.remove();            
+        if (!informationTab) {
+            courseInfo.remove();
         }
         const containerImgButton = this.createContainerButton(course);
         containerImgButton.addEventListener("click", event => saveCourse(event));
@@ -80,8 +79,7 @@ class AvailableCourses {
         return container;
     }
 
-    createContainerButton(course){
-        console.log("course number: ",course.number)
+    createContainerButton(course) {
         const containerAnchor = document.createElement("a");
         containerAnchor.className = "course--img-button button-inscription buttonAnimate";
         containerAnchor.dataset.numberCourse = `pre-${course.number}`;
@@ -95,16 +93,16 @@ class AvailableCourses {
         return containerAnchor;
     }
 
-    isTrueFichaInformacion(url){
+    isTrueFichaInformacion(url) {
         if (url !== undefined) {
-            return true            
+            return true
         }
         return false;
     }
 
     preRegistrationInformation(course) {
         const newObject = {
-           ...course,
+            ...course,
         };
         delete newObject.imageURL;
         delete newObject.imagenURL;
@@ -115,32 +113,32 @@ class AvailableCourses {
         return information;
     }
 
-    mountNode(containerCourses){
+    mountNode(containerCourses) {
         const coursesContainers = document.createElement("div");
         coursesContainers.id = "containerCourses";
-        coursesContainers.className ="containerCourses";
-        containerCourses.forEach( course => {
+        coursesContainers.className = "containerCourses";
+        containerCourses.forEach(course => {
             coursesContainers.appendChild(course);
         })
         nodeAPI_Offer.appendChild(coursesContainers);
         Specialties.showButtonBack();
     }
 
-    sendCourses(array){
+    sendCourses(array) {
         let arrayCourses = [];
         array[0].forEach(element => {
             const course = this.constructorCourse(element);
             arrayCourses.push(course);
-        })                
+        })
         return arrayCourses;
     }
 
     toogleClass(element) {
         const nodeLineSVG = document.querySelector(`#${element}`);
         nodeLineSVG.classList.toggle(element);
-    }    
+    }
 
-    static alternateTitle(stringText){
+    static alternateTitle(stringText) {
         const title = document.querySelector("#alternateTitle");
         title.innerText = stringText;
     }
@@ -148,23 +146,23 @@ class AvailableCourses {
     static removeCourses() {
         const containerCourses = document.querySelector("#containerCourses");
         nodeAPI_Offer.removeChild(containerCourses);
-    }    
+    }
 }
 
 class ObjFromArray {
     static countCourses = 0;
-    constructor (objCourses){        
+    constructor(objCourses) {
         const arrayWithPlaces = this.coursesWithPlaces(objCourses)
         const specialities = this.sortBySpeciality(arrayWithPlaces);
         return specialities;
     }
 
-    avalilableDate(array){
+    avalilableDate(array) {
         //si la fecha rebasa el 10% de las horas totales del curso. NO PUBLICAR
         return array
     }
 
-    coursesWithPlaces(objCourses){
+    coursesWithPlaces(objCourses) {
         const withPlace = [];
         for (const key in objCourses) {
             const item = objCourses[key];
@@ -175,18 +173,18 @@ class ObjFromArray {
         }
         let totalCourses = withPlace.length
         ObjFromArray.countCourses = totalCourses;
-        const assignPreInscription = withPlace.map( course => {
-        const newCourse = {
-            ...course,
-            number: totalCourses
-        }
-        totalCourses--;
-        return newCourse
+        const assignPreInscription = withPlace.map(course => {
+            const newCourse = {
+                ...course,
+                number: totalCourses
+            }
+            totalCourses--;
+            return newCourse
         })
         return assignPreInscription
     }
 
-    sortBySpeciality(objCourses){
+    sortBySpeciality(objCourses) {
         const onlySpecialities = [];
         for (const key in objCourses) {
             const item = objCourses[key];
@@ -194,9 +192,9 @@ class ObjFromArray {
                 onlySpecialities.push(item.especialidad)
             }
         }
-        
-        const forSpecialities = onlySpecialities.map( item => {
-            const coursesArrayWithSpecialtie = [];            
+
+        const forSpecialities = onlySpecialities.map(item => {
+            const coursesArrayWithSpecialtie = [];
             for (const key in objCourses) {
                 const itemObj = objCourses[key];
                 if (itemObj.especialidad === item) {
@@ -204,23 +202,23 @@ class ObjFromArray {
                 }
             }
             const imgArrayWithSpecialtie = [];
-            coursesArrayWithSpecialtie.forEach( course => imgArrayWithSpecialtie.push(course.imagenURL))
-            
+            coursesArrayWithSpecialtie.forEach(course => imgArrayWithSpecialtie.push(course.imagenURL))
+
             const objSpecialities = {
-                specialty : item,
-                courses : coursesArrayWithSpecialtie,
-                imageURL : imgArrayWithSpecialtie
-            }            
+                specialty: item,
+                courses: coursesArrayWithSpecialtie,
+                imageURL: imgArrayWithSpecialtie
+            }
             return objSpecialities
-        })        
+        })
         return forSpecialities;
     }
 }
-    
+
 class Specialties {
     static textTitle = "Selecciona una especialidad para ver los cursos disponibles:"
 
-    constructor(arrayBySpecialties){
+    constructor(arrayBySpecialties) {
         this.textTitleCount(arrayBySpecialties)
         this.title()
         this.createContainer(arrayBySpecialties);
@@ -229,31 +227,31 @@ class Specialties {
         preloader();
     }
 
-    textTitleCount(array){
+    textTitleCount(array) {
         const countSpecialties = array.length;
-        Specialties.textTitle= `
+        Specialties.textTitle = `
         Tenemos ${countSpecialties} especialidades con ${ObjFromArray.countCourses} cursos abiertos.
         Selecciona una especialidad y ve los cursos disponibles:
         `;
     }
 
-    title(array){
+    title(array) {
         const title = document.createElement("h3");
         title.innerText = Specialties.textTitle
         title.id = "alternateTitle"
-        title.className ="section__courses--title";
+        title.className = "section__courses--title";
         nodeAPI_Offer.appendChild(title);
     }
-    
-    createContainer(arrayBySpecialties){
+
+    createContainer(arrayBySpecialties) {
         const container = document.createElement("div");
         container.className = `container__Specialties container__Specialties--HIDE`;
         container.id = "containerSpecialties";
         arrayBySpecialties.forEach(element => {
             //image course random show to specialtie
-            const imageRandom = Math.ceil(Math.random()*element.imageURL.length) - 1;
+            const imageRandom = Math.ceil(Math.random() * element.imageURL.length) - 1;
             let image = element.imageURL[imageRandom];
-            if (image == undefined) {                
+            if (image == undefined) {
                 image = "LogoCecatiEspecialidades.png";
             }
             container.innerHTML += `
@@ -264,15 +262,15 @@ class Specialties {
                 </div>
                 <div class="Specialties--container--title" 
                 data-specialty="${element.specialty.toLowerCase()}">${element.specialty.toLowerCase()}</div>
-            </div>`             
+            </div>`
         });
-        container.addEventListener("click", event => locateEvent(event));      
+        container.addEventListener("click", event => locateEvent(event));
         nodeAPI_Offer.appendChild(container);
     }
 
-    createButtoBack(){        
-        const buttonBack = document.createElement("div");        
-        buttonBack.className = "container__buttons";      
+    createButtoBack() {
+        const buttonBack = document.createElement("div");
+        buttonBack.className = "container__buttons";
         buttonBack.innerHTML = `
         <div class="buttonBack buttonBack--HIDE" id="buttonBack">
             <img src="${URL_BASE_ASSETS}arrowBack.svg" alt="Retroceder">
@@ -282,12 +280,12 @@ class Specialties {
         nodeAPI_Offer.appendChild(buttonBack);
     }
 
-    static showSpecialties(){    
+    static showSpecialties() {
         const nodeSpecialties = document.querySelector("#containerSpecialties");
         nodeSpecialties.classList.toggle("container__Specialties--HIDE");
     }
 
-    static showButtonBack() {        
+    static showButtonBack() {
         const nodeButtonBack = document.querySelector("#buttonBack");
         nodeButtonBack.classList.toggle("buttonBack--HIDE");
         nodeButtonBack.addEventListener("click", backToSpecialties);
@@ -308,17 +306,17 @@ const backToSpecialties = function () {
 
 function saveCourse(e) {
     //const expresion = /pre-\d\d/
-    const locate = e.target.dataset.numbercourse 
+    const locate = e.target.dataset.numbercourse
     //if(expresion.test(locate)){   
-        sessionStorage.removeItem(keyCourseStorage);
-        const nodeCourse = document.querySelector(`#${locate}`);
-        const valueCourse = nodeCourse.value;
-        sessionStorage.setItem(keyCourseStorage, valueCourse)
+    sessionStorage.removeItem(keyCourseStorage);
+    const nodeCourse = document.querySelector(`#${locate}`);
+    const valueCourse = nodeCourse.value;
+    sessionStorage.setItem(keyCourseStorage, valueCourse)
     //}
 }
 
 function moreInformation(e) {
-    const url =  e.target.dataset.moreinformation;
+    const url = e.target.dataset.moreinformation;
     window.open(url, '_blank');
 }
 
@@ -337,7 +335,7 @@ async function conexion(URL) {
     } catch (error) {
         console.log(error)
         const titleError = document.createElement("h3");
-        titleError.innerHTML= `
+        titleError.innerHTML = `
         <h3 class="error__API">Lo sentimos, la información no esta disponible en este momento.
         Por favor intenta más tarde, lamentamos los inconvenientes.</h3>`;
         nodeAPI_Offer.appendChild(titleError);
