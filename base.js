@@ -1,7 +1,6 @@
 class Base {
     getApi() {
-        //return "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1";
-        return "https://api-dvnegrete-mail.ue.r.appspot.com/API/v1";
+        return "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1";
     }
 
     createNAV(ub) {
