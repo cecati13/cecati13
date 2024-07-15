@@ -56,7 +56,6 @@ export const App = {
                     accessToken
                 );
                 if (response.token) {
-                    console.log(await response.token);
                     localStorage.setItem("token", response.token);
                     localStorage.setItem("username", response.username)
                     this.username = response.username;
@@ -340,12 +339,10 @@ export const App = {
             const res = await this.getData(endpoint, 'PUT');
             if (res.statusCode === 405) {
                 this.message = res.message;
-                console.log("mismo usaurio");
             }
             if (res.update) {
                 this.ShowMenu();
             }
-            console.log(res);
         },
 
         preloader() {
@@ -354,15 +351,12 @@ export const App = {
 
         async getToken() {
             let tokenResponse;
-            console.log("GET_TOKEN!");
             if (typeof getTokenPopup === 'function') {
-                console.log("if typeof getTokenPopup", getTokenPopup);
                 tokenResponse = await getTokenPopup({
                     scopes: [],
                     redirectUri: '/redirect'
                 });
             } else {
-                console.log("else typeof getTokenPopup");
                 tokenResponse = await this.getTokenRedirect({
                     scopes: ["User.Read"],
                 });
@@ -375,7 +369,6 @@ export const App = {
         },
 
         async callApi(method, endpoint, token, data = null) {
-            console.log("-----callApi----", token)
             const headers = new Headers();
             const bearer = `Bearer ${token}`;
 

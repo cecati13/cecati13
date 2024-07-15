@@ -128,7 +128,6 @@ function changeImage() {
     setTimeout(() => {
         const positions = numberRandom()
         //const arrayPositions = indexArrayImage()        
-        //console.log("array que regreso la funcion indexArrayImage: ", arrayPositions)
         changeOneImage(2, positions[0])
         changeOneImage(3, positions[1])
         //changeOneImage(2, position1)
@@ -144,11 +143,9 @@ const indexArrayImage = () => {
     //    let position2 = 2;
     return {
         function(increment) {
-            //console.log("antes: del forEach", positions)
             positions.forEach(element => {
                 element += increment;
             });
-            //console.log("despuesdel forEach: ", positions)
             return positions
         }
     }
