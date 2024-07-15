@@ -1,0 +1,19 @@
+name: 'Deploy to GitHub Pages'
+description: 'Deploy the project to GitHub Pages'
+inputs:
+  branch:
+    description: 'Branch to deploy'
+    required: true
+  folder:
+    description: 'Folder to deploy'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Deploy to GitHub Pages
+      uses: jamesives/github-pages-deploy-action@v4
+      with:
+        branch: ${{ inputs.branch }}
+        folder: ${{ inputs.folder }}
