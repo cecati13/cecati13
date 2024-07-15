@@ -1,4 +1,5 @@
 const host = base.verifyHost();
+const API = base.getApi();
 /**
  * Configuration object to be passed to MSAL instance on creation.
  * For a full list of MSAL.js configuration parameters, visit:
@@ -50,7 +51,7 @@ const msalConfig = {
  */
 const protectedResources = {
     todolistApi: {
-        endpoint: 'https://api-dvnegrete-mail.ue.r.appspot.com//API/v1/controlStudents',
+        endpoint: `${API}/controlStudents`,
         scopes: {
             read: ['api://e7db502b-8ed9-4af6-8ed6-280918b39123'],
         },
