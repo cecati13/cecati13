@@ -13,9 +13,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: List files for debugging
+        run: ls -la
+
       - name: Deploy to GitHub Pages
         uses: jamesives/github-pages-deploy-action@v4
         with:
           token: ${{ secrets.GH_PAT }}
-          folder: .
           branch: gh-pages
+          folder: .
