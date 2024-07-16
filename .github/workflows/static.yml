@@ -2,23 +2,20 @@
 name: Deploy static content to Github Pages. 
 
 on:
-  # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
+    branches:
+      - main
 
 jobs:
   # Single deploy job since we're just deploying
   deploy:
-    environment:
-      name: github-pages
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-            token: ${{ secrets.GH_PAT }}
       - name: Deploy to GitHub Pages
         uses: jamesives/github-pages-deploy-action@v4
         with:
-          folder: /
-          branch: main
+          token: ${{ secrets.GH_PAT }}
+          folder: .
+          branch: gh-pages
