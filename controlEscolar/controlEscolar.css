@@ -1,0 +1,180 @@
+.main {
+    font-size: 1.6rem;
+    padding: 15px;
+    color: var(--fontColor2);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.message {
+    margin-top: 20px;
+    font-size: 1.8rem;
+    font-weight: 700;
+    overflow-wrap: break-word;
+}
+
+h4 {
+    margin-top: 35px;
+    padding: 15px 0 0 0;
+}
+
+form {
+    max-width: 450px;
+    padding: 5px 25px;
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+input,
+select {
+    margin: 20px 0;
+}
+
+button {
+    width: 130px;
+    color: var(--mainColor);
+    background-color: var(--contrastColor);
+    padding: 10px 15px;
+    border-radius: 15px;
+    margin-top: 5px;
+    align-self: center;
+    cursor: pointer;
+}
+
+.piecesInformationCloud {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 0 25px;
+}
+
+.piecesInformationCloud>li>span {
+    color: var(--contrastColor);
+    font-size: 1.8rem;
+}
+
+.piecesInformationCloud>li {
+    width: max-content;
+    color: var(--fontColor);
+    overflow-wrap: anywhere;
+    padding: 15px 5px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    margin-right: 40px;
+}
+
+.functionOption {
+    padding: 30px;
+}
+
+.functionOption>button {
+    font-size: 1.9rem;
+    width: 165px;
+}
+
+.functionOption .closeSession {
+    background-color: var(--fontColor2);
+}
+
+.buttonBack {
+    background-color: var(--fontColor);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100px;
+    font-size: 1.2rem;
+    color: var(--mainColor);
+    cursor: pointer;
+    padding: 8px;
+}
+
+.buttonBack img {
+    padding: 4px;
+    height: 50px;
+    width: 50px;
+}
+
+.blobs--button {
+    background-color: var(--contrastColor);
+    border-radius: 3em;
+    color: var(--mainColor);
+    font-size: 1.4rem;
+    margin: 25px 0;
+    padding: 15px;
+    cursor: pointer;
+}
+
+.uploadFiles {
+    max-width: 500px;
+    overflow-wrap: anywhere;
+}
+
+.uploadFiles>p {
+    padding: 5px;
+}
+
+.table {
+    border-radius: 0.25rem;
+    margin-top: 4rem;
+    background-color: var(--contrastColor);
+}
+
+.table th {
+    color: var(--mainColor);
+    height: 40px;
+}
+
+.table th:last-child {
+    width: 195px;
+}
+
+.table td {
+    padding: 0 30px;
+    color: var(--fontColor2);
+    height: 45px;
+}
+
+.table td:last-child {
+    padding: 0;
+    width: 185px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.table--name {
+    min-width: 11rem;
+    height: 25px;
+}
+
+.table--email {
+    min-width: 11rem;
+}
+
+.table--role {
+    min-width: 9rem;
+}
+
+.table--body {
+    background-color: var(--mainColor);
+}
+
+.icons {
+    height: 25px;
+    cursor: pointer;
+}
+
+.td--edit select {
+    min-width: 120px;
+    max-width: 120px;
+    margin: 0;
+    margin-left: 5px;
+    padding: 5px 15px;
+}
+

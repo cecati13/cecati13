@@ -1,0 +1,95 @@
+#header {
+    color: var(--fontColor);
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 65px;
+}
+
+.header__C13 {
+    display: block;
+    padding-top: 10px;
+    font-size: 2rem;
+}
+
+.header__title {
+    font-size: 2rem;
+    padding-bottom: 5px;
+}
+
+#tv {
+    padding: 5px;
+    width: 100vw;
+}
+
+.container__courses {
+    display: inline-flex
+}
+
+
+/* .containerCourses > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(180deg, var(--mainColor), var(--mainColor2));
+    border-radius: 7px;
+    margin: 10px 10px 25px 10px;    
+    padding: 5px;
+} */
+
+.course {
+    color: var(--contrastColor);
+    font-size: 1.5rem;
+    padding-bottom: 15px;
+    text-align: center;
+    width: 450px;
+    margin: 0 10px;
+    white-space: normal;
+}
+
+.course > img {
+    width: 110px;
+}
+
+.course__specialtie {
+    text-transform: capitalize;
+    padding-bottom: 4px;
+    font-size: 1.8rem;
+}
+
+.course__title {
+    text-transform: uppercase;
+    font-size: 2rem;
+    background-color: var(--contrastColor);
+    color: var(--mainColor);    
+    padding: 7px 7px;
+    white-space: normal;
+}
+
+.course__profesor {
+    text-transform: capitalize;
+    font-size: 1.8rem;
+    margin-top: 10px;
+    padding: 0px 15px;
+}
+
+.course__highlight {
+    font-size: 1.6rem;
+    font-weight: 600;    
+}
+
+.course__date {
+    font-size: 1.8rem;
+}
+
+.footer__tv {
+    color: var(--fontColor);
+    font-size: 1.4rem;
+}
+
+.footer__tv > a {
+    text-decoration: underline;
+    font-size: 1.7rem;
+}
