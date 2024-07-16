@@ -18,8 +18,7 @@ jobs:
         with:
             token: ${{ secrets.GH_PAT }}
       - name: Deploy to GitHub Pages
-        uses: ./.github/actions/deploy
+        uses: jamesives/github-pages-deploy-action@v4
         with:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           folder: /
           branch: main
