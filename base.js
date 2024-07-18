@@ -1,6 +1,7 @@
 class Base {
     getApi() {
-        return "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1";
+        //return "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1";
+        return "https://apic13inscripciones-dev.up.railway.app/API/v1";
     }
 
     createNAV(ub) {
