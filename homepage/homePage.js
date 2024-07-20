@@ -1,6 +1,4 @@
-const host = base.getApi();
-const announceURL = host + "/frontendURL/50";
-const imageURL = host + "/frontendURL/imageHomePage?size=17"
+const API = base.getFunctionsAPI();
 const URL_BASE_IMAGE = "https://storage.googleapis.com/cecati13/galeria/";
 const containerMain = document.querySelector(".main__container");
 const widthPort = window.innerWidth;
@@ -182,11 +180,11 @@ function preloader() {
 
 async function conexion() {
     try {
-        const infoImage = await fetch(imageURL);
+        const infoImage = await fetch(API + "/images?size=17");
         const imageJSON = await infoImage.json();
         createArrayImageFetch(imageJSON);
 
-        const info = await fetch(announceURL);
+        const info = await fetch(API + "/homePage");
         const infoJSON = await info.json();
         const announce = new HomePage(infoJSON);
 
