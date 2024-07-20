@@ -1,5 +1,5 @@
-const host = base.getApi();
-const URL = host + "/frontendURL/40"
+const host = base.getFunctionsAPI();
+const URL = host + "/images"
 const URL_BASE_IMAGE = "https://storage.googleapis.com/cecati13/galeria/";
 const container = document.querySelector(".carousel__list");
 

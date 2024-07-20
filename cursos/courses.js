@@ -1,5 +1,5 @@
-const api = base.getApi();
-const URL = api + "/frontendURL/10"
+const API = base.getFunctionsAPI();
+const URL = API + "/courses";
 const URL_BASE_ASSETS = "https://storage.googleapis.com/cecati13/assets/";
 //Nombre de key guardado en Session Storage para preinscribir Curso
 const keyCourseStorage = "CourseCecati13";

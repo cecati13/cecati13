@@ -1,5 +1,5 @@
-const host = base.getApi();
-const URL = host + "/frontendURL/30";
+const host = base.getFunctionsAPI();
+const URL = host + "/questions";
 const nodeAPIQuestions = document.querySelector("#sectionQuestions");
 
 class Questions {

@@ -4,6 +4,10 @@ class Base {
         return "https://apic13inscripciones-dev.up.railway.app/API/v1";
     }
 
+    getFunctionsAPI(){
+        return "https://function-cecati13-prvi2pqgoq-uc.a.run.app"
+    }
+
     createNAV(ub) {
         const nav = document.createElement("nav");
         nav.className = "nav__hide";
