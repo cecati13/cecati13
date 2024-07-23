@@ -35,4 +35,4 @@ function galleryContainer(array) {
   window.addEventListener("load", functionGlider());
 }
 
-galleryContainer(IMAGES.mockAPI);
+galleryContainer(IMAGES);
