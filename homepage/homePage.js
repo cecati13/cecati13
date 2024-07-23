@@ -1,3 +1,4 @@
+import { IMAGES } from "./../shared/images.js";
 const API = base.getFunctionsAPI();
 const URL_BASE_IMAGE = "https://storage.googleapis.com/cecati13/galeria/";
 const containerMain = document.querySelector(".main__container");
@@ -125,29 +126,10 @@ function changeImage() {
     opacityChange(3);
     setTimeout(() => {
         const positions = numberRandom()
-        //const arrayPositions = indexArrayImage()        
         changeOneImage(2, positions[0])
         changeOneImage(3, positions[1])
-        //changeOneImage(2, position1)
-        //changeOneImage(3, position2)
+    }, 300);
 
-    }, 250);
-
-}
-
-//trabajar en el clousure para que las imagenes se pasen una a una y vaya aumentando
-const indexArrayImage = () => {
-    let positions = [1, 2];
-    //    let position2 = 2;
-    return {
-        function(increment) {
-            positions.forEach(element => {
-                element += increment;
-            });
-            return positions
-        }
-    }
-    return changeIndexArrayImage
 }
 
 function opacityChange(ubication) {
@@ -179,9 +161,8 @@ function preloader() {
 }
 
 async function conexion() {
-    try {
-        const infoImage = await fetch(API + "/images?size=17");
-        const imageJSON = await infoImage.json();
+    try {      
+        const imageJSON = IMAGES.mockAPI.slice(0,17);
         createArrayImageFetch(imageJSON);
 
         const info = await fetch(API + "/homePage");

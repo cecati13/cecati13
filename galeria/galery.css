@@ -36,7 +36,8 @@
 
 .carousel__previous:hover, 
 .carousel__next:hover {
-    opacity: 1;
+    opacity: 0.8;
+    cursor: pointer;
 }   
 
 .carousel__previous{
