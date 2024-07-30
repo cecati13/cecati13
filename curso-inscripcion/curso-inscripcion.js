@@ -78,7 +78,6 @@ const app = Vue.createApp({
 
   methods: {
     async consult(curp) {
-      console.log(curp);
       this.isWelcome = false;
       this.infoCourseShow = false;
       this.preloader();

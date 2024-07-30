@@ -42,26 +42,10 @@ export const vDbRegister = {
       const data = {
         ...this.reactive.studentDB
       };
-      // const formFiles = new FormData;
-      // formFiles.append("curp", this.reactive.studentDB.curp);
       const objInscription = {
         data,
-        //formFiles,
         db: true,
-      }
-
-      // if (objInscription.data.update) {
-      //   for (const key in objInscription.data) {
-      //     const element = objInscription.data[key];
-      //     if (typeof (element) === "object") {
-      //       //si es "object" es un archivo (File)
-      //       objInscription.files = + 1;
-      //       formFiles.append(key, objInscription.data[key]);
-      //       delete objInscription.data[key];
-      //     }
-      //   }
-      // }
-    
+      }    
       this.$emit("eventInscription", objInscription);
     }
   },
