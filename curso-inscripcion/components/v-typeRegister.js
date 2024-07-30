@@ -6,11 +6,7 @@ export const vTypeRegister = {
         const nodeCurp = document.querySelector("#valueCurp")
         const curpValue = nodeCurp.value;      
         if (curpValue.length === 18) {        
-          const objCurp = {
-            curp: curpValue
-          }
-          this.reactive.curp = curpValue;
-          this.$emit("consultCURP", objCurp);
+          this.$emit("consultCURP", curpValue);
         } else {
           Swal.fire({
             title: "Revisa nuevamente.",
