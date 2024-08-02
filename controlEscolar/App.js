@@ -1,5 +1,5 @@
 import { roles } from "./models/roles.js";
-const host = base.getApi();
+const host = base.getFunctionsAPI();
 
 export const App = {
     data() {
