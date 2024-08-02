@@ -1,6 +1,4 @@
-const host = "http://localhost:3000/API/v1";
-//const host = "https://backend-cursos-cecati13.uc.r.appspot.com/API/v1";
-const URL = host + "/frontendURL/10"
+const URL = "https://us-east1-backend-cursos-cecati13.cloudfunctions.net/API-V2/courses"
 const URL_BASE_IMAGE = "https://storage.googleapis.com/cecati13/assets/";
 
 const nodeAPI_TV = document.getElementById("tv");

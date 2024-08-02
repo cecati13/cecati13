@@ -29,8 +29,9 @@ import {
   vUpdateSchool,
   vViewInscriptionNew,
 } from "./components/index.js";
+import { API_GET, API_POST } from "./service/api.js";
 
-const host = base.getApi();
+const host = base.getFunctionsAPI();
 
 const app = Vue.createApp({
   data() {
@@ -44,7 +45,7 @@ const app = Vue.createApp({
       sizeFile: "5",
       reactive: {
         studentDB: {
-          update: false
+          update: false,
         },
         newStudent: {},
         ageRequeriment: true,
@@ -58,7 +59,7 @@ const app = Vue.createApp({
       firstRegisterCompleted: false,
       confirmation: false,
       dataConfirmation: {},
-      statusAPIs: false
+      statusAPIs: false,
     };
   },
 
@@ -71,17 +72,17 @@ const app = Vue.createApp({
       reactive: this.reactive,
       MAX_SIZE_FILES: this.MAX_SIZE_FILES,
       sizeFile: this.sizeFile,
-      dataConfirmation: this.dataConfirmation
-    }
+      dataConfirmation: this.dataConfirmation,
+    };
   },
 
   methods: {
-    async consult(formData) {
+    async consult(curp) {
       this.isWelcome = false;
       this.infoCourseShow = false;
       this.preloader();
-      const API = `${this.API}/typeRegister`
-      const response = await this.sendData(API, formData);
+      const API = `${this.API}/typeRegister/${curp}`;
+      const response = await API_GET(API);
       if (response.error) {
         this.preloader();
         this.isNewStudent = true;
@@ -94,8 +95,8 @@ const app = Vue.createApp({
           title: "Error",
           text: "Hubo un error en la comunicación al servidor",
           icon: "error",
-          confirmButtonText: "Cerrar"
-        })
+          confirmButtonText: "Cerrar",
+        });
         //alert("Hubo un error en la comunicación al servidor, por favor vuelve a intentarlo. Si el error persiste intentalo mas tarde.")
       } else if (response.message === "Wrong Structure") {
         this.preloader();
@@ -105,8 +106,8 @@ const app = Vue.createApp({
           title: "Incorrecto!",
           text: "La Estructura de la CURP es incorrecta, revisa y corrige la información",
           icon: "info",
-          confirmButtonText: "Cerrar"
-        })
+          confirmButtonText: "Cerrar",
+        });
         //alert("La Estructura de la CURP es incorrecta, revisa y corrige la información");
         // } else if(response.updateContact) {
         //   //usuario existe, pero actualizar datos de contacto es obligatorio
@@ -127,139 +128,67 @@ const app = Vue.createApp({
       nodeAPP.classList.toggle("preloader");
     },
 
-    async verifyCURPofData() {
-      //***********Debe traerse desde la funcion verifyDataGeneral() en el componente v-dataGeneral *************/
-      const responseFile = await this.sendDataGeneralForm(dataFORM)
-      if (responseFile.curp === undefined) {
-        //temporalmente añadir el blob al objeto de acta de nacimiento
-        Object.defineProperty(this.reactive.newStudent, "actaNacimiento", {
-          value: birthCertificate,
-          writable: true,
-          configurable: false,
-          enumerable: true
-        })
-        this.$emit("continueFirstRegister", responseFile)
-      } else if (responseFile.curp == "false") {
-        Swal.fire({
-          title: "Incorrecto",
-          text: "Verifica la información nuevamente.",
-          icon: "warning",
-          confirmButtonText: "Cerrar"
-        });
-        //alert("Error. Verifica la información.")
-      } else {
-        Swal.fire({
-          title: "Error",
-          text: "Lo sentimos, estamos teniendo problemas de comunicación con nuestro servidor. Por favor intentalo mas tarde.",
-          icon: "error",
-          confirmButtonText: "Cerrar"
-        });
-        //alert("Lo sentimos, estamos teniendo problemas de comunicación con nuestro servidor. Por favor intentalo mas tarde.")
-      }
-      //***********Debe traerse desde la funcion verifyDataGeneral() en el componente v-dataGeneral *************/
-    },
-
+    /**
+     *
+     * @param {Object} objInscription - All data
+     * @param {Object} objInscription.data - All data (include files)
+     * @param {boolean} objInscription.db - Student registered in the system
+     */
     async inscription(objInscription) {
       this.preloader();
       this.statusAPIs = false;
       this.isUserStudent = false;
       this.firstRegisterCompleted = false;
       try {
-        const backendData = await this.checkConnection(this.API);
-        if (backendData
-          //|| backendFiles
-        ) {
-          let objLinksFiles = {};
-          if (objInscription.formFiles) {
-            const formFiles = objInscription.formFiles;
-            const endpoint = `${this.API}/files`;
-            const files = await this.sendFiles(formFiles, endpoint);
-            objLinksFiles = { ...files };
-            //errores en server files
-            if (objLinksFiles.error) {
-              if (objLinksFiles.error.code === "LIMIT_FILE_SIZE") {
-                console.log(`Archivos de mas de ${this.sizeFile} MB`);
-                new Error("LIMIT_FILE_SIZE");
-              }
-              if (objLinksFiles.error.storageErrors["length"] === 0) {
-                console.log("1 archivo con formato incorrecto");
-                new Error("FILES_TYPE_ERROR");
-              }
-            }
-            //errores en server files
-          }
-          const objOfLinksFiles = { ...objInscription.data, ...objLinksFiles }
-          const objDataInscription = this.addCourseData(objOfLinksFiles);
-          let endpoint = objInscription.db === true ?
-            `${this.API}/DBStudent` :
-            `${this.API}/newStudent/inscription`;
+        const objDataInscription = this.addCourseData(objInscription.data);
+        const formData = this.buildFormData(objDataInscription);
+        const endpoint =
+          objInscription.db === true
+            ? `${this.API}/DBStudent`
+            : `${this.API}/newStudent/inscription`;
+        const responseData = await API_POST(endpoint, formData);
 
-          const responseData = await this.sendData(endpoint, objDataInscription);
-
-          //falta manejo de errores que responda el servidor
-          if (responseData.status) {
-            this.dataConfirmation.nombre = objDataInscription.nombre,
-              this.dataConfirmation.matricula = responseData.matricula,
-              this.dataConfirmation.fechaRegistro = responseData.fechaRegistro
-            sessionStorage.removeItem(this.keyCourseStorage)
-          } else {
-            new Error("Falla al inscribir en BD")
-          }
-          this.preloader();
-          this.confirmation = true;
+        //falta manejo de errores que responda el servidor
+        if (responseData.status) {
+          (this.dataConfirmation.nombre = objDataInscription.nombre),
+            (this.dataConfirmation.matricula = responseData.matricula),
+            (this.dataConfirmation.fechaRegistro = responseData.fechaRegistro);
+          sessionStorage.removeItem(this.keyCourseStorage);
         }
+        if (
+          responseData.message === "FILES_TYPE_ERROR" ||
+          responseData.message === "LIMIT_FILE_SIZE"
+        ) {
+          new Error("FILES_TYPE_ERROR");
+        } else {
+          new Error("Falla al inscribir en BD");
+        }
+        this.preloader();
+        this.confirmation = true;
       } catch (error) {
         this.preloader();
         Swal.fire({
           title: "Error",
           text: "Lo sentimos, se genero un error interno del sitio. Por favor intenta más tarde.",
           icon: "error",
-          confirmButtonText: "Cerrar"
-        })
+          confirmButtonText: "Cerrar",
+        });
         console.log(error);
       }
     },
 
     addCourseData(objInscription) {
-      const dataCourse = JSON.parse(sessionStorage.getItem(this.keyCourseStorage));
-      //sessionStorage
-      const inscriptionMoreCourse = {
-        ...objInscription,
-        ...dataCourse
-      };
-      return inscriptionMoreCourse;
-    },
-
-    async sendFiles(formFiles, API) {
-      const response = await fetch(API, {
-        method: "post",
-        body: formFiles
-      })
-      const info = await response.json();
-      return info;
-    },
-
-    async sendData(API, obj = {}) {
-      try {
-        const response = await fetch(API, {
-          method: "POST",
-          headers: {
-            //"Content-Type": "multipart/form-data"
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(obj)
-        })
-        return response.json()
-      } catch (error) {
-        console.error(error);
-      }
+      const dataCourse = JSON.parse(
+        sessionStorage.getItem(this.keyCourseStorage)
+      );
+      return { ...objInscription, ...dataCourse };
     },
 
     isStudent() {
-      const dataSaveStudent = JSON.parse(sessionStorage.getItem(this.keyStudentStorage));
-      this.reactive.studentDB = {
-        ...dataSaveStudent,
-      }
+      const dataSaveStudent = JSON.parse(
+        sessionStorage.getItem(this.keyStudentStorage)
+      );
+      this.reactive.studentDB = { ...dataSaveStudent };
 
       this.isUserStudent = true;
     },
@@ -272,10 +201,10 @@ const app = Vue.createApp({
             value: element,
             writable: true,
             configurable: false,
-            enumerable: true
+            enumerable: true,
           });
         } else {
-          this.reactive.newStudent[key] = object[key]
+          this.reactive.newStudent[key] = object[key];
         }
       }
     },
@@ -286,13 +215,20 @@ const app = Vue.createApp({
       this.firstRegisterCompleted = true;
     },
 
-    async checkConnection(API) {
-      const conexionInfo = await fetch(API);
-      let status = false;
-      if (conexionInfo.status) {
-        status = true;
+    /**
+     * Converts an object to FormData.
+     *
+     * @param {Object} data - The object to convert.
+     * @returns {FormData} - The resulting FormData.
+     */
+    buildFormData(data) {
+      const formData = new FormData();
+      for (const key in data) {
+        if (data.hasOwnProperty(key)) {
+          formData.append(key, data[key]);
+        }
       }
-      return status;
+      return formData;
     },
   },
 
@@ -300,7 +236,7 @@ const app = Vue.createApp({
     getCourse() {
       const getItem = sessionStorage.getItem(this.keyCourseStorage);
       if (!getItem) {
-        window.location.href = "../cursos"
+        window.location.href = "../cursos";
         //Si no se ha selecionado un curso redireccionar a /cursos
       }
       const courseInfo = JSON.parse(getItem);
@@ -314,7 +250,7 @@ const app = Vue.createApp({
         this.studentLocalStorage = JSON.parse(getItem);
         this.reactive.curp = this.studentLocalStorage.curp;
       }
-    }
+    },
   },
 
   template: `
@@ -398,4 +334,4 @@ app.component("v-confirmation", vConfirmation);
 app.component("v-legendFiles", vLegendFiles);
 app.component("v-conexionFailBack", vConexionFailBack);
 
-app.mount('#app');
+app.mount("#app");
