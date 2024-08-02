@@ -31,7 +31,7 @@ import {
 } from "./components/index.js";
 import { API_GET, API_POST } from "./service/api.js";
 
-const host = base.getApi();
+const host = base.getFunctionsAPI();
 
 const app = Vue.createApp({
   data() {
