@@ -4,7 +4,8 @@ class Base {
   }
 
   getFunctionsAPI() {
-    return "https://us-east1-backend-cursos-cecati13.cloudfunctions.net/API-V2";
+    //return "https://us-east1-backend-cursos-cecati13.cloudfunctions.net/API-V2";
+    return "http://localhost:8080";
   }
 
   createNAV(ub) {

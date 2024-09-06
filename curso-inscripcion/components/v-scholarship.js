@@ -55,7 +55,7 @@ export const vScholarship = {
       
       <p>¿Cuál es el máximo grado de estudios que alcanzaste? Selecciona una opción.</p>
       <label for="scholarship">
-      <select name="scholarship" id="scholarship">            
+      <select name="scholarship" id="scholarship">
         <option 
           v-for="item in listaEscolaridades" 
           selected="listaEscolaridades[0]"

@@ -165,15 +165,11 @@ const app = Vue.createApp({
         }
         this.preloader();
         this.confirmation = true;
-      } catch (error) {
-        this.preloader();
-        Swal.fire({
-          title: "Error",
-          text: "Lo sentimos, se genero un error interno del sitio. Por favor intenta más tarde.",
-          icon: "error",
-          confirmButtonText: "Cerrar",
-        });
-        console.log(error);
+        if (responseData.errorCode) {
+          this.showErrorInscription();
+        }
+      } catch (error) {        
+       this.showErrorInscription();
       }
     },
 
@@ -251,6 +247,18 @@ const app = Vue.createApp({
         this.reactive.curp = this.studentLocalStorage.curp;
       }
     },
+
+    showErrorInscription () {
+      this.preloader();
+      this.confirmation = false;
+      Swal.fire({
+        title: "Error",
+        text: "Lo sentimos, se genero un error interno del sitio. Por favor intenta más tarde.",
+        icon: "error",
+        confirmButtonText: "Cerrar",
+      });
+      console.log(error);
+    }
   },
 
   template: `

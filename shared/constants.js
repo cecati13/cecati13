@@ -78,7 +78,6 @@ export const CONSTANTS = {
         "Intelectual"
     ],
     padecimientos: [ 
-        "Ninguno", 
         "Diabetes", 
         "Hipertensión", 
         "Asma", 

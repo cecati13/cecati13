@@ -71,10 +71,15 @@ export const vViewInscriptionNew = {
         comprobanteDomicilio: this.reactive.newStudent.comprobanteDomicilio,
         comprobanteEstudios: this.reactive.newStudent.comprobanteEstudios,
       };
-
+      
+      if (data.padecimiento === undefined || data.padecimiento === null) {
+        delete data.padecimiento;
+      }
+      if (data.discapacidad === "NINGUNA" || data.padecimiento === null) {
+        delete data.discapacidad;
+      }
       const objInscription = {
         data,
-        //formFiles,
         db: false,
       };
       this.$emit("completedNewInscription", objInscription);
