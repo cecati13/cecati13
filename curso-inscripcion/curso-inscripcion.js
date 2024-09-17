@@ -83,23 +83,13 @@ const app = Vue.createApp({
       this.preloader();
       const API = `${this.API}/typeRegister/${curp}`;
       const response = await API_GET(API);
-      if (response.error) {
-        this.preloader();
+      if (response.errorCode === 404) {
         this.isNewStudent = true;
-      } else if (response.message === "internal server error") {
-        //error generalemente al hacer una primera consulta en SpreedSheets en version 16 nodejs
-        this.preloader();
-        this.isWelcome = true;
-        this.infoCourseShow = true;
-        Swal.fire({
-          title: "Error",
-          text: "Hubo un error en la comunicación al servidor",
-          icon: "error",
-          confirmButtonText: "Cerrar",
-        });
-        //alert("Hubo un error en la comunicación al servidor, por favor vuelve a intentarlo. Si el error persiste intentalo mas tarde.")
+      } else if (response.curp === curp) {
+        const storageResponse = JSON.stringify(response);
+        sessionStorage.setItem(this.keyStudentStorage, storageResponse);
+        this.isStudent();
       } else if (response.message === "Wrong Structure") {
-        this.preloader();
         this.isWelcome = true;
         this.infoCourseShow = true;
         Swal.fire({
@@ -108,19 +98,17 @@ const app = Vue.createApp({
           icon: "info",
           confirmButtonText: "Cerrar",
         });
-        //alert("La Estructura de la CURP es incorrecta, revisa y corrige la información");
-        // } else if(response.updateContact) {
-        //   //usuario existe, pero actualizar datos de contacto es obligatorio
-        //   const storageResponse = JSON.stringify(response);
-        //   sessionStorage.setItem(this.keyStudentStorage, storageResponse);
-        //   //crear un nuevo componente para obligar a actualizar
-      } else {
-        //el usuario existe en nuestros registros mas recientes
-        const storageResponse = JSON.stringify(response);
-        sessionStorage.setItem(this.keyStudentStorage, storageResponse);
-        this.preloader();
-        this.isStudent();
+      } else {        
+        this.isWelcome = true;
+        this.infoCourseShow = true;
+        Swal.fire({
+          title: "Error",
+          text: "Hubo un error en la comunicación al servidor",
+          icon: "error",
+          confirmButtonText: "Cerrar",
+        });
       }
+      this.preloader();
     },
 
     preloader() {
@@ -168,8 +156,8 @@ const app = Vue.createApp({
         if (responseData.errorCode) {
           this.showErrorInscription();
         }
-      } catch (error) {        
-       this.showErrorInscription();
+      } catch (error) {
+        this.showErrorInscription();
       }
     },
 
@@ -248,7 +236,7 @@ const app = Vue.createApp({
       }
     },
 
-    showErrorInscription () {
+    showErrorInscription() {
       this.preloader();
       this.confirmation = false;
       Swal.fire({
@@ -258,7 +246,7 @@ const app = Vue.createApp({
         confirmButtonText: "Cerrar",
       });
       console.log(error);
-    }
+    },
   },
 
   template: `
