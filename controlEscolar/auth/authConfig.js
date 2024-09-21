@@ -1,5 +1,5 @@
 const host = base.verifyHost();
-const API = base.getApi();
+const API = base.getFunctionsAPI();;
 /**
  * Configuration object to be passed to MSAL instance on creation.
  * For a full list of MSAL.js configuration parameters, visit:

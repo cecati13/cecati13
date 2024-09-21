@@ -1,4 +1,4 @@
-const delayMs = 2500;
+const delayMs = base.delayMsAPI();
 
 const responseError = async (response) => {
   const status = response.status;

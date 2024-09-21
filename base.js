@@ -1,11 +1,11 @@
 class Base {
-  getApi() {
-    return "https://apic13inscripciones-dev.up.railway.app/API/v1";
-  }
-
   getFunctionsAPI() {
     //return "https://us-east1-backend-cursos-cecati13.cloudfunctions.net/API-V2";
     return "http://localhost:8080";
+  }
+
+  delayMsAPI() {
+    return 2500;
   }
 
   createNAV(ub) {
