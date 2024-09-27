@@ -1,7 +1,13 @@
-import { getData } from "../service/api";
+import { getData } from "../service/api.js";
 
 export const vGetSisae = {
   inject: ["API", "records"],
+
+  data() {
+    return {
+      showTableRecords: false,
+    };
+  },
 
   methods: {
     async findRecords(e) {
@@ -9,7 +15,11 @@ export const vGetSisae = {
       const numberControl = e.target.matricula.value;
       const endpoint = `${this.API}/infosisae/${numberControl}`;
       const res = await getData(endpoint);
-      this.records = [...res];
+      if (res.students.length > 0) {
+        this.records.forSisae = [...res.students];
+        this.showTableRecords = true;
+      }
+      console.log(this.records);
       //this.$emit("recordsSisae", res);
     },
   },
@@ -28,7 +38,7 @@ export const vGetSisae = {
             <button>Buscar últimos registros</button>
         </form>
 
-        <v-tableRecordsSisae></v-tableRecordsSisae>
+        <v-tableRecordsSisae v-if=showTableRecords />
     </section>
     `,
 };

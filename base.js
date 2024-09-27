@@ -1,7 +1,6 @@
 class Base {
   getFunctionsAPI() {
-    //return "https://us-east1-backend-cursos-cecati13.cloudfunctions.net/API-V2";
-    return "http://localhost:8080";
+    return "https://apiserverlessspreadsheet-776826070708.us-east1.run.app";
   }
 
   delayMsAPI() {

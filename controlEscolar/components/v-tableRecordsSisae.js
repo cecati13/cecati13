@@ -1,13 +1,14 @@
 export const vTableRecordsSisae = {
   inject: ["records"],
-  data() {
-    return {
-      records: [],
-    };
-  },
+  // data() {
+  //   return {
+  //     records: [],
+  //   };
+  // },
   watch: {
     records: {
       handler(newVal) {
+        console.log(this.records)
         this.records = [...newVal];
       },
     },
@@ -33,16 +34,16 @@ export const vTableRecordsSisae = {
         </thead>
         <tbody class="table--body">
             <tr v-for="(record, i) in records" :key="i" >
-                <td>{{ record.numero_matricula }}</td>
-                <td>{{ record.curp }}</td>
-                <td>{{ record.apellido_paterno }}</td>
-                <td>{{ record.apellido_materno }}</td>
-                <td>{{ record.nombre }}</td>
-                <td>{{ record.calle }}</td>
-                <td>{{ record.colonia }}</td>
-                <td>{{ record.municipio_alcaldia }}</td>
-                <td>{{ record.estado }}</td>
-                <td>{{ record.cp }}</td>
+                <td>{{ records.forSisae.numero_matricula }}</td>
+                <td>{{ records.forSisae.curp }}</td>
+                <td>{{ records.forSisae.apellido_paterno }}</td>
+                <td>{{ records.forSisae.apellido_materno }}</td>
+                <td>{{ records.forSisae.nombre }}</td>
+                <td>{{ records.forSisae.calle }}</td>
+                <td>{{ records.forSisae.colonia }}</td>
+                <td>{{ records.forSisae.municipio_alcaldia }}</td>
+                <td>{{ records.forSisae.estado }}</td>
+                <td>{{ records.forSisae.cp }}</td>
             </tr>
         </tbody>
     </table>`,

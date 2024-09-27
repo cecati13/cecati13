@@ -19,7 +19,9 @@ export const App = {
         role: roles.notFunctions,
         users: [],
       },
-      records: [],
+      records: {
+        forSisae: [],
+      },
       message: "",
       messageFI: false,
       inputCurp: true,
@@ -286,7 +288,7 @@ export const App = {
         </p>
 
         <v-selectOption
-            v-if=auth&&!optionPiecesInformation&&!optionFindFiles&&!optionListUsers
+            v-if=auth&&!optionPiecesInformation&&!optionFindFiles&&!optionListUsers&&!optionGetSisae
             v-on:selectedFunction="showFunctionSite"
         ></v-selectOption>
 
