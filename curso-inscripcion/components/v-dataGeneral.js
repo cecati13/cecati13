@@ -51,13 +51,10 @@ export const vDataGeneral = {
       const nodePlaceOfBirth = document.getElementById("placeOfBirth");
       const placeOfBirth = nodePlaceOfBirth.value;
       const genero = document.getElementById("genero");
-      let gender;
-      if (genero.checked && genero.value === "MASCULINO") {
-        gender = "MASCULINO";
-      } else {
-        gender = "FEMENINO";
-      }
-
+      const gender =
+        genero.checked && genero.value === "MASCULINO"
+          ? "MASCULINO"
+          : "FEMENINO";
       const birthCertificate = e.target.children["birthCertificate"].files[0];
       const birthCertificateBlob = URL.createObjectURL(
         e.target.children["birthCertificate"].files[0]
@@ -81,7 +78,6 @@ export const vDataGeneral = {
           icon: "warning",
           confirmButtonText: "Aceptar",
         });
-        //alert(`El archivo tiene que ser menor a ${this.sizeFile} MB. Por favor intenta nuevamente.`);
       } else {
         //***********PARTE TRABAJANDO EN  verifyCURPofData() en el padre de todos*************/
         const endpoint = `${this.API}/newStudent/dataGeneral`;
@@ -96,19 +92,14 @@ export const vDataGeneral = {
           });
           this.$emit("continueFirstRegister", responseFile);
           //VERIFICAR SI USUARIO CAMBIO LA CURP Y VERIFICAR QUE NO ESTE INSCRITO EN EL SISTEMA
-        } else if (responseFile.curp === false) {
-          const message = responseFile.message;
+        }
+        if (responseFile.curp === false) {
           Swal.fire({
             title: "Error",
-            text: message,
+            text: responseFile.message,
             icon: "error",
             confirmButtonText: "Aceptar",
           });
-          //alert("Error. Verifica la información.")
-        } else {
-          console.warn(
-            "comunicacion con servidor exitosa, pero se genero otro error al procesar la respuesta aqui en el Front"
-          );
         }
       }
     },
