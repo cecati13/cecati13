@@ -11,6 +11,7 @@ export const App = {
       optionPiecesInformation: false,
       optionFindFiles: false,
       optionListUsers: false,
+      optionGetSisae: false,
       fileSource: "",
       username: "",
       email: "",
@@ -18,6 +19,7 @@ export const App = {
         role: roles.notFunctions,
         users: [],
       },
+      records: [],
       message: "",
       messageFI: false,
       inputCurp: true,
@@ -35,6 +37,8 @@ export const App = {
   provide() {
     return {
       permissions: this.permissions,
+      API: this.API,
+      records: this.records,
     };
   },
 
@@ -85,6 +89,7 @@ export const App = {
         this.optionListUsers = obj.adminUsers;
         this.getUsers();
       }
+      this.optionGetSisae = obj.getSisae;
       this.optionPiecesInformation = obj.fInformation;
       this.optionFindFiles = obj.files;
     },
@@ -101,6 +106,7 @@ export const App = {
       this.optionPiecesInformation = false;
       this.optionFindFiles = false;
       this.optionListUsers = false;
+      this.optionGetSisae = false;
       this.listInCloud = false;
       this.listButton = true;
       this.uploadPiecesInformation = true;
@@ -264,7 +270,7 @@ export const App = {
         </p>
 
         <v-buttonBack
-            v-if=auth&&(optionFindFiles||optionPiecesInformation||optionListUsers)
+            v-if=auth&&(optionFindFiles||optionPiecesInformation||optionListUsers||optionGetSisae)
             v-on:click="ShowMenu"
         ></v-buttonBack>
 
@@ -283,6 +289,10 @@ export const App = {
             v-if=auth&&!optionPiecesInformation&&!optionFindFiles&&!optionListUsers
             v-on:selectedFunction="showFunctionSite"
         ></v-selectOption>
+
+        <v-getSisae
+          v-if=auth&&optionGetSisae
+        />
 
 
         <form 
