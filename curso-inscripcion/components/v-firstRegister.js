@@ -27,8 +27,15 @@ export const vFirstRegister = {
         const newObj = { 
           ...object, 
           discapacidad: disability,
-          padecimiento: suffering 
         };
+        if(suffering) {
+          Object.defineProperty(newObj, "padecimiento",{
+            value: suffering,
+            writable: true,
+            enumerable: true,
+            configurable: true
+          })
+        }
         this.firstRegisterIsCompletedScholarship = false;
         this.$emit("firstRegisterCompleted", newObj);
       },
@@ -40,9 +47,14 @@ export const vFirstRegister = {
       },
       
       nodeSuffering(){
-        const node = document.getElementById("suffering");
-        const suffering = node.value.toUpperCase();
-        return suffering;
+        const thereSuffering = document.querySelector('input[name="isDisability"]:checked').value;        
+        if(thereSuffering === "SI") {
+          const node = document.getElementById("suffering");
+          const suffering = node.value.toUpperCase();
+          return suffering;
+        } else {
+          return false;
+        }
       }
     },
   

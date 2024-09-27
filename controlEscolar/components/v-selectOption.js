@@ -1,64 +1,71 @@
 import { roles } from "../models/roles.js";
 
 export const vSelectOption = {
-    inject: ["permissions"],
+  inject: ["permissions"],
 
-    data() {
-        return {
-            option: {
-                files: false,
-                fInformation: false,
-                adminUsers: false,
-                closed: false,
-            },
-            accessAdmin: this.isAdmin(),
-            doHaveAccess: this.isAccess(),
-        }
+  data() {
+    return {
+      option: {
+        files: false,
+        fInformation: false,
+        adminUsers: false,
+        getSisae: false,
+        closed: false,
+      },
+      accessAdmin: this.isAdmin(),
+      doHaveAccess: this.isAccess(),
+    };
+  },
+
+  methods: {
+    setOptionsFalse() {
+      this.option.files = false;
+      this.option.fInformation = false;
+      this.option.adminUsers = false;
+      this.option.closed = false;
     },
 
-    methods: {
-        setOptionsFalse() {
-            this.option.files = false;
-            this.option.fInformation = false;
-            this.option.adminUsers = false;
-            this.option.closed = false;
-        },
-
-        findFile() {
-            this.setOptionsFalse();
-            this.option.files = true;
-            this.$emit("selectedFunction", this.option);
-        },
-
-        piecesInformation() {
-            this.setOptionsFalse();
-            this.option.fInformation = true;
-            this.$emit("selectedFunction", this.option);
-        },
-
-        adminUsers() {
-            this.setOptionsFalse();
-            this.option.adminUsers = true;
-            this.$emit("selectedFunction", this.option);
-        },
-
-        isAdmin() {
-            return String(this.permissions.role) === String(roles.admin)
-                //|| String(this.permissions.role) === String(roles.sAdmin);
-        },
-
-        isAccess() {
-            return String(this.permissions.role) !== String(roles.notFunctions);
-        },
-
-        closeSession() {
-            this.setOptionsFalse();
-            this.option.closed = true;
-            this.$emit("selectedFunction", this.option);
-        }
+    findFile() {
+      this.setOptionsFalse();
+      this.option.files = true;
+      this.$emit("selectedFunction", this.option);
     },
 
-    template: `
+    piecesInformation() {
+      this.setOptionsFalse();
+      this.option.fInformation = true;
+      this.$emit("selectedFunction", this.option);
+    },
+
+    adminUsers() {
+      this.setOptionsFalse();
+      this.option.adminUsers = true;
+      this.$emit("selectedFunction", this.option);
+    },
+
+    getSisae() {
+      this.setOptionsFalse();
+      this.option.getSisae = true;
+      this.$emit("selectedFunction", this.option);
+    },
+
+    isAdmin() {
+      return String(this.permissions.role) === String(roles.admin);
+      //|| String(this.permissions.role) === String(roles.sAdmin);
+    },
+
+    isAccess() {
+      return String(this.permissions.role) !== String(roles.notFunctions);
+    },
+
+    closeSession() {
+      this.setOptionsFalse();
+      this.option.closed = true;
+      this.$emit("selectedFunction", this.option);
+    },
+  },
+
+  template: `
     <p v-if=doHaveAccess>
         Selecciona las funciones del sitio que deseas utilizar:
     </p>
@@ -83,6 +90,14 @@ export const vSelectOption = {
     >
         <button>Fichas de información</button>
     </div>
+
+    <div 
+        v-if=doHaveAccess
+        v-on:click="getSisae" 
+        class="functionOption"
+    >
+        <button>Consultar registros SISAE</button>
+    </div>
     
     <div 
         v-if=accessAdmin
@@ -90,7 +105,7 @@ export const vSelectOption = {
         class="functionOption"
     >
         <button>Administración de Usuarios</button>
-    </div>
+    </div>    
 
     <div
         v-on:click="closeSession" 
@@ -98,5 +113,5 @@ export const vSelectOption = {
     >
         <button class="closeSession">Cerrar Sesión</button>
     </div>
-    `
+    `,
 };
