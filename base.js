@@ -1,7 +1,6 @@
 class Base {
   getFunctionsAPI() {
-    //return "https://apiserverlessspreadsheet-776826070708.us-east1.run.app";
-    return "http://localhost:8080";
+    return "https://apiserverlessspreadsheet-776826070708.us-east1.run.app";
   }
 
   delayMsAPI() {
