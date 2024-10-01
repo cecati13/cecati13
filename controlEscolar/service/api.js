@@ -1,5 +1,14 @@
 const delayMs = base.delayMsAPI();
 
+const responseError = async (response) => {
+  const status = response.status;
+  const res = await response.json();
+  return {
+    ...res,
+    errorCode: status,
+  };
+};
+
 const delay = (ms) => {
   console.error(`Error, reintentando en ${ms / 1000} segundos...`);
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -33,7 +42,7 @@ export const getData = async (endpoint, methodRest = "GET", retries = 3) => {
       await delay(delayMs);
       return getData(endpoint, methodRest, retries - 1);
     }
-    return response.json();
+    return response.status === 200 ? response.json() : responseError(response);
   } catch (error) {
     console.error(error);
   }

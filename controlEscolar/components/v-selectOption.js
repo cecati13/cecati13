@@ -9,7 +9,7 @@ export const vSelectOption = {
         files: false,
         fInformation: false,
         adminUsers: false,
-        getSisae: false,
+        getDB: false,
         closed: false,
       },
       accessAdmin: this.isAdmin(),
@@ -43,9 +43,9 @@ export const vSelectOption = {
       this.$emit("selectedFunction", this.option);
     },
 
-    getSisae() {
+    getDB() {
       this.setOptionsFalse();
-      this.option.getSisae = true;
+      this.option.getDB = true;
       this.$emit("selectedFunction", this.option);
     },
 
@@ -93,10 +93,10 @@ export const vSelectOption = {
 
     <div 
         v-if=doHaveAccess
-        v-on:click="getSisae" 
+        v-on:click="getDB" 
         class="functionOption"
     >
-        <button>Consultar registros SISAE</button>
+        <button>Consultar registros en Base de Datos</button>
     </div>
     
     <div 

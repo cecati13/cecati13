@@ -11,16 +11,13 @@ export const App = {
       optionPiecesInformation: false,
       optionFindFiles: false,
       optionListUsers: false,
-      optionGetSisae: false,
+      optionGetDB: false,
       fileSource: "",
       username: "",
       email: "",
       permissions: {
         role: roles.notFunctions,
         users: [],
-      },
-      records: {
-        forSisae: [],
       },
       message: "",
       messageFI: false,
@@ -40,7 +37,6 @@ export const App = {
     return {
       permissions: this.permissions,
       API: this.API,
-      records: this.records,
     };
   },
 
@@ -91,7 +87,7 @@ export const App = {
         this.optionListUsers = obj.adminUsers;
         this.getUsers();
       }
-      this.optionGetSisae = obj.getSisae;
+      this.optionGetDB = obj.getDB;
       this.optionPiecesInformation = obj.fInformation;
       this.optionFindFiles = obj.files;
     },
@@ -108,32 +104,12 @@ export const App = {
       this.optionPiecesInformation = false;
       this.optionFindFiles = false;
       this.optionListUsers = false;
-      this.optionGetSisae = false;
+      this.optionGetDB = false;
       this.listInCloud = false;
       this.listButton = true;
       this.uploadPiecesInformation = true;
       this.clearMessage();
       this.cleanArrays();
-    },
-
-    async findFileCURP(e) {
-      e.preventDefault();
-      this.preloader();
-      const curp = e.target.curp.value;
-      const typeDoc = e.target.typeDoc.value;
-      const endpoint = `${this.API}/file/${curp}?type=${typeDoc}`;
-      const res = await getData(endpoint);
-      const type = this.typeFile(res.typeFile);
-      console.log(res);
-      const base64Response = await fetch(
-        `data:${type};base64,${res.file.file}`
-      );
-      const blob = await base64Response.blob();
-      const fileURL = URL.createObjectURL(blob);
-      this.fileSource = fileURL;
-      this.clearMessage();
-      this.preloader();
-      window.open(this.fileSource, "_blank");
     },
 
     async sendFiles(formFiles, API) {
@@ -148,25 +124,6 @@ export const App = {
       const info = await response.json();
       this.preloader();
       return info;
-    },
-
-    typeFile(extension) {
-      let type = "";
-      switch (extension) {
-        case "jpg":
-          type = "image/jpg";
-          break;
-        case "jpeg":
-          type = "image/jpeg";
-          break;
-        case "png":
-          type = "image/png";
-          break;
-        default: //pdf
-          type = "application/pdf";
-          break;
-      }
-      return type;
     },
 
     clearMessage() {
@@ -262,24 +219,24 @@ export const App = {
         v-bind:class="['preloader']"
     ></div>
 
-    <section v-if=!loading>
+    <div v-if=!loading class="section-responsive">
 
         <p v-if=auth>
             Bienvenido {{ username.toUpperCase() }} 
         </p>
         <p v-if=auth>
-            {{ email }} 
+            {{ email }}
         </p>
 
         <v-buttonBack
-            v-if=auth&&(optionFindFiles||optionPiecesInformation||optionListUsers||optionGetSisae)
+            v-if=auth&&(optionFindFiles||optionPiecesInformation||optionListUsers||optionGetDB)
             v-on:click="ShowMenu"
         ></v-buttonBack>
 
          <v-users 
             v-if=auth&&optionListUsers
             v-on:updateRole="updateRoleSend"
-        />   
+        />
 
         <p
             class="message"
@@ -288,37 +245,18 @@ export const App = {
         </p>
 
         <v-selectOption
-            v-if=auth&&!optionPiecesInformation&&!optionFindFiles&&!optionListUsers&&!optionGetSisae
+            v-if=auth&&!optionPiecesInformation&&!optionFindFiles&&!optionListUsers&&!optionGetDB
             v-on:selectedFunction="showFunctionSite"
         ></v-selectOption>
 
-        <v-getSisae
-          v-if=auth&&optionGetSisae
+        <v-getDB
+          v-if=auth&&optionGetDB
         />
 
 
-        <form 
-            v-if=auth&&optionFindFiles
-            v-on:submit="findFileCURP"
-            class="formFile"
-        >
-            <h4>Buscar comprobante.</h4>
-            <label for="typeDoc">
-                Selecciona el tipo de documento:
-            </label>
-            <select name="typeDoc" id="typeDocumentSelected">
-                <option value="nacimiento">Acta de Nacimiento</option>
-                <option value="estudios">Comprobante de Estudios</option>
-                <option value="domicilio">Comprobante de Domicilio</option>
-            </select>
-            <label for="curp">CURP</label>
-            <input 
-                name="curp"
-                onkeyup="javascript:this.value=this.value.toUpperCase();"
-            >
-            
-            <button>Enviar</button>
-        </form>     
+        <v-findFile 
+          v-if=auth&&optionFindFiles
+        />
 
         <v-uploadFile
             v-if=auth&&optionPiecesInformation&&uploadPiecesInformation
@@ -352,6 +290,6 @@ export const App = {
                 </a>    
             </li>
         </ol>
-    </section>
+    </div>
     `,
 };

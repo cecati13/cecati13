@@ -3,8 +3,6 @@
     padding: 15px;
     color: var(--fontColor2);
     text-align: center;
-    display: flex;
-    flex-direction: column;
     align-items: center;
 }
 
@@ -13,6 +11,11 @@
     font-size: 1.8rem;
     font-weight: 700;
     overflow-wrap: break-word;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
 }
 
 h4 {
@@ -24,9 +27,13 @@ form {
     max-width: 450px;
     padding: 5px 25px;
     margin: 5px;
-    display: flex;
-    flex-direction: column;
     text-align: center;
+}
+
+.form-double {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 
 input,
@@ -43,6 +50,12 @@ button {
     margin-top: 5px;
     align-self: center;
     cursor: pointer;
+}
+.section-responsive {
+    max-width: 95vw;
+}
+.section-getSisae {
+    align-items: center;
 }
 
 .piecesInformationCloud {
@@ -83,8 +96,6 @@ button {
 .buttonBack {
     background-color: var(--fontColor);
     border-radius: 5px;
-    display: flex;
-    flex-direction: column;
     align-items: center;
     text-align: center;
     width: 100px;
@@ -119,15 +130,34 @@ button {
     padding: 5px;
 }
 
+.table-responsive {
+    overflow-x: auto;
+    overflow-x: scroll; 
+    -webkit-overflow-scrolling: touch;
+    font-size: 0.9em;
+}
+
 .table {
     border-radius: 0.25rem;
     margin-top: 4rem;
     background-color: var(--contrastColor);
+    border-collapse: collapse;
+    border-spacing: 0;
+    table-layout: auto;
+}
+
+.table th, .table td {
+    word-wrap: break-word;
+    white-space: normal; 
 }
 
 .table th {
     color: var(--mainColor);
     height: 40px;
+}
+
+.table tr:hover {
+    background-color: var(--mainColor2);
 }
 
 .table th:last-child {
@@ -178,3 +208,34 @@ button {
     padding: 5px 15px;
 }
 
+.list-responsive {
+    display: flex;
+    flex-wrap: wrap;
+    width: 90vw;
+    justify-content: space-evenly;
+}
+
+.detail-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 7px;
+    width: 100%;
+    max-width: 500px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.detail-list li {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+}
+
+.detail-list li:last-child {
+    border-bottom: none;
+}
+
+.detail-list li span {
+    font-weight: bold;
+}
