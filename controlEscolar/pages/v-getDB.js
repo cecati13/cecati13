@@ -9,42 +9,63 @@ export const vGetDB = {
       showTableRecords: false,
       records: [],
       showInfoStudent: false,
-      recordStudent: {}
+      recordStudent: {},
+      message: "",
+      showMessage: false,
     };
   },
 
   methods: {
     async findRecords(e) {
       e.preventDefault();
+      this.resetResults();
       const numberControl = e.target.matricula.value;
       const endpoint = `${this.API}/infosisae/${numberControl}`;
       const res = await getData(endpoint);
       if (res.students.length > 0) {
         this.records = [...res.students];
         this.showTableRecords = true;
-        this.showInfoStudent = false;
       }
+      this.message = res.msg;
+      this.showMessage = true;
+    },
+
+    changeNullToNone(value) {
+      return value === null || value === undefined ? "Ninguna" : value;
+    },
+
+    resetResults() {
+      this.message = "";
+      this.showMessage = false;
+      this.showTableRecords = false;
+      this.showInfoStudent = false;
     },
 
     async findStudent(e) {
       e.preventDefault();
+      this.resetResults();
       const infoSearch = e.target.infoSearch.value;
       const typeSearch = e.target.typeSearch.value;
-      const validation = typeSearch === "user"
-        ? this.validateCurp(infoSearch)
-        : this.validateNumberControl(infoSearch);
-        console.log(validation);
-        
+      const validation =
+        typeSearch === "user"
+          ? this.validateCurp(infoSearch)
+          : this.validateNumberControl(infoSearch);
+
       if (!validation) {
         alert("Valida que la informacion sea correcta");
       } else {
         const endpoint = `${this.API}/registrationRecord/?${typeSearch}=${infoSearch}`;
         const res = await getData(endpoint);
         if (res.studentRecord) {
-          this.recordStudent = {...res.studentRecord};
+          this.recordStudent = {
+            ...res.studentRecord,
+            padecimiento: this.changeNullToNone(res.studentRecord.padecimiento),
+            discapacidad: this.changeNullToNone(res.studentRecord.discapacidad),
+          };
           this.showInfoStudent = true;
-          this.showTableRecords = false;
-          console.log(this.recordStudent);          
+        } else {
+          this.message = res.msg;
+          this.showMessage = true;
         }
       }
     },
@@ -59,9 +80,9 @@ export const vGetDB = {
       );
     },
 
-    formatDate (date){
+    formatDate(date) {
       return formatDateDB(date);
-    }
+    },
   },
 
   template: `
@@ -108,6 +129,10 @@ export const vGetDB = {
 
       </div>
 
+      <p v-if=showMessage class="message">
+        {{ message }}
+      </p>
+
       <div 
         v-if=showTableRecords
         class="table-responsive"
@@ -117,9 +142,10 @@ export const vGetDB = {
           <tr>
             <th>Matricula</th>
             <th>CURP</th>
-            <th>Nombre</th>
             <th>Apellido Paterno</th>
             <th>Apellido Materno</th>
+            <th>Nombre</th>
+            <th>Telefono</th>
             <th>Calle</th>
             <th>Colonia</th>
             <th>Alcaldia</th>
@@ -134,6 +160,7 @@ export const vGetDB = {
             <td>{{ record.apellido_paterno }}</td>
             <td>{{ record.apellido_materno }}</td>
             <td>{{ record.nombre }}</td>
+            <td>{{ record.telefono }}</td>
             <td>{{ record.calle }}</td>
             <td>{{ record.colonia }}</td>
             <td>{{ record.municipio_alcaldia }}</td>
