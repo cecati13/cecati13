@@ -20,7 +20,6 @@ export const vFindFile = {
       const res = await getData(endpoint);
       if (res.file) {
         const type = typeFile(res.typeFile);
-        console.log(res);
         const base64Response = await fetch(
           `data:${type};base64,${res.file.file}`
         );

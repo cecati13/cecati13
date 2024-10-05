@@ -37,7 +37,6 @@ export const getData = async (endpoint, methodRest = "GET", retries = 3) => {
       method: methodRest,
       headers: objHeaders,
     });
-    console.log(response);
     if (response.status === 500 && retries > 0) {
       await delay(delayMs);
       return getData(endpoint, methodRest, retries - 1);
