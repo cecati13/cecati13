@@ -1,6 +1,9 @@
 class Base {
   getFunctionsAPI() {
-    return "https://apiserverlessspreadsheet-776826070708.us-east1.run.app";
+    return "https://api13-776826070708.us-central1.run.app";
+
+    // Development
+    //  return "https://api-development-c13-776826070708.us-central1.run.app";
   }
 
   delayMsAPI() {
@@ -25,7 +28,7 @@ class Base {
             <li>
                 <a id="services" href="${ub}/servicios" class="nav__show--ul__link">Servicios</a>
             </li>
-        </ul>   
+        </ul>
         `;
     // <li>
     //     <a id="specialties" href="${ub}/oferta" class="nav__show--ul__link">Oferta Educativa</a>
