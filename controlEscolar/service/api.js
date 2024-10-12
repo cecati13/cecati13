@@ -1,4 +1,5 @@
 const delayMs = base.delayMsAPI();
+const numRetries = base.attemptRetryAPI();
 
 const responseError = async (response) => {
   const status = response.status;
@@ -14,7 +15,7 @@ const delay = (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
-export const fetchWithRetry = async (endpoint, options, retries = 3) => {
+export const fetchWithRetry = async (endpoint, options, retries = numRetries) => {
   try {
     const response = await fetch(endpoint, options);
     if (response.status === 500 && retries > 0) {
@@ -27,7 +28,7 @@ export const fetchWithRetry = async (endpoint, options, retries = 3) => {
   }
 };
 
-export const getData = async (endpoint, methodRest = "GET", retries = 3) => {
+export const getData = async (endpoint, methodRest = "GET", retries = numRetries) => {
   try {
     const objHeaders = {
       "Content-Type": "application/json",
@@ -37,6 +38,8 @@ export const getData = async (endpoint, methodRest = "GET", retries = 3) => {
       method: methodRest,
       headers: objHeaders,
     });
+    console.log(retries);
+    
     if (response.status === 500 && retries > 0) {
       await delay(delayMs);
       return getData(endpoint, methodRest, retries - 1);
