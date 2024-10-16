@@ -1,17 +1,16 @@
 class Base {
   getFunctionsAPI() {
-    //return "https://api13-776826070708.us-central1.run.app";
+    // return "https://api13-776826070708.us-central1.run.app";
 
     // Development
-    //  return "https://api-development-c13-776826070708.us-central1.run.app";
-    return "http://localhost:3000"
+    return "https://api-development-c13-776826070708.us-central1.run.app";
   }
 
   delayMsAPI() {
-    return 2000;
+    return 1000;
   }
 
-  attemptRetryAPI (){
+  attemptRetryAPI() {
     return 2;
   }
 
