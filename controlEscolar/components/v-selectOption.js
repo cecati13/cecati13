@@ -67,49 +67,54 @@ export const vSelectOption = {
 
   template: `
     <p v-if=doHaveAccess>
-        Selecciona las funciones del sitio que deseas utilizar:
+      Selecciona las funciones del sitio que deseas utilizar:
     </p>
-
     <div v-if=!doHaveAccess>
-        <h3>No tienes ninguna función asignada.</h3>
-        <p>Si crees que debes tener acceso a alguna funcionalidad del sitio, solicitala a algún directivo.</p>
+      <h3>No tienes ninguna función asignada.</h3>
+      <p class="message--notFunctions">
+        Si crees que debes tener acceso a alguna funcionalidad del sitio, solicitala a algún directivo.
+      </p>
     </div>
 
-    <div 
+    <div class="container--functionOption">
+
+      <div 
         v-if=doHaveAccess
         v-on:click="findFile" 
         class="functionOption"
-    >
+      >
         <button>Buscar comprobantes</button>
-    </div>
-    
-    <div 
-        v-if=doHaveAccess
-        v-on:click="piecesInformation"
-        class="functionOption"
-    >
-        <button>Fichas de información</button>
-    </div>
-
-    <div 
+      </div>
+      
+      <div 
         v-if=doHaveAccess
         v-on:click="getDB" 
         class="functionOption"
-    >
+      >
         <button>Consultar registros en Base de Datos</button>
-    </div>
-    
-    <div 
+      </div>
+
+      <div 
+        v-if=doHaveAccess
+        v-on:click="piecesInformation"
+        class="functionOption"
+      >
+        <button>Fichas de información</button>
+      </div>
+      
+      <div 
         v-if=accessAdmin
         v-on:click="adminUsers" 
         class="functionOption"
-    >
+      >
         <button>Administración de Usuarios</button>
-    </div>    
+      </div>    
 
+    </div>
+    
     <div
-        v-on:click="closeSession" 
-        class="functionOption"
+      v-on:click="closeSession" 
+      class="functionOption"
     >
         <button class="closeSession">Cerrar Sesión</button>
     </div>
