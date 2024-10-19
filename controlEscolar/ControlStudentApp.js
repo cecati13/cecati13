@@ -3,7 +3,7 @@ import { callApi, getToken } from "./service/login.js";
 import { getData } from "./service/api.js";
 const host = base.getFunctionsAPI();
 
-export const App = {
+export const ControlStudentApp = {
   data() {
     return {
       API: host + "/controlStudents",

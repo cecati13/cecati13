@@ -1,4 +1,4 @@
-import { App } from "./App.js";
+import { ControlStudentApp } from "./ControlStudentApp.js";
 import { vFindFile, vGetDB, vUsers } from "./pages/index.js";
 import {
   vAvailableFI,
@@ -10,7 +10,7 @@ import {
 } from "./components/index.js";
 import { IconCancel, IconEdit, IconSave } from "./components/icons/index.js";
 
-const app = Vue.createApp(App);
+const app = Vue.createApp(ControlStudentApp);
 
 /** Pages */
 app.component("v-users", vUsers);

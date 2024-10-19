@@ -1,39 +1,8 @@
-import {
-  vAddress,
-  vButton,
-  vButtonCancel,
-  vButtonInscription,
-  vButtonUpdate,
-  vConexionFailBack,
-  vConfirmation,
-  vContact,
-  vCourse,
-  vDataGeneral,
-  vDbRegister,
-  vDbRegisterLegend,
-  vDisability,
-  vFirstRegister,
-  vForceUpdateDB,
-  vInputFile,
-  vLegendFiles,
-  vLegendUpdateData,
-  vNewRegister,
-  vNotScholarshipExample,
-  vScholarship,
-  vTagCurp,
-  vTypeRegister,
-  vUpdateAddress,
-  vUpdateBirthCertificate,
-  vUpdateContact,
-  vUpdateRegister,
-  vUpdateSchool,
-  vViewInscriptionNew,
-} from "./components/index.js";
 import { API_GET, API_POST } from "./service/api.js";
 
 const host = base.getFunctionsAPI();
 
-const app = Vue.createApp({
+export const InscriptionApp = {
   data() {
     return {
       API: host + "/students",
@@ -53,9 +22,9 @@ const app = Vue.createApp({
       },
       infoCourseShow: true,
       isStudentLocalStorage: false,
-      isWelcome: true,
+      isWelcome: false, // #
       isUserStudent: false,
-      isNewStudent: false,
+      isNewStudent: true, // #
       firstRegisterCompleted: false,
       confirmation: false,
       dataConfirmation: {},
@@ -147,7 +116,7 @@ const app = Vue.createApp({
           responseData.message === "LIMIT_FILE_SIZE"
         ) {
           new Error("FILES_TYPE_ERROR");
-        } 
+        }
         // else {
         //   new Error("Falla al inscribir en BD");
         // }
@@ -250,84 +219,45 @@ const app = Vue.createApp({
   },
 
   template: `
-  <section class="seccion__inscription">
-    <h3>Inscripción</h3>
-
-    <div id="preloader"></div>
-
-    <h4 v-if="infoCourseShow" class="article__course">
-      Bienvenido al proceso de inscripción al curso:
-    </h4>
-    <v-course
-      v-if="infoCourseShow"
-    />
-
-    <v-conexionFailBack
-      v-if="statusAPIs"
-    />
-
-    <v-typeRegister
-      v-on:consultCURP="consult"
-      v-if="isWelcome"
-    />
-
-    <v-dbRegister
-      v-if="isUserStudent"
-      v-on:eventInscription="inscription"
-    />
-    
-    <v-newRegister
-      v-if="isNewStudent"
-      v-on:saveDataNewRegister="saveDataNewRegister"
-      v-on:completedNewInscription="checkInformation"
-    />
-
-    <v-viewInscriptionNew
-      v-if="firstRegisterCompleted"
-      v-on:saveDataUpdate="saveDataNewRegister"
-      v-on:completedNewInscription="inscription"
-    />
-
-    <v-conexionFailBack
-      v-if="statusAPIs"
-    />
-    
-    <v-confirmation
-    v-if="confirmation"
-    />
-
-  </section>
-    `,
-});
-
-app.component("v-typeRegister", vTypeRegister);
-app.component("v-dbRegister", vDbRegister);
-app.component("v-dbRegisterLegend", vDbRegisterLegend);
-app.component("v-forceUpdateDB", vForceUpdateDB);
-app.component("v-newRegister", vNewRegister);
-app.component("v-dataGeneral", vDataGeneral);
-app.component("v-contact", vContact);
-app.component("v-address", vAddress);
-app.component("v-scholarship", vScholarship);
-app.component("v-notScholarshipExample", vNotScholarshipExample);
-app.component("v-updateContact", vUpdateContact);
-app.component("v-updateAddress", vUpdateAddress);
-app.component("v-updateSchool", vUpdateSchool);
-app.component("v-updateRegister", vUpdateRegister);
-app.component("v-firstRegister", vFirstRegister);
-app.component("v-button", vButton);
-app.component("v-tagCurp", vTagCurp);
-app.component("v-viewInscriptionNew", vViewInscriptionNew);
-app.component("v-updateBirthCertificate", vUpdateBirthCertificate);
-app.component("v-legendUpdateData", vLegendUpdateData);
-app.component("v-buttonCancel", vButtonCancel);
-app.component("v-inputFile", vInputFile);
-app.component("v-course", vCourse);
-app.component("v-disability", vDisability);
-app.component("v-buttonInscription", vButtonInscription);
-app.component("v-buttonUpdate", vButtonUpdate);
-app.component("v-confirmation", vConfirmation);
-app.component("v-legendFiles", vLegendFiles);
-app.component("v-conexionFailBack", vConexionFailBack);
-
-app.mount("#app");
+    <section class="seccion__inscription">
+      <h3>Inscripción</h3>
+  
+      <div id="preloader"></div>
+  
+      <h4 v-if="infoCourseShow" class="article__course">
+        Bienvenido al proceso de inscripción al curso:
+      </h4>
+      
+      <v-course v-if="infoCourseShow" />
+  
+      <v-conexionFailBack v-if="statusAPIs" />
+  
+      <v-typeRegister
+        v-on:consultCURP="consult"
+        v-if="isWelcome"
+      />
+  
+      <v-dbRegister
+        v-if="isUserStudent"
+        v-on:eventInscription="inscription"
+      />
+      
+      <v-newRegister
+        v-if="isNewStudent"
+        v-on:saveDataNewRegister="saveDataNewRegister"
+        v-on:completedNewInscription="checkInformation"
+      />
+  
+      <v-viewInscriptionNew
+        v-if="firstRegisterCompleted"
+        v-on:saveDataUpdate="saveDataNewRegister"
+        v-on:completedNewInscription="inscription"
+      />
+  
+      <v-conexionFailBack v-if="statusAPIs" />
+      
+      <v-confirmation v-if="confirmation" />
+  
+    </section>
+      `,
+};

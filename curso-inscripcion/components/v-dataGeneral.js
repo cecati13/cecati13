@@ -6,7 +6,20 @@ export const vDataGeneral = {
   data() {
     return {
       meetsAgeRequirement: true,
+      editRFC: false,
       estadoNacimiento: CONSTANTS.onlyStates,
+      form: {
+        curp: this.reactive.curp,
+        birthdate: "",
+        nombre: "",
+        a_paterno: "",
+        a_materno: "",
+        genero: "",
+        maritalStatus: "",
+        rfc: null,
+        estado: "",
+        birthCertificate: "",
+      }
     };
   },
 
@@ -41,82 +54,96 @@ export const vDataGeneral = {
       }
     },
 
+    fnEditRFC (){
+      this.editRFC = !this.editRFC;
+      this.form.rfc = this.editRFC ? "" : null;
+    },
+
+    handleFileUpload(event) {
+      const file = event.target.files[0]; 
+      this.form.birthCertificate = file; 
+    },
+
     async verifyDataGeneral(e) {
       e.preventDefault();
-      const curp = e.target.children["curp"].value;
-      const birthday = e.target.children["birthday"].value;
-      const nombre = e.target.children["nombre"].value;
-      const a_paterno = e.target.children["a_paterno"].value;
-      const a_materno = e.target.children["a_materno"].value;
-      const nodePlaceOfBirth = document.getElementById("placeOfBirth");
-      const placeOfBirth = nodePlaceOfBirth.value;
-      const genero = document.getElementById("genero");
-      const gender =
-        genero.checked && genero.value === "MASCULINO"
-          ? "MASCULINO"
-          : "FEMENINO";
-      const birthCertificate = e.target.children["birthCertificate"].files[0];
-      const birthCertificateBlob = URL.createObjectURL(
-        e.target.children["birthCertificate"].files[0]
-      );
+      console.log(this.form)
+      // debugger;
+      // const curp = e.target.children["curp"].value;
+      // const birthday = e.target.children["birthday"].value;
+      // const nombre = e.target.children["nombre"].value;
+      // const a_paterno = e.target.children["a_paterno"].value;
+      // const a_materno = e.target.children["a_materno"].value;
+      // const nodePlaceOfBirth = document.getElementById("placeOfBirth");
+      // const placeOfBirth = nodePlaceOfBirth.value;
+      // const genero = document.getElementById("genero");
+      // const gender =
+      //   genero.checked && genero.value === "MASCULINO"
+      //     ? "MASCULINO"
+      //     : "FEMENINO";
+      // const birthCertificate = e.target.children["birthCertificate"].files[0];
+      // const birthCertificateBlob = URL.createObjectURL(
+      //   e.target.children["birthCertificate"].files[0]
+      // );
 
-      const formData = new FormData();
+      // const formData = new FormData();
 
-      formData.append("curp", curp),
-        formData.append("fechaNacimiento", birthday),
-        formData.append("nombre", nombre),
-        formData.append("a_paterno", a_paterno),
-        formData.append("a_materno", a_materno),
-        formData.append("estado", placeOfBirth),
-        formData.append("genero", gender),
-        formData.append("actaNacimientoRender", birthCertificateBlob);
+      // formData.append("curp", curp),
+      //   formData.append("fechaNacimiento", birthday),
+      //   formData.append("nombre", nombre),
+      //   formData.append("a_paterno", a_paterno),
+      //   formData.append("a_materno", a_materno),
+      //   formData.append("estado", placeOfBirth),
+      //   formData.append("genero", gender),
+      //   formData.append("actaNacimientoRender", birthCertificateBlob);
 
-      if (birthCertificate.size > `${this.MAX_SIZE_FILES}`) {
-        Swal.fire({
-          title: "Archivo muy grande.",
-          text: `El archivo tiene que ser menor a ${this.sizeFile} MB. Por favor intenta nuevamente.`,
-          icon: "warning",
-          confirmButtonText: "Aceptar",
-        });
-      } else {
-        //***********PARTE TRABAJANDO EN  verifyCURPofData() en el padre de todos*************/
-        const endpoint = `${this.API}/newStudent/dataGeneral`;
-        const responseFile = await API_POST(endpoint, formData);
-        if (responseFile.curp === this.reactive.curp) {
-          //temporalmente añadir el blob al objeto de acta de nacimiento
-          Object.defineProperty(this.reactive.newStudent, "actaNacimiento", {
-            value: birthCertificate,
-            writable: true,
-            configurable: false,
-            enumerable: true,
-          });
-          this.$emit("continueFirstRegister", responseFile);
-          //VERIFICAR SI USUARIO CAMBIO LA CURP Y VERIFICAR QUE NO ESTE INSCRITO EN EL SISTEMA
-        }
-        if (responseFile.curp === false) {
-          Swal.fire({
-            title: "Error",
-            text: responseFile.message,
-            icon: "error",
-            confirmButtonText: "Aceptar",
-          });
-        }
-      }
+      // if (birthCertificate.size > `${this.MAX_SIZE_FILES}`) {
+      //   Swal.fire({
+      //     title: "Archivo muy grande.",
+      //     text: `El archivo tiene que ser menor a ${this.sizeFile} MB. Por favor intenta nuevamente.`,
+      //     icon: "warning",
+      //     confirmButtonText: "Aceptar",
+      //   });
+      // } else {
+      //   //***********PARTE TRABAJANDO EN  verifyCURPofData() en el padre de todos*************/
+      //   const endpoint = `${this.API}/newStudent/dataGeneral`;
+      //   const responseFile = await API_POST(endpoint, formData);
+      //   if (responseFile.curp === this.reactive.curp) {
+      //     //temporalmente añadir el blob al objeto de acta de nacimiento
+      //     Object.defineProperty(this.reactive.newStudent, "actaNacimiento", {
+      //       value: birthCertificate,
+      //       writable: true,
+      //       configurable: false,
+      //       enumerable: true,
+      //     });
+      //     this.$emit("continueFirstRegister", responseFile);
+      //     //VERIFICAR SI USUARIO CAMBIO LA CURP Y VERIFICAR QUE NO ESTE INSCRITO EN EL SISTEMA
+      //   }
+      //   if (responseFile.curp === false) {
+      //     Swal.fire({
+      //       title: "Error",
+      //       text: responseFile.message,
+      //       icon: "error",
+      //       confirmButtonText: "Aceptar",
+      //     });
+      //   }
+      // }
     },
   },
 
   template: `
-    <form v-on:submit="verifyDataGeneral" name="dataGeneral">
-      <input v-bind:value="reactive.curp" name="curp" readonly></input>
+    <form @submit="verifyDataGeneral" name="dataGeneral">
+      <input v-bind:value="reactive.curp" readonly/>
       <h4>Para Verificar que tú CURP sea correcta y continuar con la inscripción, por favor proporcionanos los siguientes datos personales:</h4>
+      
       <label for="birthday">Fecha de Nacimiento</label>
       <input
         id="birthdate"
-        type="date" name="birthday" 
+        type="date" 
+        v-model="form.birthdate" 
         placeholder="Fecha de nacimiento..."
         v-on:input="isAgeOver15"
         required
-      >
+      />
       <p v-if="!reactive.ageRequeriment" class="inscription__message">
         Lo sentimos no podemos continuar con tu proceso de inscripción
       </p>
@@ -128,72 +155,113 @@ export const vDataGeneral = {
       <input 
         v-if="meetsAgeRequirement"
         type="text" 
-        name="nombre" 
+        name="nombre"
+        v-model="form.nombre"  
         placeholder="Escribe tu nombre de pila..."
         required
         onkeyup="javascript:this.value=this.value.toUpperCase();"
-      >
+      />
   
       <label for="a_paterno" v-if="meetsAgeRequirement">Apellido Paterno</label>
       <input 
         v-if="meetsAgeRequirement"
         type="text" 
         name="a_paterno" 
+        v-model="form.a_paterno"  
         placeholder="Tu apellido paterno..."
         required
         onkeyup="javascript:this.value=this.value.toUpperCase();"
-      >
+      />
   
       <label for="a_materno" v-if="meetsAgeRequirement">Apellido Materno</label>
       <input 
         v-if="meetsAgeRequirement"
         type="text"
-        name="a_materno" 
+        name="a_materno"
+        v-model="form.a_materno" 
         placeholder="Tu apellido materno..."
         required
         onkeyup="javascript:this.value=this.value.toUpperCase();"
-      >
+      />
   
       <div class="label__gender" v-if="meetsAgeRequirement">
-        <label for="genero" name="MASCULINO" class="label__gender">Hombre 
-            <input
-              type="radio" 
-              value="MASCULINO" 
-              name="genero" 
-              id="genero"
-            >
+        <label class="label__gender">
+          Hombre 
+          <input
+            type="radio" 
+            value="MASCULINO" 
+            v-model="form.genero"
+          >
         </label>
-        <label for="genero" name="FEMENINO" class="label__gender">Mujer
-            <input
-              type="radio" 
-              value="FEMENINO" name="genero"
-            >
-        </label>    
+        <label class="label__gender">
+          Mujer
+          <input
+            type="radio" 
+            v-model="form.genero"
+          >
+        </label>
       </div>
       
   
       <br>
+
+      <div class="label__gender" v-if="meetsAgeRequirement">
+        <p>Estado Civil</p>
+        <label class="label__gender">
+          Soltero 
+          <input type="radio"  value="SOLTERO" v-model="form.maritalStatus" />
+        </label>
+        <label for="maritalStatus" name="CASADO/A" class="label__gender">
+          Casado/a
+          <input type="radio" value="CASADO/A" v-model="form.maritalStatus"/>
+        </label>
+        <label for="maritalStatus" name="UNION LIBRE" class="label__gender">
+          Unión Libre
+          <input type="radio" value="UNION LIBRE" v-model="form.maritalStatus"/>
+        </label>
+        <label for="maritalStatus" name="VIUDO/A" class="label__gender">
+          Viudo/a
+          <input type="radio" value="VIUDO/A" v-model="form.maritalStatus"/>
+        </label>
+        <label for="maritalStatus" name="DIVORCIADO/A" class="label__gender">
+          Divorciado/a
+          <input type="radio" value="DIVORCIADO/A" v-model="form.maritalStatus"/>
+        </label>
+      </div>
+
+      <div>
+        <label for="rfc" >
+          Hemos generado tu RFC de manera automatica. Si hay algun error presionar EDITAR y captura el RFC correcto.
+        </label>
+        <input v-bind:value="reactive.curp" name="rfc" v-if="meetsAgeRequirement && !editRFC" readonly/>
+        <input name="rfc" v-if="meetsAgeRequirement && editRFC" v-model="form.rfc"/>
+        <button 
+          type="button" v-if="meetsAgeRequirement" v-on:click="fnEditRFC"
+        >
+          {{ meetsAgeRequirement && !editRFC ? "Editar" : "Generar Automaticamente"}}
+        </button>
+      </div>
   
       <p v-if="meetsAgeRequirement">Lugar de Nacimiento</p>
       <label for="estado" v-if="meetsAgeRequirement">
-        <select name="estado" id="placeOfBirth">
+        <select v-model="form.estado" name="estado" id="placeOfBirth">
+        <option value="" disabled>Seleccione un estado</option>
           <option v-for="item in estadoNacimiento" :key="item">{{ item }}</option>
+        </select>
       </label>
-      <label 
-        for="birthCertificate"
-        v-if="meetsAgeRequirement"
-      >
+
+      <label for="birthCertificate" v-if="meetsAgeRequirement">
         Adjuntar Acta de Nacimiento
       </label>
       <v-legendFiles v-if="meetsAgeRequirement"/>
       <input
-        v-if="meetsAgeRequirement"       
+        v-if="meetsAgeRequirement"
         type="file" 
-        name="birthCertificate"
+        @change="handleFileUpload"
         accept=".jpg, .jpeg, .pdf" 
-      >
+      />
   
-      <v-button v-if="meetsAgeRequirement"></v-button>
+      <v-button v-if="meetsAgeRequirement" type="submit"/>
       </form>
       `,
 };
