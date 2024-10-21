@@ -64,11 +64,19 @@ export const App = {
           this.auth = true;
           this.clearMessage();
           this.preloader();
+        } else if (response.statusCode === 500 || response.statusCode === 503){
+          throw new Error("Error de Conexión. Intenta iniciar de nuevo")
         } else {
           this.message = response.message;
         }
       } catch (error) {
         console.log(error);
+        Swal.fire({
+          title: "Error",
+          text: error.message,
+          icon: "error",
+          confirmButtonText: "Cerrar",
+        });
       }
     },
 

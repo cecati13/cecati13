@@ -98,7 +98,7 @@ const app = Vue.createApp({
           icon: "info",
           confirmButtonText: "Cerrar",
         });
-      } else {        
+      } else {
         this.isWelcome = true;
         this.infoCourseShow = true;
         Swal.fire({
@@ -135,7 +135,6 @@ const app = Vue.createApp({
             ? `${this.API}/DBStudent`
             : `${this.API}/newStudent/inscription`;
         const responseData = await API_POST(endpoint, formData);
-
         //falta manejo de errores que responda el servidor
         if (responseData.status) {
           (this.dataConfirmation.nombre = objDataInscription.nombre),
@@ -148,9 +147,10 @@ const app = Vue.createApp({
           responseData.message === "LIMIT_FILE_SIZE"
         ) {
           new Error("FILES_TYPE_ERROR");
-        } else {
-          new Error("Falla al inscribir en BD");
-        }
+        } 
+        // else {
+        //   new Error("Falla al inscribir en BD");
+        // }
         this.preloader();
         this.confirmation = true;
         if (responseData.errorCode) {

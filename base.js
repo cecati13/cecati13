@@ -3,11 +3,15 @@ class Base {
     return "https://api13-776826070708.us-central1.run.app";
 
     // Development
-    //  return "https://api-development-c13-776826070708.us-central1.run.app";
+    // return "https://api-development-c13-776826070708.us-central1.run.app";
   }
 
   delayMsAPI() {
-    return 2500;
+    return 1000;
+  }
+
+  attemptRetryAPI() {
+    return 2;
   }
 
   createNAV(ub) {
