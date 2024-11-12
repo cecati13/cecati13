@@ -154,6 +154,7 @@
 .button-inscription {
     margin-bottom: 10px;
     text-align: center;
+    cursor: pointer;
 }
 
 .button-inscription > img {
