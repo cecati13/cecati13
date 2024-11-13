@@ -85,13 +85,24 @@ class AvailableCourses {
       courseInfo.remove();
     }
     const containerImgButton = this.createContainerButton(course);
-    containerImgButton.addEventListener("click", (event) => saveCourse(event));
+    if (Number(course.annio_course) < 2025) {
+      containerImgButton.addEventListener("click", (event) =>
+        saveCourse(event)
+      );
+    } else {
+      containerImgButton.addEventListener("click", () =>
+        messageInPersonRegistration(course.curso)
+      );
+    }
     container.appendChild(containerImgButton);
     return container;
   }
 
   createContainerButton(course) {
-    const containerAnchor = document.createElement("a");
+    const containerAnchor =
+      Number(course.annio_course) < 2025
+        ? document.createElement("a")
+        : document.createElement("div");
     containerAnchor.className =
       "course--img-button button-inscription buttonAnimate";
     containerAnchor.dataset.numberCourse = `pre-${course.number}`;
@@ -336,6 +347,15 @@ function saveCourse(e) {
   const valueCourse = nodeCourse.value;
   sessionStorage.setItem(keyCourseStorage, valueCourse);
   //}
+}
+
+function messageInPersonRegistration(courseName) {
+  Swal.fire({
+    title: "Inscripción en ventanilla",
+    text: `Acude a la ventanilla del plantel para inscribirte al curso ${courseName}.`,
+    icon: "info",
+    confirmButtonText: "Cerrar",
+  });
 }
 
 function moreInformation(e) {
