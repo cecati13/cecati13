@@ -84,17 +84,7 @@ class AvailableCourses {
     if (!informationTab) {
       courseInfo.remove();
     }
-    const containerImgButton = this.createContainerButton(course);
-    if (Number(course.annio_course) < 2025) {
-      containerImgButton.addEventListener("click", (event) =>
-        saveCourse(event)
-      );
-    } else {
-      containerImgButton.addEventListener("click", () =>
-        messageInPersonRegistration(course.curso)
-      );
-    }
-    container.appendChild(containerImgButton);
+       
     return container;
   }
 
