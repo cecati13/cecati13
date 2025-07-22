@@ -178,9 +178,9 @@ button {
 }
 
 .table td {
-    padding: 0 30px;
+    padding: 7px 25px;
     color: var(--fontColor2);
-    height: 45px;
+    max-height: 45px;
 }
 
 .table td:last-child {
@@ -221,6 +221,16 @@ button {
     padding: 5px 15px;
 }
 
+.td--FI {
+    max-width: 65vw;
+    cursor: pointer;
+    padding: 10px;
+}
+
+#td--delete{
+    width: 50px;
+}
+
 .list-responsive {
     display: flex;
     flex-wrap: wrap;
@@ -251,4 +261,10 @@ button {
 
 .detail-list li span {
     font-weight: bold;
+}
+
+@media (min-width: 1024px) {
+    .td--FI {
+        max-width: 750px;
+    }
 }

@@ -23,9 +23,11 @@ export const App = {
       messageFI: false,
       inputCurp: true,
       listButton: true,
-      arrayForBlobs: [],
-      arrayForLinksFI: [],
-      arrayPiecesInfCloud: [],
+      listArrays: {
+        arrayForBlobs: [],
+        arrayForLinksFI: [],
+        arrayPiecesInfCloud: [],
+      },
       listInCloud: false,
       uploadPiecesInformation: true,
       loading: true,
@@ -37,6 +39,7 @@ export const App = {
     return {
       permissions: this.permissions,
       API: this.API,
+      piecesInformation: this.listArrays
     };
   },
 
@@ -151,7 +154,7 @@ export const App = {
       this.messageFI = true;
       this.listInCloud = true;
       res.message.forEach((item) => {
-        this.arrayPiecesInfCloud.push(item);
+        this.listArrays.arrayPiecesInfCloud.push(item);
       });
       this.listButton = false;
       this.uploadPiecesInformation = false;
@@ -172,19 +175,19 @@ export const App = {
 
     showUrlMessageUpload(array) {
       array.forEach((url) => {
-        this.arrayForLinksFI.push(url);
+        this.listArrays.arrayForLinksFI.push(url);
       });
     },
 
     cleanArrays() {
-      while (this.arrayForBlobs.length > 0) {
-        this.arrayForBlobs.pop();
+      while (this.listArrays.arrayForBlobs.length > 0) {
+        this.listArrays.arrayForBlobs.pop();
       }
-      while (this.arrayForLinksFI.length > 0) {
-        this.arrayForLinksFI.pop();
+      while (this.listArrays.arrayForLinksFI.length > 0) {
+        this.listArrays.arrayForLinksFI.pop();
       }
-      while (this.arrayPiecesInfCloud.length > 0) {
-        this.arrayPiecesInfCloud.pop();
+      while (this.listArrays.arrayPiecesInfCloud.length > 0) {
+        this.listArrays.arrayPiecesInfCloud.pop();
       }
     },
 
@@ -211,6 +214,16 @@ export const App = {
       }
       if (res.update) {
         this.ShowMenu();
+      }
+    },
+
+    async deleteFile(file) {
+      const endpoint = this.API + file.url;
+      const res = await getData(endpoint, "DELETE");      
+      if (res.file) {
+        const filterPiecesInformation = this.listArrays.arrayPiecesInfCloud.filter( item => item.name !== file.name)
+        this.listArrays.arrayPiecesInfCloud =[...filterPiecesInformation];
+        this.message = `El sistema tiene ${this.listArrays.arrayPiecesInfCloud.length} fichas de información disponibles`;
       }
     },
 
@@ -276,7 +289,7 @@ export const App = {
             class="uploadFiles"
         >
             <p 
-                v-for="link in arrayForLinksFI"
+                v-for="link in listArrays.arrayForLinksFI"
             >
                 {{ link }}
             </p>
@@ -288,16 +301,14 @@ export const App = {
             v-on:listFI="generateList"
         ></v-availableFI>
 
-       <ol 
+        <v-tablePiecesInfCloud
             v-if=auth
+            v-on:deleteFile="deleteFile"
             class="piecesInformationCloud"
-        >
-            <li v-for="item in arrayPiecesInfCloud">
-                <a :href="item.url" target="blank">
-                    {{ item.name }}
-                </a>    
-            </li>
-        </ol>
+        />
+
+      
+        
     </div>
     `,
 };
