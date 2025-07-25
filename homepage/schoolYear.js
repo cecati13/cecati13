@@ -4,8 +4,8 @@ function obtainSchoolYear() {
     const now = new Date();
     const yearNow = now.getFullYear();
 
-    // Cambio de año ciclo escolar cada: 14 de junio
-    if (now.getMonth() < 6 || (now.getMonth() === 6 && now.getDate() < 14)) {
+    // Cambio de año ciclo escolar cada: 1 de julio
+    if (now.getMonth() < 6 || (now.getMonth() === 5 && now.getDate() < 30)) {
         return `${yearNow - 1}-${yearNow}`;
     }
     return `${yearNow}-${yearNow + 1}`;
