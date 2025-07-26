@@ -1,14 +1,9 @@
 export const vTablePiecesInfCloud = {
-    inject: ["piecesInformation", "API"],
+    inject: ["piecesInformation"],
 
-    watch: {
-        "piecesInformation": {
-            handler(newFIList) {
-                const filterPiecesInformation = newFIList
-                    .filter(item => item.name !== file.name)
-                this.piecesInformation = [...filterPiecesInformation];
-            },
-            inmediate: true
+    data() {
+        return {
+            showTable: this.piecesInformation.linksFI.length > 0
         }
     },
 
@@ -27,18 +22,21 @@ export const vTablePiecesInfCloud = {
     },
 
     template: `
-    <div class="table-responsive"></div>
-        <table class="table">
+    <div class="table-responsive">
+        <table 
+            v-if="showTable"
+            class="table"
+        >
             <thead>
                 <tr>
-                    <th class="table--FI">Nombre</th>
+                    <th class="table--FI">Fichas de Información en el sistema: {{this.piecesInformation.linksFI.length}}</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody class="table--body">
-                <tr v-for="(itemFI, i) in piecesInformation.arrayPiecesInfCloud" :key="i" >
+                <tr v-for="(itemFI, i) in piecesInformation.linksFI" :key="i" >
                     <td 
-                        class="td--FI"    
+                        class="td--FI"
                         @click="showFI(itemFI.url)"
                     >
                         {{ i + 1 }}. {{ itemFI.name }}

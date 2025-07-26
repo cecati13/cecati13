@@ -22,14 +22,12 @@ export const App = {
       message: "",
       messageFI: false,
       inputCurp: true,
-      listButton: true,
       listArrays: {
         arrayForBlobs: [],
         arrayForLinksFI: [],
         arrayPiecesInfCloud: [],
+        linksFI: [],
       },
-      listInCloud: false,
-      uploadPiecesInformation: true,
       loading: true,
       thereAreSesion: this.areThereSession,
     };
@@ -39,7 +37,8 @@ export const App = {
     return {
       permissions: this.permissions,
       API: this.API,
-      piecesInformation: this.listArrays
+      piecesInformation: this.listArrays,
+      loader: () => this.preloader()
     };
   },
 
@@ -67,7 +66,7 @@ export const App = {
           this.auth = true;
           this.clearMessage();
           this.preloader();
-        } else if (response.statusCode === 500 || response.statusCode === 503){
+        } else if (response.statusCode === 500 || response.statusCode === 503) {
           throw new Error("Error de Conexión. Intenta iniciar de nuevo")
         } else {
           this.message = response.message;
@@ -117,8 +116,6 @@ export const App = {
       this.optionListUsers = false;
       this.optionGetDB = false;
       this.listInCloud = false;
-      this.listButton = true;
-      this.uploadPiecesInformation = true;
       this.clearMessage();
       this.cleanArrays();
     },
@@ -143,35 +140,7 @@ export const App = {
       if (!(messageInfCloud === null)) {
         messageInfCloud.innerHTML = "";
       }
-    },
-
-    async generateList(container) {
-      this.preloader();
-      const endpoint = `${this.API}/listBlobs/${container}`;
-      const res = await getData(endpoint);
-      const totalList = res.message.length;
-      this.message = `El sistema tiene ${totalList} fichas de información disponibles`;
-      this.messageFI = true;
-      this.listInCloud = true;
-      res.message.forEach((item) => {
-        this.listArrays.arrayPiecesInfCloud.push(item);
-      });
-      this.listButton = false;
-      this.uploadPiecesInformation = false;
-      this.preloader();
-    },
-
-    async uploadFileFI(arrayFiles) {
-      const formFiles = new FormData();
-      arrayFiles.forEach((file) => {
-        formFiles.append("fileFI", file);
-      });
-      const enpoint = `${this.API}/fileInformation`;
-      const res = await this.sendFiles(formFiles, enpoint);
-      this.messageFI = true;
-      this.showUrlMessageUpload(res.message);
-      this.listButton = true;
-    },
+    },    
 
     showUrlMessageUpload(array) {
       array.forEach((url) => {
@@ -217,15 +186,7 @@ export const App = {
       }
     },
 
-    async deleteFile(file) {
-      const endpoint = this.API + file.url;
-      const res = await getData(endpoint, "DELETE");      
-      if (res.file) {
-        const filterPiecesInformation = this.listArrays.arrayPiecesInfCloud.filter( item => item.name !== file.name)
-        this.listArrays.arrayPiecesInfCloud =[...filterPiecesInformation];
-        this.message = `El sistema tiene ${this.listArrays.arrayPiecesInfCloud.length} fichas de información disponibles`;
-      }
-    },
+    
 
     preloader() {
       this.loading = !this.loading;
@@ -233,6 +194,8 @@ export const App = {
   },
 
   template: `
+
+  <div>
     <h3>Exclusivo del área de control escolar</h3>
 
     <div  
@@ -254,61 +217,36 @@ export const App = {
             v-on:click="ShowMenu"
         ></v-buttonBack>
 
-         <v-users 
-            v-if=auth&&optionListUsers
-            v-on:updateRole="updateRoleSend"
-        />
-
-        <p
-            class="message"
-        >
-            {{ message }}
+        
+        <p class="message">
+        {{ message }}
         </p>
-
+        
         <v-selectOption
-            v-if=auth&&!optionPiecesInformation&&!optionFindFiles&&!optionListUsers&&!optionGetDB
-            v-on:selectedFunction="showFunctionSite"
+        v-if=auth&&!optionPiecesInformation&&!optionFindFiles&&!optionListUsers&&!optionGetDB
+        v-on:selectedFunction="showFunctionSite"
         ></v-selectOption>
+        
+        <v-users 
+           v-if=auth&&optionListUsers
+           v-on:updateRole="updateRoleSend"
+       />
 
         <v-getDB
           v-if=auth&&optionGetDB
         />
 
-
         <v-findFile 
           v-if=auth&&optionFindFiles
         />
 
-        <v-uploadFile
-            v-if=auth&&optionPiecesInformation&&uploadPiecesInformation
-            v-on:fileInformation="uploadFileFI"
-        ></v-uploadFile>
-
-        <div 
-            v-if=auth&&optionPiecesInformation&&uploadPiecesInformation
-            class="uploadFiles"
-        >
-            <p 
-                v-for="link in listArrays.arrayForLinksFI"
-            >
-                {{ link }}
-            </p>
-        </div>
-
-        
-        <v-availableFI 
-            v-if=auth&&listButton&&optionPiecesInformation
-            v-on:listFI="generateList"
-        ></v-availableFI>
-
-        <v-tablePiecesInfCloud
-            v-if=auth
-            v-on:deleteFile="deleteFile"
-            class="piecesInformationCloud"
-        />
+       <v-informationFiles 
+        v-if=auth&&optionPiecesInformation
+       />
 
       
         
+    </div>
     </div>
     `,
 };

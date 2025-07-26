@@ -1,16 +1,39 @@
-export const vAvailableFI =  {
+import { getData } from "../service/api.js";
+
+export const vAvailableFI = {
+    inject: ["API", "loader", "piecesInformation"],
+
     methods: {
-        availableFI(e){
-            e.preventDefault();
+        async generateList() {
             const container = "informacion";
-            this.$emit("listFI", container)
-        }
+            this.loader();
+            const endpoint = `${this.API}/listBlobs/${container}`;
+            const res = await getData(endpoint);
+            this.piecesInformation.linksFI = [...res.message];
+            this.loader();
+        },
+        async deleteFile(file) {
+            const endpoint = this.API + file.url;
+            const res = await getData(endpoint, "DELETE");
+            if (res.file) {
+              const filterPiecesInformation =  this.piecesInformation.linksFI.filter(item => item.name !== file.name)
+              this.piecesInformation.linksFI = [...filterPiecesInformation];
+            }
+        },
     },
 
     template: `
-    <h4>Ver Fichas de Información disponibles en el sistema.</h4>
-    <form v-on:submit="availableFI">
-        <button>Consultar</button>
-    </form>
+        <div class="section-files">
+            <h4>Ver Fichas de Información disponibles en el sistema.</h4>
+
+            <div>
+                <button v-on:click="generateList">Consultar</button>
+            </div>
+
+            <v-tablePiecesInfCloud
+                @deleteFile="deleteFile"
+                class="piecesInformationCloud"
+            />
+        </div>
     `
 };
