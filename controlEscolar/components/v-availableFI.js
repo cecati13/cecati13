@@ -16,8 +16,10 @@ export const vAvailableFI = {
             const endpoint = this.API + file.url;
             const res = await getData(endpoint, "DELETE");
             if (res.file) {
-              const filterPiecesInformation =  this.piecesInformation.linksFI.filter(item => item.name !== file.name)
-              this.piecesInformation.linksFI = [...filterPiecesInformation];
+                const filterPiecesInformation = this.piecesInformation.linksFI.filter(
+                    item => item.name !== file.name
+                )
+                this.piecesInformation.linksFI = [...filterPiecesInformation];
             }
         },
     },

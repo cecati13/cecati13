@@ -64,26 +64,32 @@ export const getData = async (
   }
 };
 
-// async sendData(API, obj) {
-//   try {
-//     this.preloader();
-//     const objHeaders = { "Content-Type": "application/json" };
-//     if (!obj.username) {
-//       Object.defineProperty(objHeaders, "Authorization", {
-//         value: `Bearer ${localStorage.getItem("token")}`,
-//         writable: true,
-//         enumerable: true,
-//         configurable: true,
-//       });
-//     }
-//     const response = await fetch(API, {
-//       method: "POST",
-//       headers: objHeaders,
-//       body: JSON.stringify(obj),
-//     });
-//     this.preloader();
-//     return response.json();
-//   } catch (error) {
-//     console.error(error);
-//   }
-// },
+export const postFormData = async (
+  endpoint,
+  formData,
+  retries = numRetries
+) => {
+  try {
+    const objHeaders = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: objHeaders,
+      body: formData,
+    });
+    if (response.status === 503 && retries > 0) {
+      await delay(delayMs);
+      return postFormData(endpoint, formData, retries - 1);
+    } else if (response.status === 401) {
+      reloadSite({
+        title: "La sesión caducó",
+        message: "¿Deseas recargar la página?",
+        buttonText: "Si, recargar!"
+      });
+    }
+    return response.status === 200 ? response.json() : responseError(response);
+  } catch (error) {
+    console.error(error);
+  }
+};

@@ -12,7 +12,6 @@ export const App = {
       optionFindFiles: false,
       optionListUsers: false,
       optionGetDB: false,
-      fileSource: "",
       username: "",
       email: "",
       permissions: {
@@ -20,12 +19,7 @@ export const App = {
         users: [],
       },
       message: "",
-      messageFI: false,
-      inputCurp: true,
       listArrays: {
-        arrayForBlobs: [],
-        arrayForLinksFI: [],
-        arrayPiecesInfCloud: [],
         linksFI: [],
       },
       loading: true,
@@ -117,47 +111,10 @@ export const App = {
       this.optionGetDB = false;
       this.listInCloud = false;
       this.clearMessage();
-      this.cleanArrays();
-    },
-
-    async sendFiles(formFiles, API) {
-      this.preloader();
-      const response = await fetch(API, {
-        method: "post",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: formFiles,
-      });
-      const info = await response.json();
-      this.preloader();
-      return info;
     },
 
     clearMessage() {
       this.message = "";
-      const messageInfCloud = document.querySelector(".piecesInformationCloud");
-      if (!(messageInfCloud === null)) {
-        messageInfCloud.innerHTML = "";
-      }
-    },    
-
-    showUrlMessageUpload(array) {
-      array.forEach((url) => {
-        this.listArrays.arrayForLinksFI.push(url);
-      });
-    },
-
-    cleanArrays() {
-      while (this.listArrays.arrayForBlobs.length > 0) {
-        this.listArrays.arrayForBlobs.pop();
-      }
-      while (this.listArrays.arrayForLinksFI.length > 0) {
-        this.listArrays.arrayForLinksFI.pop();
-      }
-      while (this.listArrays.arrayPiecesInfCloud.length > 0) {
-        this.listArrays.arrayPiecesInfCloud.pop();
-      }
     },
 
     assignRoleFunctions(role) {
@@ -186,8 +143,6 @@ export const App = {
       }
     },
 
-    
-
     preloader() {
       this.loading = !this.loading;
     },
@@ -195,58 +150,45 @@ export const App = {
 
   template: `
 
-  <div>
+  <div class="container-main">
+
     <h3>Exclusivo del área de control escolar</h3>
 
     <div  
-        v-if=loading
-        v-bind:class="['preloader']"
+      v-if=loading
+      v-bind:class="['preloader']"
     ></div>
 
     <div v-if=!loading class="section-responsive">
+      <p v-if=auth>
+        Bienvenido {{ username.toUpperCase() }} 
+      </p>
+      <p v-if=auth> {{ email }} </p>
 
-        <p v-if=auth>
-            Bienvenido {{ username.toUpperCase() }} 
-        </p>
-        <p v-if=auth>
-            {{ email }}
-        </p>
-
-        <v-buttonBack
-            v-if=auth&&(optionFindFiles||optionPiecesInformation||optionListUsers||optionGetDB)
-            v-on:click="ShowMenu"
-        ></v-buttonBack>
-
-        
-        <p class="message">
-        {{ message }}
-        </p>
-        
-        <v-selectOption
+      <v-buttonBack
+        v-if=auth&&(optionFindFiles||optionPiecesInformation||optionListUsers||optionGetDB)
+        v-on:click="ShowMenu"
+      ></v-buttonBack>
+      
+      <p class="message"> {{ message }} </p>
+      
+      <v-selectOption
         v-if=auth&&!optionPiecesInformation&&!optionFindFiles&&!optionListUsers&&!optionGetDB
         v-on:selectedFunction="showFunctionSite"
-        ></v-selectOption>
-        
-        <v-users 
-           v-if=auth&&optionListUsers
-           v-on:updateRole="updateRoleSend"
-       />
-
-        <v-getDB
-          v-if=auth&&optionGetDB
-        />
-
-        <v-findFile 
-          v-if=auth&&optionFindFiles
-        />
-
-       <v-informationFiles 
-        v-if=auth&&optionPiecesInformation
-       />
+      ></v-selectOption>
 
       
+      <v-findFile v-if=auth&&optionFindFiles />
+
+      <v-getDB v-if=auth&&optionGetDB />
+
+      <v-informationFiles v-if=auth&&optionPiecesInformation />
+
+      <v-users  v-if=auth&&optionListUsers v-on:updateRole="updateRoleSend" />
+
         
     </div>
-    </div>
-    `,
+
+  </div>
+  `,
 };

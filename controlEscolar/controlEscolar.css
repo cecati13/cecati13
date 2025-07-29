@@ -6,6 +6,12 @@
     align-items: center;
 }
 
+.container-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .message {
     margin-top: 20px;
     font-size: 1.8rem;
@@ -125,6 +131,10 @@ button {
 
 .uploadFiles>p {
     padding: 5px;
+}
+
+.file-item > span > svg {
+    width: fit-content;
 }
 
 .table-responsive {
