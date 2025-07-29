@@ -10,6 +10,14 @@ export const vAvailableFI = {
             const endpoint = `${this.API}/listBlobs/${container}`;
             const res = await getData(endpoint);
             this.piecesInformation.linksFI = [...res.message];
+            if (res.message.length === 0) {
+                Swal.fire({
+                    title: "Error",
+                    text: "No hay Fichas de información en el sistema",
+                    icon: "info",
+                    confirmButtonText: "Cerrar",
+                  });
+            }
             this.loader();
         },
         async deleteFile(file) {
