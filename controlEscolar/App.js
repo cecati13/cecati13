@@ -12,7 +12,6 @@ export const App = {
       optionFindFiles: false,
       optionListUsers: false,
       optionGetDB: false,
-      fileSource: "",
       username: "",
       email: "",
       permissions: {
@@ -20,14 +19,9 @@ export const App = {
         users: [],
       },
       message: "",
-      messageFI: false,
-      inputCurp: true,
-      listButton: true,
-      arrayForBlobs: [],
-      arrayForLinksFI: [],
-      arrayPiecesInfCloud: [],
-      listInCloud: false,
-      uploadPiecesInformation: true,
+      listArrays: {
+        linksFI: [],
+      },
       loading: true,
       thereAreSesion: this.areThereSession,
     };
@@ -37,6 +31,8 @@ export const App = {
     return {
       permissions: this.permissions,
       API: this.API,
+      piecesInformation: this.listArrays,
+      loader: () => this.preloader()
     };
   },
 
@@ -64,7 +60,7 @@ export const App = {
           this.auth = true;
           this.clearMessage();
           this.preloader();
-        } else if (response.statusCode === 500 || response.statusCode === 503){
+        } else if (response.statusCode === 500 || response.statusCode === 503) {
           throw new Error("Error de Conexión. Intenta iniciar de nuevo")
         } else {
           this.message = response.message;
@@ -114,78 +110,11 @@ export const App = {
       this.optionListUsers = false;
       this.optionGetDB = false;
       this.listInCloud = false;
-      this.listButton = true;
-      this.uploadPiecesInformation = true;
       this.clearMessage();
-      this.cleanArrays();
-    },
-
-    async sendFiles(formFiles, API) {
-      this.preloader();
-      const response = await fetch(API, {
-        method: "post",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: formFiles,
-      });
-      const info = await response.json();
-      this.preloader();
-      return info;
     },
 
     clearMessage() {
       this.message = "";
-      const messageInfCloud = document.querySelector(".piecesInformationCloud");
-      if (!(messageInfCloud === null)) {
-        messageInfCloud.innerHTML = "";
-      }
-    },
-
-    async generateList(container) {
-      this.preloader();
-      const endpoint = `${this.API}/listBlobs/${container}`;
-      const res = await getData(endpoint);
-      const totalList = res.message.length;
-      this.message = `El sistema tiene ${totalList} fichas de información disponibles`;
-      this.messageFI = true;
-      this.listInCloud = true;
-      res.message.forEach((item) => {
-        this.arrayPiecesInfCloud.push(item);
-      });
-      this.listButton = false;
-      this.uploadPiecesInformation = false;
-      this.preloader();
-    },
-
-    async uploadFileFI(arrayFiles) {
-      const formFiles = new FormData();
-      arrayFiles.forEach((file) => {
-        formFiles.append("fileFI", file);
-      });
-      const enpoint = `${this.API}/fileInformation`;
-      const res = await this.sendFiles(formFiles, enpoint);
-      this.messageFI = true;
-      this.showUrlMessageUpload(res.message);
-      this.listButton = true;
-    },
-
-    showUrlMessageUpload(array) {
-      array.forEach((url) => {
-        this.arrayForLinksFI.push(url);
-      });
-    },
-
-    cleanArrays() {
-      while (this.arrayForBlobs.length > 0) {
-        this.arrayForBlobs.pop();
-      }
-      while (this.arrayForLinksFI.length > 0) {
-        this.arrayForLinksFI.pop();
-      }
-      while (this.arrayPiecesInfCloud.length > 0) {
-        this.arrayPiecesInfCloud.pop();
-      }
     },
 
     assignRoleFunctions(role) {
@@ -220,84 +149,46 @@ export const App = {
   },
 
   template: `
+
+  <div class="container-main">
+
     <h3>Exclusivo del área de control escolar</h3>
 
     <div  
-        v-if=loading
-        v-bind:class="['preloader']"
+      v-if=loading
+      v-bind:class="['preloader']"
     ></div>
 
     <div v-if=!loading class="section-responsive">
+      <p v-if=auth>
+        Bienvenido {{ username.toUpperCase() }} 
+      </p>
+      <p v-if=auth> {{ email }} </p>
 
-        <p v-if=auth>
-            Bienvenido {{ username.toUpperCase() }} 
-        </p>
-        <p v-if=auth>
-            {{ email }}
-        </p>
+      <v-buttonBack
+        v-if=auth&&(optionFindFiles||optionPiecesInformation||optionListUsers||optionGetDB)
+        v-on:click="ShowMenu"
+      ></v-buttonBack>
+      
+      <p class="message"> {{ message }} </p>
+      
+      <v-selectOption
+        v-if=auth&&!optionPiecesInformation&&!optionFindFiles&&!optionListUsers&&!optionGetDB
+        v-on:selectedFunction="showFunctionSite"
+      ></v-selectOption>
 
-        <v-buttonBack
-            v-if=auth&&(optionFindFiles||optionPiecesInformation||optionListUsers||optionGetDB)
-            v-on:click="ShowMenu"
-        ></v-buttonBack>
+      
+      <v-findFile v-if=auth&&optionFindFiles />
 
-         <v-users 
-            v-if=auth&&optionListUsers
-            v-on:updateRole="updateRoleSend"
-        />
+      <v-getDB v-if=auth&&optionGetDB />
 
-        <p
-            class="message"
-        >
-            {{ message }}
-        </p>
+      <v-informationFiles v-if=auth&&optionPiecesInformation />
 
-        <v-selectOption
-            v-if=auth&&!optionPiecesInformation&&!optionFindFiles&&!optionListUsers&&!optionGetDB
-            v-on:selectedFunction="showFunctionSite"
-        ></v-selectOption>
-
-        <v-getDB
-          v-if=auth&&optionGetDB
-        />
-
-
-        <v-findFile 
-          v-if=auth&&optionFindFiles
-        />
-
-        <v-uploadFile
-            v-if=auth&&optionPiecesInformation&&uploadPiecesInformation
-            v-on:fileInformation="uploadFileFI"
-        ></v-uploadFile>
-
-        <div 
-            v-if=auth&&optionPiecesInformation&&uploadPiecesInformation
-            class="uploadFiles"
-        >
-            <p 
-                v-for="link in arrayForLinksFI"
-            >
-                {{ link }}
-            </p>
-        </div>
+      <v-users  v-if=auth&&optionListUsers v-on:updateRole="updateRoleSend" />
 
         
-        <v-availableFI 
-            v-if=auth&&listButton&&optionPiecesInformation
-            v-on:listFI="generateList"
-        ></v-availableFI>
-
-       <ol 
-            v-if=auth
-            class="piecesInformationCloud"
-        >
-            <li v-for="item in arrayPiecesInfCloud">
-                <a :href="item.url" target="blank">
-                    {{ item.name }}
-                </a>    
-            </li>
-        </ol>
     </div>
-    `,
+
+  </div>
+  `,
 };
